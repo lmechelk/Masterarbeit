@@ -1,0 +1,72 @@
+\chapter{Verwandte Arbeiten}
+
+\input{tabellen/literatur}
+
+%%%%%
+
+\section{Aufbau und Struktur von MP4-Containern}
+
+Hierarchische Baumstruktur gemäß ISO/IEC 14496-14
+Oft tief verschachtelte Objektstruktur
+Elementare Bausteine sind Atome/Boxen
+
+Box Typen (ftyp, moov, trak)
+ftyp: Definiert den Dateityp und grundlegende Kompatibilitätsmerkmale
+moov: Fungiert als Hauptcontainer für sämtliche Metadaten und die logische Struktur
+trak: Spureninformationen sowie udta, meta und hdlr für spezifische Metadaten 
+
+Metadaten (udta, meta, hdlr)
+Mediadaten (mdat -> uninteressant)
+Free Space (free, skip -> Anomalien? Vielleicht Interessant?)
+
+
+udta (User Data Box): Container für benutzerdefinierte oder anwendungsspezifische Zusatzinformationen (z. B. Copyright-Tags, GPS-Koordinaten, Kameraeinstellungen
+colr (Colour Information Box): Spezifiziert den Farbraum, die Transfercharakteristika und die Farbmatrix des Videomaterials (z. B. ICC-Profile, BT.2020, nclx)
+free (Free Space Box): Ungenutzten Speicherplatz (Padding) innerhalb der Datei
+wide (Wide Box): Padding-Element (typischerweise 8 Byte groß), das historisch aus der Apple-QuickTime-Spezifikation stammt
+beam (Beam-/Loop-Box): WhatsApp verwendet diese, um Videos als GIFs darzustellen oder um sie für die Vorschau zu optimieren
+
+%%%%%
+
+\section{Container-Forensik für Videodaten}
+
+Die Containerstruktur trägt forensisch nutzbare Informationen:
+
+Gloe u. a. (2014)\cite{gloe_forensic_2014}: Fundament der strukturellen und binären Analyse
+
+Iuliani u. a. (2019)\cite{iuliani_video_2019}: Basis der Hierarchischen Strukturanalyse\\
+
+
+Bestehende Verfahren der Container-Forensik umgehen die rechenintensive Videokodierung, indem sie die hierarchische Struktur und Metadaten des MP4-Formats analysieren. Die hier analysierte Literatur weist hierbei vier methodische Richtungen auf, und zwar Analyse binärer Strukturen, Metadaten-Vektorisierung, hierarchische Strukturanalyse und quantifizierbare Container-Charakterisierung:
+
+Ramos López u. a. (2020)\cite{ramos_lopez_digital_2020}: Hierarchische Strukturanalyse (Pfad, Pfad + Wert, Pfad + Reihenfolge, Pfad + Reihenfolge + Wert)
+
+Hasan u. a. (2021)\cite{hasan_forensic_2021}: Analyse binärer Strukturen (Manueller und visueller Hex-Abgleich von Containerstrukturen)
+
+Xiang u. a. (2021)\cite{xiang_forensic_2021}: Metadaten-Vektorisierung (Baumstruktur wird in ein Set aus Strings übersetzt und vektorisiert)
+
+Yang u. a. (2020)\cite{yang_efficient_2020}: Anwendung quantitativer Ansätze mittels Bag-of-Words-Modellen und Entscheidungsbäumen zur Integritätsprüfung\\
+
+
+Die Zuverlässigkeit von Containerstrukturen ist in Frage zu stellen, da sie leicht manipulierbar sind:
+
+Y. Li u. a. (2024)\cite{li_learning_2024}: Methodologische Kritik (Re-Muxing-Vulnerabilität) 
+
+
+\subsection{}
+
+
+%%%%%
+
+\section{Similarity Hashing in der Forensik}
+
+Klier \& Baier (2025)\cite{klier_media_2025}
+TODO: Hier noch weitere Literatur sichten
+
+%%%%%
+
+\section{Video-Datensätze}
+
+VISION (Shullani u. a. 2017)\cite{shullani_vision_2017}: Videos Smartphone, Social Media (Facebook, YouTube, Whattsapp) https://lesc.dinfo.unifi.it/VISION/
+
+EVA-7K (Yang u. a. 2020)\cite{yang_efficient_2020}: Videos Social Media (Facebook, TikTok, Weibo, YouTube), Software-Tools (Avidemux, Exiftool, ffmpeg, Kdenlive, Adobe Premiere) https://drive.google.com/drive/folders/1_J04iEbhZTxQgJC7cE3fSG8vkP1by8i1

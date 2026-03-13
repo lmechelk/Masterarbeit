@@ -1,0 +1,80 @@
+
+% Hilfsdefinition für linksbündige Spalten mit fester Breite und Umbruch
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+% Start der xltabular-Umgebung
+% {\textwidth} = nutzt die volle Seitenbreite
+% L{4.5cm} = erste Spalte fix 4.5cm, linksbündig
+% X = mittlere Spalte nutzt den restlichen Platz flexibel
+% L{3.5cm} = letzte Spalte fix 3.5cm, linksbündig
+\begin{xltabular}{\textwidth}{L{4.5cm} X L{3.5cm}}
+    
+    \caption{Übersicht von verwandten Arbeiten, sortiert nach Erscheinungsjahr} \label{tab:literaturuebersicht} \\
+    
+    \toprule
+    \textbf{Titel (Autoren)} & \textbf{Relevanz für die Arbeit} & \textbf{Geeignet für Kapitel} \\
+    \midrule
+    \endfirsthead % Kopfzeile nur auf der ersten Seite
+    
+    \multicolumn{3}{c}{\textit{Fortsetzung von der vorherigen Seite}} \\
+    \toprule
+    \textbf{Titel (Autoren)} & \textbf{Relevanz für die Arbeit} & \textbf{Geeignet für Kapitel} \\
+    \midrule
+    \endhead % Kopfzeile auf allen Folgeseiten
+    
+    \bottomrule
+    \multicolumn{3}{r}{\textit{Weiter auf der nächsten Seite}} \\
+    \endfoot % Fußzeile auf allen umgebrochenen Seiten
+    
+    \bottomrule
+    \endlastfoot % Fußzeile nur am Ende der gesamten Tabelle
+
+    % --- TABELLENINHALT START ---
+    
+    A Comprehensive Review on File Containers-Based Image and Video Forensics (Yang u.\,a. 2025)\cite{yang_comprehensive_2025} & 
+    Aktueller Überblick über Container-Forensik & 
+    Container-Forensik \\ \midrule
+    
+    Media source similarity hashing (MSSH): A practical method for large-scale media investigations (Klier und Baier 2025)\cite{klier_media_2025} & 
+    Similarity Hashing für JPEG samt GitHub & 
+    Similarity Hashing \\ \midrule
+    
+    Learning Hierarchical Fingerprints via Multi-Level Fusion for Video Integrity and Source Analysis (Y. Li u.\,a. 2024)\cite{li_learning_2024} & 
+    Argumentiert, dass Container-Spuren durch Re-Muxing leicht manipulierbar sind & 
+    Container-Forensik \\ \midrule
+    
+    Forensic Analysis of Binary Structures of Video Files (Hasan u.\,a. 2021)\cite{hasan_forensic_2021} & 
+    Untersucht binäre Unterschiede in ftyp- und moov-Boxen zwischen Kameraherstellern & 
+    Aufbau MP4, Container-Forensik \\ \midrule
+    
+    Forensic Analysis of Video Files Using Metadata (Xiang u.\,a. 2021)\cite{xiang_forensic_2021} & 
+    Nutzt Vektorisierung von Metadaten-Bäumen für MP4 & 
+    Aufbau MP4, Container-Forensik \\ \midrule
+    
+    Digital Video Source Identification Based on Container's Structure Analysis (Ramos López u.\,a. 2020)\cite{ramos_lopez_digital_2020} & 
+    Nutzt hierarchische Container-Strukturen diverser Video-Dateien zur unüberwachten Quellenerkennung anhand der VISION- und ACID-Datensätze & 
+    Aufbau MP4, Container-Forensik \\ \midrule
+    
+    Efficient Video Integrity Analysis Through Container Characterization (Yang u.\,a. 2020)\cite{yang_efficient_2020} & 
+    Etabliert einen quantitativen Ansatz mittels Bag-of-Words-Modell und Entscheidungsbäumen zur Integritätsprüfung. Liefert zudem den EVA-7K-Datensatz (manipulierte und komprimierte Social-Media-Videos auf Basis „VISION“ von Shullani u.\,a.) & 
+    Container-Forensik, Video-Datensätze \\ \midrule
+    
+    Information technology - Coding of audio-visual objects - Part 14: MP4 file format (ISO 2020)\cite{iso_14496-14_2020} & 
+    ISO-Norm, definiert die formale Spezifikation und hierarchische Objektstruktur (Atome/Boxen) des MP4-Formats & 
+    Aufbau MP4 \\ \midrule
+    
+    A Video Forensic Framework for the Unsupervised Analysis of MP4-Like File Container (Iuliani u.\,a. 2019)\cite{iuliani_video_2019} & 
+    Formalisiert MP4 als Baumstruktur & 
+    Aufbau MP4, Container-Forensik \\ \midrule
+    
+    VISION: a video and image dataset for source identification (Shullani u.\,a. 2017)\cite{shullani_vision_2017} & 
+    Liefert Datensatz für native Videoquellen (Dataset „VISION“), Grundlage für Social-Media-Variante (Dataset „EVA-7K“ von Yang u.\,a.) & 
+    Video-Datensätze \\ \midrule
+    
+    Forensic analysis of video file formats (Gloe u.\,a. 2014)\cite{gloe_forensic_2014} & 
+    Zeigen auf, dass Hersteller und Software-Encoder spezifische Spuren in der Struktur von AVI- und MP4-Dateien hinterlassen, etwa durch die Anordnung und Benennung von Datenblöcken & 
+    Aufbau MP4, Container-Forensik \\
+    
+    % --- TABELLENINHALT ENDE ---
+
+\end{xltabular}

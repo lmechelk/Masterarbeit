@@ -1,0 +1,88 @@
+\documentclass{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[babel]{csquotes}
+
+% Font
+\usepackage[T1]{fontenc}
+%\usepackage{newtxtext,newtxmath}
+\usepackage{arev}
+
+% Math, Symbols, Units, Chemistry
+\usepackage{amsmath}
+\usepackage{amsxtra}
+\usepackage{eurosym}
+\usepackage{siunitx}  
+\sisetup{locale=US}
+ \DeclareSIUnit\bar{bar}
+\usepackage[version=4]{mhchem}
+
+% Figures, Tables, Listings
+\usepackage{pgfplots}
+\usepackage{tikz}
+\pgfplotsset{compat=newest}
+
+%data
+\pgfplotstableread[header=false, col sep=semicolon, skip first n=1]{data/electricity-prod-source-stacked-KAZ.dat}{\data}
+
+% TABLEAU-10
+\definecolor{Tab10-A}{RGB}{78, 121, 167}
+\definecolor{Tab10-B}{RGB}{242, 142, 43}
+\definecolor{Tab10-C}{RGB}{225, 87, 89}
+\definecolor{Tab10-D}{RGB}{118, 183, 178}
+\definecolor{Tab10-E}{RGB}{89, 161, 79}
+\definecolor{Tab10-F}{RGB}{237, 201, 72}
+\definecolor{Tab10-G}{RGB}{176, 122, 161}
+\definecolor{Tab10-H}{RGB}{255, 157, 167}
+\definecolor{Tab10-I}{RGB}{156, 117, 95}
+\definecolor{Tab10-J}{RGB}{186, 176, 172}
+
+\begin{document}
+\begin{tikzpicture}[font=\scriptsize]
+  \begin{axis}[width=120mm,height=70mm,
+    ybar stacked,
+    bar width=0.9,
+    xmin=1984.5, xmax=2023.5,
+    xtick distance={5},
+    minor x tick num={4},
+    xtick align=outside,
+    xtick pos=left,
+    x tick label style={/pgf/number format/.cd,%
+          scaled x ticks = false,
+          set thousands separator={},
+          fixed},
+    ymin=0, ymax=120,
+    ytick align=outside,
+    ytick pos=left,
+    xlabel= \empty,
+    ylabel={Stromgestehung (TWh)},
+    grid style={line width=0.5pt, solid, line cap=round, color=gray, {/pgfplots/on layer=axis background}},
+    ymajorgrids=true,
+    every axis legend/.append style={
+      at={(axis cs:2004,15)},
+      anchor=center,
+      line width=0.2pt,
+      },
+    legend style={/tikz/every even column/.append style={column sep=10pt}},
+    legend cell align=left,
+    legend columns=4]
+    \addplot[fill=Tab10-I, yshift=0cm] table [x index=2, y index=11] {\data};
+    \addlegendentry{Kohle};
+    \addplot[fill=Tab10-F, yshift=0cm] table [x index=2, y index=10] {\data};
+    \addlegendentry{Erdgas};
+    \addplot[fill=Tab10-C, yshift=0cm] table [x index=2, y index=9] {\data};
+    \addlegendentry{Öl};
+    \addplot[fill=Tab10-D, yshift=0cm] table [x index=2, y index=8] {\data};
+    \addlegendentry{Nuklear};
+    \addplot[fill=Tab10-A, yshift=0cm] table [x index=2, y index=7] {\data};
+    \addlegendentry{Wasserkraft};
+    \addplot[fill=Tab10-H, yshift=0cm] table [x index=2, y index=6] {\data};
+    \addlegendentry{Wind};
+    \addplot[fill=Tab10-B, yshift=0cm] table [x index=2, y index=5] {\data};
+    \addlegendentry{Solar};
+    \addplot[fill=Tab10-E, yshift=0cm] table [x index=2, y index=4] {\data};
+    \addlegendentry{Biomasse};
+\end{axis}
+  
+\end{tikzpicture}
+\end{document}

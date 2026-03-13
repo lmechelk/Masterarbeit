@@ -1,0 +1,39 @@
+\chapter{Methodik}
+
+%%%%%
+
+\section{Untersuchungsdesign}
+
+%%%%%
+
+\section{Eigener KI-Video-Datensatz}
+
+Auswahl der Generatoren
+
+Vorgehen der Erstellung von Testvideos
+
+Text-Prompts und Bildvorlagen
+
+Link auf Datensatz
+
+Generative KI-Modelle können bereits jetzt fotorealistische Videos anhand von Text oder Deepfakes mittels Bildmaterial generieren und überwiegend im MP4-Containerformat ausgeben (siehe Table 2)
+
+z. B. Imagine 0.9 von xAI das über die Plattform Grok angeboten wird
+
+
+\input{tabellen/kivideogeneratoren}
+
+%%%%%
+
+\section{Feature-Engineering für MP4}
+
+Strategie, um MP4-Baumstruktur abzubilden
+
+Irrelevante Inhaltsabhängige Felder (mdat, creationTime, duration, freeSpace) rausfiltern
+
+
+\section{Implementierung des Prototyps}
+
+Inspiration durch Github-Projekt aus MSSH (Klier, 2025)\cite{klier_github_2025}
+Tests mit Parsern („Online Mp4 Parser“, o. J.)
+Ähnlichkeitsmetrik

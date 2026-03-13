@@ -1,0 +1,140 @@
+%Dokumentklasse und Spracheinstellung
+%für elektronische Veröffentlichung (Standard)
+\documentclass[11pt,oneside,paper=A4,DIV=11,BCOR=0mm,abstract=true,headsepline,headings=normal,ngerman]{scrreprt}
+%für Druck (doppelseitig)
+%\documentclass[11pt,twoside,paper=A4,DIV=11,BCOR=8mm,abstract=true,headsepline,headings=normal,ngerman]{scrreprt}
+
+\usepackage{babel}
+\usepackage[utf8]{inputenc}
+
+%Schriftart
+\usepackage{libertine}
+\usepackage{libertinust1math}
+\usepackage[T1]{fontenc}
+
+%Typographie
+\usepackage[auto]{microtype}
+\clubpenalty = 10000
+\widowpenalty = 10000
+\displaywidowpenalty = 10000
+
+%Mathe, Symbole, EInheitendarstellung, Chemie
+\usepackage{amsmath}
+\usepackage{amsxtra}
+\usepackage{eurosym}
+\usepackage{siunitx}  
+\sisetup{locale=DE}
+\usepackage[version=4]{mhchem}
+\usepackage{chemfig}
+
+%Einbindung von Bildern, Tabellen, pdf-Seiten, Quellcode
+\usepackage{graphicx}
+\usepackage{multirow,multicol,booktabs}
+\usepackage{threeparttable}
+\usepackage{longtable}
+\usepackage{rotating}
+\usepackage{ltablex}
+\usepackage{subfig}
+\captionsetup[subtable]{position=top}
+\usepackage{pdfpages}
+\usepackage{listings}
+\usepackage{blindtext}
+\usepackage{csquotes}
+
+%Tabellen
+\usepackage{xltabular} % Erlaubt Seitenumbrüche + flexible Spalten
+\usepackage{booktabs}
+\usepackage{array}      % Für erweiterte Spaltendefinitionen
+
+%Darstellung von URL
+\usepackage{url}
+\urlstyle{same}
+
+%Fussnoten, auch für Tabellen
+\usepackage{footnote}
+\makesavenoteenv{tabular} 
+
+%Darstellung der Literaturangaben
+\usepackage[
+backend=biber,
+style=numeric,
+sorting=none,
+citestyle=numeric-comp,
+maxbibnames=10,
+giveninits=true
+]{biblatex}
+
+\renewcommand*{\labelnamepunct}{\addcolon\addspace}
+
+%Speicherort der Literaturangaben (*.bib Datei)
+\bibliography{literatur/literaturdatenbank}
+
+%Nomenklatur
+\usepackage[intoc, german]{nomencl}
+\renewcommand{\nomname}{Abkürzungs- und Symbolverzeichnis}
+\setlength{\nomitemsep}{-\parsep}
+\newlength{\nomgroupstartsep}
+\setlength{\nomgroupstartsep}{18pt}
+\newcommand{\nomenclheader}[1]{\item[\hspace*{-\itemindent}\itshape#1]{\ } \vspace{6pt}\par}
+
+\renewcommand\nomgroup[1]{
+ \itemsep\nomgroupstartsep
+  \ifstrequal{#1}{A}{\nomenclheader{Abkürzungen}}{
+  \ifstrequal{#1}{E}{\nomenclheader{Lateinische Symbole}}{
+  \ifstrequal{#1}{G}{\nomenclheader{Griechische Symbole}}{
+  \ifstrequal{#1}{O}{\nomenclheader{Operatoren}}{
+  \ifstrequal{#1}{X}{\nomenclheader{Tiefgestelle Indizes}}{
+  \ifstrequal{#1}{Y}{\nomenclheader{Hochgestelle Indizes}}{}}}}}}
+ \itemsep\nomitemsep
+}
+
+%Fussnoten
+%Markierung in der Fußnote selbst weder hochgestellt noch kleiner gesetzt
+%\deffootnote{1em}{1em}{\thefootnotemark\ }
+%linksbündige Fußnotenmarkierungen
+\deffootnote{1.5em}{1em}{%
+	\makebox[1.5em][l]{\thefootnotemark}%
+}
+
+%Fussnoten nicht umbrechen
+\interfootnotelinepenalty=10000
+
+%Gestaltung der Bildunterschrift und Tabellenüberschirften sowieTitelseitenangaben
+\addtokomafont{caption}{\small}
+\setkomafont{captionlabel}{\sffamily\bfseries}
+\setkomafont{author}{\large}
+\setkomafont{date}{\large}
+\setkomafont{publishers}{\large}
+\setkomafont{dedication}{\normalsize}
+\addtokomafont{dedication}{\raggedright}
+
+\renewcaptionname{ngerman}{\figurename}{Abb.}
+\renewcaptionname{ngerman}{\tablename}{Tab.} 
+
+%Tabellenumgebungen mit Schriftgröße 10 und 7
+\newenvironment{tabular10}{%
+	\fontsize{10}{12}\selectfont\tabular
+}{%
+	\endtabular
+}
+
+\newenvironment{tabular7}{%
+	\fontsize{7}{12}\selectfont\tabular
+}{%
+	\endtabular
+}
+
+\input{00-daten}
+
+%Verweise und Referenzen, pdf-Einstellungen
+\usepackage[
+pdftitle={\VARtitel},
+pdfsubject={\VARtyp},
+pdfauthor={\VARname},
+pdfkeywords={},  
+%Links nicht einrahmen
+hidelinks
+]{hyperref}
+
+\usepackage[german]{cleveref}
+

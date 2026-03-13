@@ -1,0 +1,44 @@
+\chapter{Einleitung}
+
+TODO
+
+%%%%%
+
+\section{Motivation und Problemstellung}
+
+Zunahme digitaler Videodaten, Herausforderung für forensische Untersuchungen \cite{europol_common_2024}
+
+Für Szenarien mit großen Datenmengen, etwa bei der Detektion von illegalen Inhalten oder Desinformations-Kampagnen mittels KI-Videogenerierung, werden performante Methoden zur schnell Vorfilterung benötigt. Diese soll die Dateien nicht anhand ihres visuellen Inhalts, sondern anhand ihrer technischen Erzeugungsquelle gruppieren.
+
+Verschärft wird diese Situation durch die rasante Verbreitung generativer KI-Modelle, die bereits jetzt fotorealistische Videos anhand von Text oder Deepfakes mittels Bildmaterial generieren und überwiegend im MP4-Containerformat ausgeben.
+
+Verfahren zur Quellenidentifikation wie Analyse des Sonsorrauschens (Photo Response Non-Uniformity kurz PRNU)\cite{lukas_digital_2006} oder Untersuchung von Kompressionsartefakten\cite{li_inference_2018} im Bitstrom etabliert als auch präzise - sind rechenintisentiv und erfordern vollständige Dekodierung des Videomaterials
+
+Veröffentlichte Ansätze für strukturelle und metadatenbasierte Verfahren, die rechenintensive Dekodierung des Videostreams umgehen: Untersuchung binärer Abweichungen in spezifischen MP4-Boxen \cite{hasan_forensic_2021}, Überführung und Vektorisierung kompletter Metadaten-Bäume in maschinenlesbare Formate\cite{xiang_forensic_2021}, Nutzung der tief verschachtelten Container-Architektur\cite{ramos_lopez_digital_2020}, Anwendung quantitativer Ansätze mittels Bag-of-Words-Modellen und Entscheidungsbäumen zur Integritätsprüfung\cite{yang_efficient_2020} 
+
+Gloe\cite{gloe_forensic_2014} und Iuliani\cite{iuliani_video_2019} belegen, dass die Containerstruktur forensisch nutzbare Informationen trägt. Li\cite{li_learning_2024} beweist jedoch, dass diese Struktur hochgradig volatil gegenüber Standard-Verarbeitungen (Re-Muxing) ist.
+
+Der ISO/IEC 14496-14 Standard definiert das MP4-Format als komplexe, tief verschachtelte Objektstruktur, deren semantische Bedeutung oft erst durch ihre exakte Position im Baum bzw. Pfad definiert wird. \cite{iso_14496-14_2020}
+
+Es ist zu prüfen, ob und wie eine Abbildung der MP4-Struktur für ein Similarity Hashing geeignet ist.
+
+\textbf{Ziel der Arbeit:} Entwicklung als auch Evaluation eines Similarity Hash für MP4-Container, der strukturelle Merkmale identifiziert und damit eine Unterscheidung von Videos aus Social-Media,  KI-generierten Videos sowie nativen Kameraaufnahmen ermöglicht.
+
+%%%%%
+
+\section{Forschungsfragen }
+
+\textbf{Hauptfrage:} Wie muss ein Similarity Hash für MP4-Container beschaffen sein, um eine Quellenerkennung zu ermöglichen?
+
+\begin{enumerate}
+    \item \textbf{Teilfrage:} Wie sind MP4-Container aufgebaut und was sind die Kernmerkmale der Struktur?
+    \item \textbf{Teilfrage:} Welche technischen Quellen im Bereich Smartphones, Social-Media und KI-Generatoren existieren und wie unterscheiden sich deren Container-Merkmale?
+    \item \textbf{Teilfrage:} Wie lassen sich strukturelle Merkmale aus der MP4-Hierarchie extrahieren, die für Features geeignet sind?
+    \item \textbf{Teilfrage:} Welche Ergebnisse liefert das Similarity Hashing für MP4-Dateien und sind diese ausreichend?
+\end{enumerate}
+
+%%%%%
+
+\section{Aufbau der Arbeit}
+
+TODO
