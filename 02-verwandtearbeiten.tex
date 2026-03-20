@@ -6,54 +6,72 @@
 
 \section{Aufbau und Struktur von MP4-Containern}
 
-Hierarchische Baumstruktur gemäß ISO/IEC 14496-14
-Oft tief verschachtelte Objektstruktur
-Elementare Bausteine sind Atome/Boxen
+\begin{itemize}
+    \item Hierarchische Baumstruktur gemäß ISO/IEC 14496-14
+    \item Oft tief verschachtelte Objektstruktur
+    \item Elementare Bausteine sind Atome/Boxen
+    \item Box Typen (ftyp, moov, trak)
+    \begin{itemize}
+        \item ftyp: Definiert den Dateityp und grundlegende Kompatibilitätsmerkmale
+        \item moov: Fungiert als Hauptcontainer für sämtliche Metadaten und die logische Struktur
+        \item trak: Spureninformationen sowie udta, meta und hdlr für spezifische Metadaten
+    \end{itemize}
+    \item Metadaten (udta, meta, hdlr)
+    \item Mediadaten (mdat -> uninteressant)
+    \item Free Space (free, skip -> Anomalien? Vielleicht Interessant?)
 
-Box Typen (ftyp, moov, trak)
-ftyp: Definiert den Dateityp und grundlegende Kompatibilitätsmerkmale
-moov: Fungiert als Hauptcontainer für sämtliche Metadaten und die logische Struktur
-trak: Spureninformationen sowie udta, meta und hdlr für spezifische Metadaten 
-
-Metadaten (udta, meta, hdlr)
-Mediadaten (mdat -> uninteressant)
-Free Space (free, skip -> Anomalien? Vielleicht Interessant?)
-
-
-udta (User Data Box): Container für benutzerdefinierte oder anwendungsspezifische Zusatzinformationen (z. B. Copyright-Tags, GPS-Koordinaten, Kameraeinstellungen
-colr (Colour Information Box): Spezifiziert den Farbraum, die Transfercharakteristika und die Farbmatrix des Videomaterials (z. B. ICC-Profile, BT.2020, nclx)
-free (Free Space Box): Ungenutzten Speicherplatz (Padding) innerhalb der Datei
-wide (Wide Box): Padding-Element (typischerweise 8 Byte groß), das historisch aus der Apple-QuickTime-Spezifikation stammt
-beam (Beam-/Loop-Box): WhatsApp verwendet diese, um Videos als GIFs darzustellen oder um sie für die Vorschau zu optimieren
+    \item udta (User Data Box): Container für benutzerdefinierte oder anwendungsspezifische Zusatzinformationen (z. B. Copyright-Tags, GPS-Koordinaten, Kameraeinstellungen
+    \item colr (Colour Information Box): Spezifiziert den Farbraum, die Transfercharakteristika und die Farbmatrix des Videomaterials (z. B. ICC-Profile, BT.2020, nclx)
+    \item free (Free Space Box): Ungenutzten Speicherplatz (Padding) innerhalb der Datei
+    \item wide (Wide Box): Padding-Element (typischerweise 8 Byte groß), das historisch aus der Apple-QuickTime-Spezifikation stammt
+    \item beam (Beam-/Loop-Box): WhatsApp verwendet diese, um Videos als GIFs darzustellen oder um sie für die Vorschau zu optimieren
+\end{itemize}
 
 %%%%%
 
-\section{Container-Forensik für Videodaten}
+\section{Container-Forensik für Video- und Bilddaten}
+
+\input{tabellen/containerforensik}
+
+\subsection{Überblick}
+
+\begin{itemize}
+    \item Containerforensik für Video/Bilder ist weiterhin noch relevant, wie ein systematischer Review-Artikel basierend auf 53 Publikationen von Yang u.a (2025) \cite{yang_comprehensive_2025} aufzeigt
+    \begin{itemize}
+        \item State-of-the-Art-Überblick zu Container-Forensik für Bilder und Videos
+        \item Liefert Systematik und die Vergleichsmetriken
+        \item Artikel erhebt keine eigenen Primärdaten, sondern aggregiert und taxiert bestehende Methoden
+        \item Erkenntnisse: Erhalt von Pfad und relativer Reihenfolge identischer Boxen als derzeit robustester Ansatz identifiziert
+        \item Feature-Repräsentation listet das Review ausschließlich Bag-of-Words- und Type-Aware-Modelle für Video-Container  \cite[Kap. 4.3.4]{yang_comprehensive_2025}
+    \end{itemize}
+\end{itemize}
+
+\subsection{Containerstruktur und forensischer Nutzen}
 
 Die Containerstruktur trägt forensisch nutzbare Informationen:
 
-Gloe u. a. (2014)\cite{gloe_forensic_2014}: Fundament der strukturellen und binären Analyse
+\begin{enumerate}
+    \item Gloe u. a. (2014)\cite{gloe_forensic_2014}: Fundament der strukturellen und binären Analyse
+    \item Iuliani u. a. (2019)\cite{iuliani_video_2019}: Basis der Hierarchischen Strukturanalyse\end{enumerate}
 
-Iuliani u. a. (2019)\cite{iuliani_video_2019}: Basis der Hierarchischen Strukturanalyse\\
-
+\subsection{Verfahren}
 
 Bestehende Verfahren der Container-Forensik umgehen die rechenintensive Videokodierung, indem sie die hierarchische Struktur und Metadaten des MP4-Formats analysieren. Die hier analysierte Literatur weist hierbei vier methodische Richtungen auf, und zwar Analyse binärer Strukturen, Metadaten-Vektorisierung, hierarchische Strukturanalyse und quantifizierbare Container-Charakterisierung:
 
-Ramos López u. a. (2020)\cite{ramos_lopez_digital_2020}: Hierarchische Strukturanalyse (Pfad, Pfad + Wert, Pfad + Reihenfolge, Pfad + Reihenfolge + Wert)
-
-Hasan u. a. (2021)\cite{hasan_forensic_2021}: Analyse binärer Strukturen (Manueller und visueller Hex-Abgleich von Containerstrukturen)
-
-Xiang u. a. (2021)\cite{xiang_forensic_2021}: Metadaten-Vektorisierung (Baumstruktur wird in ein Set aus Strings übersetzt und vektorisiert)
-
-Yang u. a. (2020)\cite{yang_efficient_2020}: Anwendung quantitativer Ansätze mittels Bag-of-Words-Modellen und Entscheidungsbäumen zur Integritätsprüfung\\
-
-
-Die Zuverlässigkeit von Containerstrukturen ist in Frage zu stellen, da sie leicht manipulierbar sind:
-
-Y. Li u. a. (2024)\cite{li_learning_2024}: Methodologische Kritik (Re-Muxing-Vulnerabilität) 
+\begin{enumerate}
+    \item Ramos López u. a. (2020)\cite{ramos_lopez_digital_2020}: Hierarchische Strukturanalyse (Pfad, Pfad + Wert, Pfad + Reihenfolge, Pfad + Reihenfolge + Wert)
+    \item Hasan u. a. (2021)\cite{hasan_forensic_2021}: Analyse binärer Strukturen (Manueller und visueller Hex-Abgleich von Containerstrukturen)
+    \item Xiang u. a. (2021)\cite{xiang_forensic_2021}: Metadaten-Vektorisierung (Baumstruktur wird in ein Set aus Strings übersetzt und vektorisiert)
+    \item Yang u. a. (2020)\cite{yang_efficient_2020}: Anwendung quantitativer Ansätze mittels Bag-of-Words-Modellen und Entscheidungsbäumen zur Integritätsprüfung
+\end{enumerate}
 
 
-\subsection{}
+Die Zuverlässigkeit von Containerstrukturen ist in Frage zu stellen, da sie leicht manipulierbar sind (kein Fokus dieser Arbeit, eher als Anmerkung und ggf. um komische Artefakte in der Mp4-Struktur zuzuordnen):
+
+\begin{itemize}
+    \item Y. Li u. a. (2024)\cite{li_learning_2024}: Methodologische Kritik (Re-Muxing-Vulnerabilität)
+\end{itemize}
+
 
 
 %%%%%
@@ -67,6 +85,6 @@ TODO: Hier noch weitere Literatur sichten
 
 \section{Video-Datensätze}
 
-VISION (Shullani u. a. 2017)\cite{shullani_vision_2017}: Videos Smartphone, Social Media (Facebook, YouTube, Whattsapp) https://lesc.dinfo.unifi.it/VISION/
+VISION (Shullani u. a. 2017)\cite{shullani_vision_2017}: Videos Smartphone, Social Media (Facebook, YouTube, Whattsapp) \url{https://lesc.dinfo.unifi.it/VISION/}
 
-EVA-7K (Yang u. a. 2020)\cite{yang_efficient_2020}: Videos Social Media (Facebook, TikTok, Weibo, YouTube), Software-Tools (Avidemux, Exiftool, ffmpeg, Kdenlive, Adobe Premiere) https://drive.google.com/drive/folders/1_J04iEbhZTxQgJC7cE3fSG8vkP1by8i1
+EVA-7K (Yang u. a. 2020)\cite{yang_efficient_2020}: Videos Social Media (Facebook, TikTok, Weibo, YouTube), Software-Tools (Avidemux, Exiftool, ffmpeg, Kdenlive, Adobe Premiere) \url{https://drive.google.com/drive/folders/1_J04iEbhZTxQgJC7cE3fSG8vkP1by8i1}

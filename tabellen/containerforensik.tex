@@ -1,0 +1,14 @@
+\begin{table}[h]
+    \centering
+\caption{Verfahrensübersicht zur Container-Forensik}
+\label{tab:containerforensik}
+    \begin{tabular}{ll>{\raggedright\arraybackslash}p{0.5\linewidth}>{\raggedright\arraybackslash}p{0.12\linewidth}}\toprule
+         \textbf{Bezeichnung}&  \textbf{Container}&  \textbf{Beschreibung}& \textbf{Quellen(n)}\\\midrule
+         n-Gramme&  jpeg&  Lineare Sequenzierung der Datei-Marker in Sets, flache Linearisierung& Klier und Baier (2025) \cite{klier_media_2025}\\
+ Bag-of-Words (BoW)& mp4& Zählt ausschließlich die absolute Häufigkeit, mit der ein bestimmtes Container-Symbol im MP4-Baum auftritt, und überführt diese Zählwerte in einen Feature-Vektor&Yang et al. (2020)\\
+ Type-Aware& mp4, mov& Unterscheidet Container-Symbole strikt nach Datentyp, um die Dimensionalität des Vektors zu reduzieren,  Vorhandensein einer bestimmten Box werden wie bei BoW als Häufigkeiten gezählt und kontinuierliche Felder (Bitrate, Dauer, Videoauflösung) werden als ihre tatsächlichen numerischen Werte werden direkt in den Feature-Vektor kopiert (Ist dies noch Container-Forensik?)&Xiang et al. (2021)\\ \bottomrule
+    \end{tabular}
+    
+    
+\end{table}
+
