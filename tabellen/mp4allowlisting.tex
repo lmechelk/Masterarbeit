@@ -1,0 +1,30 @@
+\begin{table}[h]
+    \centering
+\caption{Valide MP4-Container gem. ISO/IEC 14496-12, -14, -15 und Apple Quick Time Legacy}
+\label{tab:mp4allowlisting}
+    \begin{tabular}{|l|p{2.5cm}|p{5.5cm}|p{5.5cm}|}\hline
+         \textbf{Typ (4CC)}&  \textbf{Bezeichnung}&\textbf{Kurzbeschreibung}&\textbf{Besonderheiten}
+\\\hline
+         moov&  Movie Box&Haupt-Container für alle Metadaten des Videos& keine\\\hline
+         trak&  Track Box&Einzelne Medienspur (Video, Audio oder Daten).& keine\\\hline
+         mdia&  Media Box&Informationen über die Medienformate innerhalb eines Tracks& keine\\\hline
+         minf&  Media Information&Container für Handler-spezifische Informationen& keine\\\hline
+         stbl&  Sample Table&Zeitstempel, Größen und Offsets& keine\\\hline
+         udta&  User Data&Benutzerdefinierte Metadaten (oft Hersteller-Tags)& keine\\\hline
+         meta&  Metadata&Moderne Metadaten-Strukturen (z. B. C2PA oder EXIF).& Zweideutige Struktur, die in der ISO-Norm und in Apple-Legacy unterschiedlich spezifiziert sind\\\hline
+         edts&  Edit Box&Definiert Abspiel-Modifikationen (z. B. Audio-Offsets).& keine\\\hline
+         dinf&  Data Information&Verweist auf den Ort der eigentlichen Mediendaten& keine\\\hline
+ stsd& Sample Description&Container für Codec-spezifische Konfigurationsdetails& Definierte sog. FullBox und besitzt erweiterte Header-Daten\\\hline
+ avc1& H.264 Entry&Parameter des H.264 Videocodecs&Beinhaltet massive binäre Parameter, welche die Baumstruktur unterbrechen und gesondert behandelt werden müssen\\\hline
+ hev1& HEVC Entry&Parameter des H.265 (HEVC) Videocodecs&Beinhaltet massive binäre Parameter, welche die Baumstruktur unterbrechen und gesondert behandelt werden müssen\\\hline
+ mp4a& Audio Entry&Container für Audio-Codec-Einstellungen (z. B. AAC).&Beinhaltet massive binäre Parameter, welche die Baumstruktur unterbrechen und gesondert behandelt werden müssen\\\hline
+ wave& QuickTime Audio&Alte Audio-Eigenschaften (Legacy)& keine\\\hline
+ mvex& Movie Extends&Kennzeichnet die Nutzung von Fragmented MP4 (Streaming).& keine\\\hline
+ moof& Movie Fragment&Metadaten für einzelnes Video-Fragment& keine\\\hline
+ traf& Track Fragment&Informationen innerhalb eines Movie Fragments& keine\\\hline
+ mfra& Movie Fragment Random Access&Index für den schnellen Zugriff auf Fragmente& keine\\\hline
+ gmhd& Generic Media Header&QuickTime-Container für allgemeine Medieninfos (Legacy)& keine\\\hline
+ clip& Clipping Box&Bestimmt den sichtbaren Bereich des Videos (Legacy)& keine\\\hline
+ matt& Track Matte Box&Definiert Masken für die Videospur (Legacy).& keine\\ \hline
+    \end{tabular}
+\end{table}

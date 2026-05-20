@@ -1,0 +1,41 @@
+
+\begin{table}[H]
+    \centering
+\caption{Box-Typen aus der Testdatei \url{D01_V_flat_move_0001.mp4}}
+\label{tab:placeholder}
+    \begin{tabular}{|l|>{\raggedright\arraybackslash}p{0.85\linewidth}|}\hline
+         \textbf{type}& \textbf{Beschreibung}
+\\\hline
+         ftyp& File Type Box: Deklariert Kompatibilität und Format (z. B. isom, 3gp4). Verifiziert die Datei als standardkonformes MP4.
+\\\hline
+         mdat& Media Data Box: Container für den gemultiplexten Binärstrom (Audio-/Video-Samples). Keine internen Metadaten.
+\\\hline
+         moov& Movie Box: Top-Level-Container für sämtliche Metadaten. Darf auf Dateiebene nur einmal vorkommen.
+\\\hline
+         mvhd& Movie Header Box: Enthält globale Timing-Parameter (Erstellungszeit, globale duration, timescale).
+\\\hline
+         trak& Track Box: Container für einen einzelnen, unabhängigen Medienstrom (z. B. Video oder Audio).
+\\\hline
+         tkhd& Track Header Box: Spezifiziert räumliche (Breite/Höhe in Festkommazahlen) und zeitliche Dimensionen des Tracks.
+\\\hline
+         mdia& Media Box: Container für die logische und zeitliche Definition der Track-Mediadaten.
+\\\hline
+         mdhd& Media Header Box: Definiert die trackspezifische Zeitbasis (timescale) und Dauer.
+\\\hline
+         hdlr& Handler Reference Box: Identifiziert den Medientyp des Tracks (z. B. vide für Video, soun für Audio).
+\\ \hline
+ minf&Media Information Box: Container für medienspezifische Metadaten (enthält u. a. stbl).
+\\\hline
+ stbl&Sample Table Box: Container für sämtliche Tabellen zur zeitlichen und physischen Lokalisierung von Samples.
+\\\hline
+ stsd&Sample Description Box: Definiert Codec-Spezifikationen (z. B. avc1, mp4a) und Initialisierungsparameter (SPS/PPS).
+\\\hline
+ stts&Time-to-Sample Box: Definiert die Dauer jedes Samples (Frames) in Ticks. Beweist VFR (Variable Framerate) oder CFR.
+\\\hline
+ stsz&Sample Size Box: Listet die exakte Größe (in Bytes) jedes einzelnen Samples im Track auf.
+\\\hline
+ stco&Chunk Offset Box: Listet die absoluten Byte-Offsets auf, bei denen Chunks (Gruppen von Samples) innerhalb der mdat beginnen.\\\hline
+    \end{tabular}
+    
+    
+\end{table}

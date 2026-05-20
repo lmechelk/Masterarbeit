@@ -1,0 +1,115 @@
+
+
+\chapter{Grundlagen}
+
+%%%%%
+
+\section{Architektur und Syntaktik von MP4-Containern}
+
+\begin{itemize}
+    \item  Containerformat für MPEG-4-Inhalte
+    \item  Seit 2001 standardisiert
+    \item Basiert auf dem Apple-QuickTime-Dateiformat, das insbesondere für MOV-Dateien genutzt wurde
+\end{itemize}
+
+\subsection{Formale Spezifikation und hierarchische Baumstruktur}
+
+\begin{itemize}
+    \item Der MP4-Container basiert auf dem ISO Base Media File Format (ISO/IEC 14496-12) und ist in der Norm ISO/IEC 14496-14 standardisiert \cite{iso_14496-14_2020}
+    \item Die Architektur ist objektorientiert und hierarchisch als Baumstruktur aufgebaut
+    \item Die elementaren Datenstrukturen werden als Boxen oder Atome bezeichnet (z. B. ftyp, moov, mdat)
+    \item Jede Box besteht aus einem Header, der die Länge und einen eindeutigen 4-Byte-Identifikator (Type) also durch einen Vier-Zeichen-Code (4CC) definiert, sowie den zugehörigen Daten oder weiter verschachtelten Sub-Boxen
+    \item Herstellerspezifische Freiheitsgrade in der Anordnung und Nutzung optionaler Boxen (z. B. udta oder uuid) 
+    \item Gerade diese optionalen Boxen werden von Herstellern und KI-Generatoren sehr unterschiedlich genutzt, und deren Existenz sowie Position sind besonders interessant
+    \item TODO: Gerade ziehen der Bezeichnungen Box, Container, Atom, ...
+\end{itemize}
+
+\subsection{Funktionale Trennung von Metadaten und Bitstrom}
+
+Struktur fordert Trennung zwischen Metadaten und dem eigentlichen audiovisuellen Bitstrom
+ftyp-Box deklariert an erster Stelle die Kompatibilität und das Format der Datei
+moov-Box fungiert als Top-Level-Container für alle Metadaten, Verknüpfungen und Timing-Informationen
+trak-Boxen enthalten die Konfigurationen für jeden individuellen Medienstrom
+mdat-Box speichert die rohen Audio- und Videodaten (für Container-Forensik nicht relevant)
+
+\subsection{Herstellerspezifische Syntaktik und proprietäre Erweiterungen}
+
+
+
+\begin{comment}
+Definition des MP4-Containers als objektorientierte Baumstruktur. Die Datei besteht aus verschachtelten Boxen/Atomen
+
+\begin{itemize}
+    \item Hierarchische Baumstruktur gemäß ISO/IEC 14496-14
+    \begin{itemize}
+        \item Oft tief verschachtelte Objektstruktur
+        \item Elementare Bausteine sind Atome/Boxen
+        \item Box Typen (ftyp, moov, trak)
+        \begin{itemize}
+        \item ftyp: Definiert den Dateityp und grundlegende Kompatibilitätsmerkmale
+        \item moov: Fungiert als Hauptcontainer für sämtliche Metadaten und die logische Struktur
+        \item trak: Spureninformationen sowie udta, meta und hdlr für spezifische Metadaten
+        \end{itemize}
+        \item Metadaten (udta, meta, hdlr)
+        \item Mediadaten (mdat -> uninteressant)
+        \item Free Space (free, skip -> Anomalien? Vielleicht Interessant?)
+    \end{itemize}
+    \item Testboxen:
+    \begin{itemize}
+        \item udta (User Data Box): Container für benutzerdefinierte oder anwendungsspezifische Zusatzinformationen (z. B. Copyright-Tags, GPS-Koordinaten, Kameraeinstellungen
+        \item colr (Colour Information Box): Spezifiziert den Farbraum, die Transfercharakteristika und die Farbmatrix des Videomaterials (z. B. ICC-Profile, BT.2020, nclx)
+        \item free (Free Space Box): Ungenutzten Speicherplatz (Padding) innerhalb der Datei
+        \item wide (Wide Box): Padding-Element (typischerweise 8 Byte groß), das historisch aus der Apple-QuickTime-Spezifikation stammt
+        \item beam (Beam-/Loop-Box): WhatsApp verwendet diese, um Videos als GIFs darzustellen oder um sie für die Vorschau zu optimieren
+    \end{itemize}
+\end{itemize}
+
+\subsection{Layout}
+
+Jede Box folgt diesem binären Layout:
+
+\begin{itemize}
+    \item \textbf{Size (4 Bytes):} Gesamtlänge der Box (Big-Endian).
+    \item \textbf{Type (4 Bytes):} Identifikator (z. B. \verb|ftyp|, \verb|moov|, \verb|mdat|).
+    \item \textbf{Extended Size (Optional, 8 Bytes):} Falls Size = 1 (für Boxen > 4 GB).
+    \item \textbf{Data:} Der eigentliche Inhalt oder weitere Sub-Boxen.
+\end{itemize}
+
+ \include{tabellen/mp4struktur}
+\end{comment}
+
+
+%%%%%
+
+
+
+\section{Taxonomie des Hashing und Approximate Matching}
+nutzen (insb. wiedererkennung)
+Abgrenzung kryptografischer Hashfunktionen (kollisionsresistent, z. B. SHA-1) von Similarity Hashes (Approximate Matching)
+
+\subsection{Kryptografische Hashfunktionen}
+
+\subsection{Approximate Matching}
+
+\subsection{Abstraktionsebenen}
+abstraktionsebenen (byte, semantic, syntactic - das ist relevant
+
+\subsection{Feature-Design}
+
+
+%%%%%
+
+\section{n-Gramm-Abstraktion und Set-Theorie}
+
+ 
+%%%%%
+
+
+
+\section{Distanzmetriken und Normalisierungsstrategien}
+
+\subsection{Jaccard-Index (symmetrisch)}
+
+\subsection{Tversky-Index (asymmetrisch, gewichtet)}
+
+\subsection{Normalization Strategy}

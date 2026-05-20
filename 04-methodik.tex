@@ -1,0 +1,172 @@
+\chapter{Methodik}
+
+%%%%%
+
+\section{Untersuchungsdesign}
+
+\begin{itemize}
+    \item Methodisches Fundament
+    \item Definition des Datensatzes
+    \item Zusammensetzung der Testdaten
+\end{itemize}
+
+%%%%%
+
+\section{Pipeline}
+
+\begin{enumerate}
+    \item Datensätze laden / Abspeichern der Dateipfade 
+    \begin{enumerate}
+        \item eva-7k (5684 datien)
+        \item vision (nur videos, 1918 dateien)
+        \item selfmade (neue iphone-modelle 7 dateien, ki-videos 14 dateien)
+    \end{enumerate}
+    \item Datensätze  strukturieren 
+    \begin{enumerate}
+        \item path
+        \item device
+        \item model
+        \item brand
+        \item content\_type
+        \item media\_type
+        \item processing
+        \item db\_name
+    \end{enumerate}
+    \item Struktur und n-Gramme extrahieren
+    \begin{enumerate}
+        \item json (atoms)
+        \item ngrams (n=2,3,4)
+    \end{enumerate}
+    \item Similarity aus allen Dateien n-zu-n berechnen
+    \begin{enumerate}
+        \item ground\_truth
+        \item source
+        \item similarity
+    \end{enumerate}
+\end{enumerate}
+
+
+
+ 
+
+%%%%%
+
+\section{Feature-Engineering für MP4}
+
+\begin{itemize}
+    \item Unterscheidung der Atome in Container und Leafs
+    \item Container enthalten weitere Boxen/Atome
+    \item Leafs nur Inhaltsdaten
+    \item Videoinhaltsdaten (in mdat) werden nicht in der Tiefe betrachtet
+    \item Valide Boxen (Container) werden als Feste Liste definiert (Allowlisting) und tiefer betrachtet
+    \item Boxen außerhalb des Allowlistings werden als Blätter/Leafes behandelt und gesammelt (z. B. mvhd, stsz, uuid) da diese Hersteller-spezifisch sein können
+    \item Feature-Engineering basiert auf der Prämisse des \textit{Multimedia Syntactic Similarity Hashing} (MSSH) nach Klier \& Baier \cite{klier_media_2025}
+    \item Dateigrammatik des ISO Base Media File Formats (ISOBMFF) wird als digitaler Fingerabdruck der Erzeugersoftware verstanden 
+\end{itemize}
+
+
+\subsection{Exklusion der Inhaltsdaten}
+\begin{itemize}
+    \item Um inhaltliche Unabhängigkeit zu gewährleisten, werden Boxen mit Video- und Ton-Daten ausgeschlossen
+    \item mdat-Container beanspruchen in der Regel 95 Prozent der Dateigröße enthalten jedoch keinerlei ISO-konforme Unteratome
+\end{itemize}
+
+
+\subsection{Container-Allowlist und Berücksichtigung von Legacy-Spezifikationen}
+
+\begin{itemize}
+    \item MP4-Format erlaubt theoretisch unendlich viele proprietäre Boxen
+    \item Allowlist als methodischer Filter, welche Container relevante Untercontainer enthalten
+    \item Berücksichtigung von historisch gewachsenen Spezifikationen und Boxen (Legacy Types) 
+    \item Basis Standard ISO/IEC 14496-12: \textbf{moov, trak, mdia, minf, stbl, udta, meta, edts, dinf, stsd, mvex, moof, traf, mfra} \cite{iso_14496-12_2022}
+    \item Codec-Erweiterungen ISO/IEC 14496-14 und -15 : \textbf{mp4a, avc1, hev1} \cite{iso_14496-14_2020}\cite{iso_14496-15_2024}
+    \item Legacy aus Apple-Quick-Time-Zeiten: \textbf{gmhd, clip, matt, wave}\cite{noauthor_quicktime_nodate}
+    \item Siehe \cref{tab:mp4allowlisting}
+\end{itemize}
+
+\include{tabellen/mp4allowlisting}
+
+\subsection{Leafs}
+\begin{itemize}
+    \item Im Kontext synthetischer Medien sind bestimmte Atome besonders relevant
+    \item Auftreten, Größe und Position der uuid-Box (von ISO als Blanko-Container erfunden) dient als primärer Herkunftsnachweis 
+    \item Nutzung uuid durch die Coalition for Content Provenance and Authenticity (C2PA) standardisiert 
+    \item Integration kryptografischer Metadaten-Manifeste führt bei serverseitigen KI-Muxern häufig zu massiven uuid-Blöcken am Dateianfang 
+    \item Inhalt als auch Auslesen der 16-Byte-Signatur der uuid ist bei syntaktischer Auswertung irrelevant, Inhalt bleibt unbetrachtete Blackbox
+\end{itemize}
+
+\subsection{Transformation}
+
+\begin{itemize}
+    \item Überführung des n-dimensionalen MP4-Baumes in ein eindimensionales, serialisiertes Format 
+    \item Topologie  durch feste Syntaxregeln
+    \item Top-Level-Atome werden  verkettet und Verschachtelungen (z. B. Track-Struktur innerhalb moov) durch Klammern abgebildet
+    \item Resultat: Kompakter Struktur-String zur Verwendung von n-Grammen
+\end{itemize}
+
+\section{Ähnlichkeitsanalyse}
+
+\begin{itemize}
+    \item Buzzwords: Feature Sets, Similarity Digest, Similarity Calculation
+    \item Zerlegung der sequenziellen Atom-Kette in diskrete Token, wobei jedes 4-Byte-Atom als eigenständiges Merkmal behandelt wird 
+    \item Sliding-Window-Verfahren überführt Token-Sequenz in n-Gramme unterschiedlicher Längen, um lokale Nachbarschaften abzubilden
+    \item Mengen an n-Grammen bilden den Similarity Digest, der als kompakter, mathematisch handhabbarer Fingerabdruck der ursprünglichen Datei fungiert 
+    \item Wahl der Vergleichsmetrik  (TODO)
+\end{itemize}
+
+
+
+%%%%%
+
+
+
+\section{Implementierung des Prototyps}
+
+https://github.com/lmechelk/mp4-structure-hash
+
+\subsection{Parse}
+
+\begin{itemize}
+    \item mp4\_parse.py (siehe \cref{ap:parsepy})
+    \item Umsetzung der Feature-Extraktion erfolgt durch Python-basierten Parser, dessen grundlegende I/O-Architektur auf dem Open-Source-Skript mp4atoms.py von Emanuele Ruffaldi aufbaut \cite{emanuele_ruffaldi_dump_2024}
+    \item Speichereffizientes Lesen der einzelnen Box-Header wird dabei unverändert über Memory Mapping (mmap) realisiert
+    \item Steuerung über Allowlist, in die der Parser rekursiv absteigen darf
+    \item Payload wird explizit von der Erfassung ausgeschlossen und Beachtung der "Large Box" bei riesigen Videodateien \cite[Kap. 4.2]{iso_14496-12_2022}
+    \item Auslesen der 8-Byte Header (enthält Box-Größe und 4CC)
+    \item Implementierung einer dynamischen Offset-Korrektur gem. \cref{tab:mp4ausnahmeboxen} zur fehlerfreien Traversierung normativer Ausnahmen im ISO-Standard, sog. "Full Box" (Sonderbehandlung für diese Boxen: meta, stsd, avc1, hev1, mp4a)
+    \item Ausgelesene Baumstruktur wird aggregiert und als eindimensionalen String exportiert, der aber weiterhin Informationen zur Topologie enthält
+    \item Beispiel String-Format: moov(mvhd,trak(tkhd))
+    \item Struktur wird also in ein Format überführt, das den theoretischen Anforderungen des Syntactic Similarity Hashing (vgl. Klier \& Baier\cite{klier_github_2025}) für den maschinellen Vergleich gerecht wird
+\end{itemize}
+
+\include{tabellen/mp4ausnahmeboxen}
+
+\subsection{Compare}
+
+\begin{itemize}
+    \item mp4\_compare.py (siehe \cref{ap:comparepy})
+    \item Klasse \verb|Mp4StructureDigest| übernimmt die Bereinigung des Struktur-Strings von sämtlichen syntaktischen Separatoren (Klammern, Pipes)
+    \item Speicherung als Liste durch Slicing als 4-Zeichen-Blöcke
+    \item Generierung der n-Gramme erfolgt über eine Methode, welche die Atome zu unveränderlichen Tuples zusammenfasst und Dubletten durch die Überführung in Python-Sets eliminiert.
+    \item Klasse \verb|SimilarityCalculator| führt die mathematischen Mengenoperationen durch 
+\end{itemize}
+
+
+
+%%%%%
+
+
+
+\section{Eigener KI-Video-Datensatz}
+
+\begin{itemize}
+    \item Auswahl der Generatoren
+    \item Vorgehen der Erstellung von Testvideos
+    \item Text-Prompts und Bildvorlagen
+    \item Link auf Datensatz
+    \item Generative KI-Modelle können bereits jetzt fotorealistische Videos anhand von Text oder Deepfakes mittels Bildmaterial generieren und überwiegend im MP4-Containerformat ausgeben (siehe Table 2)
+    \item z. B. Imagine 0.9 von xAI das über die Plattform Grok angeboten wird
+\end{itemize}
+
+
+\input{tabellen/kivideogeneratoren}
