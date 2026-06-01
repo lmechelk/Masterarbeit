@@ -2,5 +2,55 @@
 
 Dieses Kapitel beschreibt die formale Architektur, den inneren Aufbau sowie die syntaktischen Eigenschaften des weit verbreiteten MP4-Containerformats.
 
+%%%
+
 \subsection{Formale Spezifikation und hierarchische Baumstruktur }
+
+Die moderne MP4-Dateistruktur geht auf proprietäre Entwicklungen zurück und basiert im Kern auf dem von Apple im Jahr 1990 veröffentlichten QuickTime-Dateiformat.\cite{apple_quicktime_2001}
+
+Auf dieser Grundlage wurde das ISO Base Media File Format (ISOBMFF) seit 2001 standardisiert, in der Norm ISO/IEC 14496-12 seit 2004 definiert und dient seitdem als generische Vorlage für die Speicherung zeitbasierter Medien. \cite[Kap. 4]{iso_14496-12_2022}
+
+Das eigentliche MP4-Format ist eine spezifische Ausprägung dieses Basisstandards, die speziell für die Kapselung von MPEG-4-Inhalten entworfen und in der Norm ISO/IEC 14496-14 formalisiert wurde. \cite[Kap. 1]{iso_14496-14_2020}
+
+Ergänzend dazu definiert die Spezifikation ISO/IEC 14496-15, wie spezifische, moderne Videodatenströme in diese Struktur integriert werden. \cite[Kap. 1]{iso_14496-15_2024}
+
+Die grundlegende Einheit dieser Dateiformate wird im ISOBMFF als \(Box\) bezeichnet, während in der QuickTime-Spezifikation traditionell der Begriff \(Atom\) verwendet wird \cite[Kap. 4.1]{iso_14496-12_2022} \cite{apple_quicktime_2001}. Eine MP4-Datei besteht aus einer lückenlosen Abfolge solcher Boxen.\\
+
+Jede Box ist ein objektorientierter Baustein und beginnt zwingend mit einem Header. Dieser Header ist standardmäßig acht Byte groß und besteht aus zwei Feldern\cite[Kap. 4.2]{iso_14496-12_2022} :
+
+\begin{enumerate}
+    \item Einem 32-Bit-Wert, der die Gesamtgröße der Box in Byte angibt
+    \item Einem vier Zeichen langen Bezeichner (Four-Character-Code oder 4CC), der den Typ der Box definiert (z. B. \(moov\))
+\end{enumerate}
+
+Wenn die in einer Box enthaltenen Daten den maximalen 32-Bit-Wertbereich überschreiten, wird die Größe im regulären Header auf den Wert 1 gesetzt. In diesem Fall folgt direkt nach dem Header ein erweitertes 64-Bit-Feld (\(largesize\)), um auch sehr große Videodateien abbilden zu können. \cite[Kap. 4.2]{iso_14496-12_2022} 
+
+Ein zentrales Merkmal der MP4-Architektur ist ihre tief verschachtelte, hierarchische Baumstruktur. Bestimmte Boxen fungieren als reine Container. Sie enthalten keine eigenen audiovisuellen Nutzdaten, sondern schließen weitere Unterboxen in sich ein. \cite[Kap. 4.1]{iso_14496-12_2022} \
+
+Auf der obersten Ebene (Root-Level) der Datei stehen in der Regel nur wenige globale Boxen:\cite[Kap. 4.3]{iso_14496-12_2022} 
+
+\begin{itemize}
+    \item \(ftyp\)-Box (File Type Box): Sie muss zwingend als erste Box in der Datei stehen und sie teilt einlesenden Systemen mit, nach welchen genauen Spezifikationen und kompatiblen Versionen die Datei erstellt wurde
+    \item  \(moov\)-Box (Movie Box): Dies ist der Hauptcontainer für die Präsentationsmetadaten und in ihr verzweigt sich die Struktur weiter, beispielsweise in Spuren (\(trak\)), um die technischen Eigenschaften des Videos zu definieren
+    \item  \(mdat\)-Box (Media Data Box): Sie enthält die eigentlichen, komprimierten Audio- und Videodaten
+\end{itemize}
+
+Durch diese strikte Eltern-Kind-Beziehung der Boxen hängt die letztliche strukturelle Topologie einer Datei stark davon ab, wie die erzeugende Software den Standard interpretiert und implementiert hat.\cite{gloe_forensic_2014}
+
+%%%
+
+\subsection{Funktionale Trennung von Metadaten und Bitstrom}
+
+Ein zentrales Architekturmerkmal des MP4-Formats ist die strikte funktionale und physische Trennung zwischen den beschreibenden Metadaten und dem eigentlichen audiovisuellen Bitstrom \cite[Kap. 4.1]{iso_14496-12_2022}. Während die Medienpräsentation und alle steuernden Informationen vollständig innerhalb der Movie-Box (\(moov\)) gekapselt sind, liegen die komprimierten Rohdatenströme isoliert in der Media-Data-Box (\(mdat\)) \cite[Kap. 8.1.1, Kap. 8.10.1]{iso_14496-12_2022}.
+
+Die logische Verknüpfung erfolgt über ein tabellarisches Indizierungsverfahren innerhalb der Metadaten-Hierarchie \cite[Overview]{apple_quicktime_2001}. Zu diesem Zweck enthält die Sample-Table-Box (\(stbl\)) innerhalb der Spuren (\(trak\)) die mathematischen Zeiger, welche die exakte Position, Größe und zeitliche Abfolge jedes einzelnen Medien-Samples innerhalb der \(mdat\)-Box definieren \cite[Kap. 8.5.1]{iso_14496-12_2022}. 
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\linewidth]{grafiken/mp4_2.png}
+    \caption{Enter Caption}
+    \label{fig:placeholder}
+\end{figure}
+
+Für die syntaktische Videoquellenerkennung und die Generierung eines Similarity Hashes bietet diese Architektur den Vorteil, dass der eigentliche Inhalt des Videos für die Analyse irrelevant ist. Die forensische Relevanz dieser Trennung zeigt sich darin, dass die Erzeugungssoftware gänzlich freie Hand bei der Anordnung, Verschachtelung und Dimensionierung der Index-Tabellen innerhalb der Metadaten-Box besitzt. Da Kamera- und Softwarehersteller diese Freiheitsgrade beim Enkodieren unterschiedlich interpretieren, bildet die isolierte Struktur der Metadaten eine charakteristische Signatur des Erzeugungsprozesses, welche sich signifikant zwischen einzelnen Geräteherstellern unterscheidet \cite{gloe_forensic_2014}.
 
