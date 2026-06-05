@@ -1,0 +1,12 @@
+\section{Forensische Video-Datensätze}
+
+%%% noch komplett korrigieren
+
+
+Die Evaluation containerbasierter Forensikverfahren und die Gewährleistung der wissenschaftlichen Reproduzierbarkeit erfordern den Rückgriff auf standardisierte Referenzdatensätze. In der Domäne der Video-Quellenerkennung haben sich zwei Dateisammlungen als primäre Benchmarks etabliert, welche unterschiedliche forensische Schwerpunkte abbilden.
+
+Der \textit{VISION}-Datensatz ist primär für die Quellengeräte- und Markenidentifikation konzipiert \cite{shullani_vision_2017}. Er umfasst über 1.900 Videodateien, die sowohl im pristine Zustand unmittelbar von verschiedenen Smartphone-Modellen aufgezeichnet als auch über Social-Media-Plattformen wie YouTube und WhatsApp distribuiert wurden \cite[Kap. 1]{shullani_vision_2017}. Aufgrund dieser Struktur eignet sich VISION zur Validierung von Signaturen nativer Kameras sowie zur Analyse plattformspezifischer Re-Muxing-Effekte.
+
+Komplementär hierzu fokussiert sich der \textit{EVA-7K}-Datensatz auf die Erkennung nachträglicher Integritätsverletzungen und Software-Manipulationen \cite{yang_efficient_2020}. Er enthält rund 7.000 Videos, die systematisch mittels verschiedener Editing-Toolboxes (darunter \(ffmpeg\), \(Avidemux\) und \(Adobe Premiere\)) modifiziert wurden \cite[S. 947]{yang_efficient_2020}. EVA-7K erlaubt somit eine präzise Klassifizierung der zur Videoverarbeitung eingesetzten Software-Encoder anhand ihrer verbleibenden Spuren im Metadaten-Container.
+
+Trotz ihrer weiten Verbreitung offenbaren beide Datensätze im Kontext moderner Bedrohungsszenarien einen signifikanten Selektionsbias. Da die Erstellung dieser Korpora historisch vor dem Durchbruch diffusionsbasierter Videogeneratoren erfolgte, weisen sie keinerlei Repräsentanz für vollständig synthetische, KI-generierte MP4-Container auf. Da das Fehlen dieser herstellerspezifischen Strukturen (wie den in Abschnitt \ref{sec:videoquellen_spurenbildung} diskutierten C2PA-Manifesten) die Validität eines universellen Similarity-Hash-Verfahrens einschränken könnte, erwächst daraus eine methodische Notwendigkeit. Für eine verlässliche Evaluation des in dieser Arbeit entwickelten Feature-Designs (TF1) bezüglich KI-generierter Quellen (TF2) müssen die bestehenden Testdaten folglich um ein dediziertes, synthetisches Korpus erweitert werden.

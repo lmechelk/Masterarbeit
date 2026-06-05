@@ -1,0 +1,41 @@
+\section{Approximate Matching und Similarity Hashing}
+
+Um große Mengen an Videodateien performant auf ihre Erzeugungsquelle hin zu untersuchen, bedarf es mathematischer Verfahren, die strukturelle Merkmale in kompakte, vergleichbare Repräsentationen überführen. Das Konzept des Similarity Hashing (häufig synonym als Approximate Matching bezeichnet) bietet hierfür den methodischen Rahmen \cite[Kap. 2]{breitinger_approximate_2014}.
+
+%%%
+
+\subsection{Abgrenzung zu kryptografischen Hashfunktionen}
+
+Kryptografische Hashfunktionen (wie SHA-256) sind deterministisch und kollisionsresistent konzipiert. Sie unterliegen dem sogenannten Lawineneffekt, bei dem bereits die Änderung eines einzigen Bits in der Eingabedatei zu einem völlig unkorrelierten Hashwert führt. Sie eignen sich daher ausschließlich zur strikten Integritätsprüfung exakter Duplikate.
+
+In der forensischen Quellenerkennung weisen Containerstrukturen derselben Kamera oder desselben Software-Encoders zwar hochgradig ähnliche, aber aufgrund dynamischer Metadaten (wie Zeitstempel oder GPS-Koordinaten) selten identische Bitfolgen auf. Similarity Hashing löst dieses Problem, indem es Eingaben, die sich strukturell oder inhaltlich ähneln, auf Hashwerte abbildet, die ebenfalls eine mathematisch messbare Ähnlichkeit aufweisen \cite[Kap. 2.1]{breitinger_approximate_2014}. \\
+
+TODO: Beispiel und/oder Grafik für Digest\\
+
+Das Resultat dieses Hashing-Prozesses wird als Similarity Digest bezeichnet \cite{roussev_data_2010}. Dieser Digest fungiert als kompakter Fingerabdruck der ursprünglichen Datei, in dem alle extrahierten Strukturmerkmale (Features) aggregiert sind. Durch die Berechnung einer Distanzmetrik (beispielsweise des Jaccard-Koeffizienten) zwischen zwei solchen Similarity Digests lässt sich der Grad der strukturellen Verwandtschaft quantifizieren.
+
+%%%
+
+\subsection{Abstraktionsebenen und Feature-Design}
+
+Die Identifikation von Ähnlichkeiten erfordert eine klare Definition der betrachteten Datenebene. Breitinger u. a. unterteilen Approximate-Matching-Verfahren in drei Abstraktionsebenen \cite[Kap. 2.2]{breitinger_approximate_2014}:
+
+\begin{enumerate}
+    \item \textbf{Byte-Ebene:} Analyse der rohen, binären Bitsequenzen. (Anfällig für geringfügige Variationen und Komprimierung).
+    \item \textbf{Syntaktische Ebene:} Analyse der internen Datenstruktur, Grammatik oder Format-Topologie (z.\,B. Datei-Header, Container-Atome).
+    \item \textbf{Semantische Ebene:} Analyse des für Menschen wahrnehmbaren Inhalts (z.\,B. visuelle Features eines Bildes oder Videos).
+\end{enumerate}
+
+Die Quellenerkennung mittels MP4-Container-Analyse operiert ausschließlich auf der syntaktischen Ebene. Sie ignoriert den visuellen Inhalt (Semantik) sowie den Payload der \textit{mdat}-Box (Byte-Ebene) und konzentriert sich auf strukturelle Merkmale wie die Anordnung oder das Vorhandensein der ISO-Boxen.\\
+
+TODO: Beispiel für Features\\
+
+TODO: Anschauliche Grafik mit untersch. Boxen zweier Beispieldateien\\
+
+Der kritische Erfolgsfaktor eines jeden Similarity-Hash-Verfahrens liegt im Feature-Design, also der Frage, welche Merkmale extrahiert und in den Hash überführt werden \cite[Kap. 1]{roussev_data_2010}. Für die tief verschachtelte Baumstruktur eines MP4-Containers bedeutet dies, dass das gewählte Feature-Design die mehrdimensionale Topologie (wie Eltern-Kind-Relationen, proprietäre Erweiterungen) berücksichtigen sollte, um eine belastbare Quellenzuordnung zu ermöglichen.
+
+%%%
+
+\subsection{Distanzmetriken für Similarity Digests}
+
+TODO: Kurzer Abriss zu Jaccard und Tversky und der etablierten Metric (ROC, AUC) zu Performance (und auch Effizenz?) in den Papern in Related Work

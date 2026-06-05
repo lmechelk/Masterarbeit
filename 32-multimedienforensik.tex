@@ -1,0 +1,17 @@
+\section{Similarity Hashing in der Multimedien-Forensik}
+\label{sec:similarity_hashing_multimedia}
+
+Einen grundlegenden Beitrag in diesem Bereich lieferten Klier und Baier mit dem Framework des Media Source Similarity Hashing (MSSH), welches als das erste rein syntaktische Approximate-Matching-Verfahren zur Quellenerkennung eingeführt wurde \cite[Kap. 1]{klier_media_2025}. MSSH extrahiert die Sequenz der Format-Marker von JPEG-Dateien, überführt diese mittels n-Gramm-Sequenzierung in ein Token-Set und komprimiert das Ergebnis zu einem effizient vergleichbaren Similarity Digest (siehe \cref{fig:vorgeh-mssh}) \cite[Kap. 3]{klier_media_2025}.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\linewidth]{grafiken/vorgehen-mssh.drawio.png}
+    \caption{TODO: vorgehen-mssh.drawio.png}
+    \label{fig:vorgeh-mssh}
+\end{figure}
+
+Das Konzept des $n$-Gramms stammt ursprünglich aus der Computerlinguistik und bezeichnet eine Abfolge von $n$ aufeinanderfolgenden Elementen in einer Datenreihe \cite[Kap. 3]{jurafsky_speech_2026}. Wendet man dies auf Dateistrukturen an, wandert ein festes Sichtfenster (Sliding Window) der Länge $n$ schrittweise über die extrahierten Format-Marker. So entsteht eine Menge an überlappenden Teilsequenzen. Der Vorteil dieser Methode ist, dass lokale Bausteine und ihre Reihenfolge erhalten bleiben. Dadurch lassen sich Dateien auch dann zuverlässig vergleichen, wenn sie nicht vollständig, sondern nur in bestimmten Teilbereichen strukturell übereinstimmen \cite[Kap. 3.2]{klier_media_2025}.
+
+Die exakte Reihenfolge und das Auftauchen struktureller Elemente besitzen für die forensische Differenzierung von Quellen eine hohe Prägnanz. Bei der Übertragung dieses Prinzips auf Videodaten ergeben sich neue Herausforderungen. Wie in Abschnitt \ref{kap:aufbau_mp4} dargelegt, basiert die Architektur von MP4-Dateien nicht auf einer linearen Abfolge von Markern, sondern auf einer tief verschachtelten, objektorientierten Baumstruktur \cite[Kap. 4]{iso_14496-12_2022}.
+
+Für das in dieser Arbeit zu entwickelnde Feature-Design (TF1) folgt daraus, dass die lineare Sequenz und die relative Reihenfolge der Boxen als wichtiges Indiz beibehalten und beim Extraktionsprozess sowie der linearen Darstellung der Struktur beachtet werden sollten.

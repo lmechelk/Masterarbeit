@@ -1,5 +1,12 @@
 \chapter{Methodik}
 
+\begin{figure}
+    \centering
+    \includegraphics[width=1\linewidth]{grafiken/vorgehen-mp4.drawio.png}
+    \caption{TODO: vorgehen-mp4.drawio.png}
+    \label{fig:placeholder}
+\end{figure}
+
 %%%%%
 
 \section{Untersuchungsdesign}
@@ -13,6 +20,13 @@
 %%%%%
 
 \section{Pipeline}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1\linewidth]{grafiken/pipeline.drawio.png}
+    \caption{TODO: pipeline.drawio.png}
+    \label{fig:pipeline}
+\end{figure}
 
 \begin{enumerate}
     \item Datensätze laden / Abspeichern der Dateipfade 
@@ -80,7 +94,7 @@
     \item Berücksichtigung von historisch gewachsenen Spezifikationen und Boxen (Legacy Types) 
     \item Basis Standard ISO/IEC 14496-12: \textbf{moov, trak, mdia, minf, stbl, udta, meta, edts, dinf, stsd, mvex, moof, traf, mfra} \cite{iso_14496-12_2022}
     \item Codec-Erweiterungen ISO/IEC 14496-14 und -15 : \textbf{mp4a, avc1, hev1} \cite{iso_14496-14_2020}\cite{iso_14496-15_2024}
-    \item Legacy aus Apple-Quick-Time-Zeiten: \textbf{gmhd, clip, matt, wave}\cite{noauthor_quicktime_nodate}
+    \item Legacy aus Apple-Quick-Time-Zeiten: \textbf{gmhd, clip, matt, wave}\cite{apple_quicktime_2001}
     \item Siehe \cref{tab:mp4allowlisting}
 \end{itemize}
 
@@ -127,7 +141,6 @@ https://github.com/lmechelk/mp4-structure-hash
 \subsection{Parse}
 
 \begin{itemize}
-    \item mp4\_parse.py (siehe \cref{ap:parsepy})
     \item Umsetzung der Feature-Extraktion erfolgt durch Python-basierten Parser, dessen grundlegende I/O-Architektur auf dem Open-Source-Skript mp4atoms.py von Emanuele Ruffaldi aufbaut \cite{emanuele_ruffaldi_dump_2024}
     \item Speichereffizientes Lesen der einzelnen Box-Header wird dabei unverändert über Memory Mapping (mmap) realisiert
     \item Steuerung über Allowlist, in die der Parser rekursiv absteigen darf
@@ -144,7 +157,6 @@ https://github.com/lmechelk/mp4-structure-hash
 \subsection{Compare}
 
 \begin{itemize}
-    \item mp4\_compare.py (siehe \cref{ap:comparepy})
     \item Klasse \verb|Mp4StructureDigest| übernimmt die Bereinigung des Struktur-Strings von sämtlichen syntaktischen Separatoren (Klammern, Pipes)
     \item Speicherung als Liste durch Slicing als 4-Zeichen-Blöcke
     \item Generierung der n-Gramme erfolgt über eine Methode, welche die Atome zu unveränderlichen Tuples zusammenfasst und Dubletten durch die Überführung in Python-Sets eliminiert.
