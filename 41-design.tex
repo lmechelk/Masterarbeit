@@ -1,0 +1,22 @@
+\section{Untersuchungsdesign}
+
+% Verfahrensteckbrief me
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{>{\raggedright\arraybackslash}p{0.2\linewidth}>{\raggedright\arraybackslash}p{0.75\linewidth}}\toprule\toprule
+         \textbf{Verfahren}& Syntaktisches Similarity Hashing\\\hline\hline
+         \textbf{Untersuchungsziele}& SCI (Unterscheidung nativer Kameraaufnahmen und KI-generierter Videos) und SNA (Erkennung komprimierter Social-Media-Videos)\\\hline
+         \textbf{Feature}& Extrahierte 4CC-Box-Informationen unter Ausschluss der Inhaltsdaten (\(mdat\)) und volatile Metadaten (z. B. Zeitstempel wie \(creationTime\))\\\hline
+         \textbf{Symbolische Repräsentation} (T1 bis T5)& TODO: linearisiert die in JSON erfasste hierarchische Baumstruktur in eindimensionale Token-Sequenzen, ohne vertikale Pfade zu extrahieren\\\hline
+         \textbf{Feature-Repräsentation}& n-Gramm-Sets (Similarity Digest)\\\hline
+         \textbf{Feature-Selektion}& Allowlisting relevanter Container-Boxen und Dubletteneliminierung\\\hline
+         \textbf{Klassifikator}& Approximate Matching (Ähnlichkeitsberechnung mittels Jaccard-Index oder asymmetrischem Tversky-Index)\\\hline
+         \textbf{Datenbanken}& VISION, EVA-7K und ein eigens erstellter Datensatz zu KI-generierten Videos\\\hline
+         \textbf{Test- und Trainingsdaten}& Bildung von Referenz-Hashes (Source Similarity Digests) aus einer kleinen, diversen Teilmenge (z. B. ein Bild pro Aufnahmemodus), Abgleich mit allen restlichen Testdateien\\\hline
+         \textbf{Evaluation}&Native Aufnahmen, Social Media, synthetische Inhalte und gemischte Inhalte\\\hline
+         \textbf{Metriken}&Receiver Operating Characteristic (ROC) und Area Under Curve (AUC)\\ \bottomrule\bottomrule
+    \end{tabular}
+    \caption{Verfahrenssteckbrief zum Similartiy Hashing für Mp4-Dateien (Eigene Darstellung)}
+    \label{tab:steckbrief-mp4}
+\end{table}

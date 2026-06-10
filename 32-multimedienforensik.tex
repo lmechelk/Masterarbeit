@@ -1,9 +1,29 @@
 \section{Similarity Hashing in der Multimedien-Forensik}
 \label{sec:similarity_hashing_multimedia}
 
+\begin{table}
+    \centering
+    \begin{tabular}{>{\raggedright\arraybackslash}p{0.2\linewidth}>{\raggedright\arraybackslash}p{0.75\linewidth}}\toprule\toprule
+         \textbf{Studie}& Klier und Baier (2025)\cite{klier_media_2025}\\\hline
+         \textbf{Verfahren}& MSSH (Media Source Similarity Hashing)\\\hline\hline
+         \textbf{Untersuchungsziele}& SCI (Source Camera Identification auf Geräte-, Modell- und Markenebene, z. B. zur Unterscheidung von Downloads und Eigenproduktionen in CSAM-Ermittlungen) und SNA (Erkennung der Verarbeitung durch 5 Social-Media-Plattformen)\\\hline
+         \textbf{Feature}& Strukturelle Marker und deren Reihenfolge (z. B. das 2-Gramm D8E1 aus den aneinandergereihten JPEG-Markern SOI und APP1)\\\hline
+         \textbf{Symbolische Repräsentation} (T1 bis T5)& TODO\\\hline
+         \textbf{Feature-Repräsentation}& n-Gramm-Sets (Similarity Digest)\\\hline
+         \textbf{Feature-Selektion}& Dubletteneliminierung (reduziert die Sequenzen auf eine rein binäre Mengen-Repräsentation, Worthäufigkeiten werden ignoriert)\\\hline
+         \textbf{Klassifikator}& Approximate Matching (Ähnlichkeitsberechnung mittels Jaccard-Index oder asymmetrischem Tversky-Index)\\\hline
+         \textbf{Datenbanken}& 7 Bilddatensätze (u. A. VISION)\\\hline
+         \textbf{Test- und Trainingsdaten}& Bildung von Referenz-Hashes (Source Similarity Digests) aus einer kleinen, diversen Teilmenge (z. B. ein Bild pro Aufnahmemodus), Abgleich mit allen restlichen Testdateien\\\hline
+         \textbf{Evaluation}&Klassifikation auf Geräte-, Modell- und Markenebene sowie Erkennung der Verarbeitung durch 5 Social-Media-Plattformen\\\hline
+         \textbf{Metriken}&Receiver Operating Characteristic (ROC) und Area Under Curve (AUC)\\ \bottomrule\bottomrule
+    \end{tabular}
+    \caption{Verfahrenssteckbrief zum Media Source Similarity Hashing (Eigene Darstellung nach Klier und Baier\cite{klier_media_2025} }
+    \label{tab:steckbrief-klier}
+\end{table}
+
 Einen grundlegenden Beitrag in diesem Bereich lieferten Klier und Baier mit dem Framework des Media Source Similarity Hashing (MSSH), welches als das erste rein syntaktische Approximate-Matching-Verfahren zur Quellenerkennung eingeführt wurde \cite[Kap. 1]{klier_media_2025}. MSSH extrahiert die Sequenz der Format-Marker von JPEG-Dateien, überführt diese mittels n-Gramm-Sequenzierung in ein Token-Set und komprimiert das Ergebnis zu einem effizient vergleichbaren Similarity Digest (siehe \cref{fig:vorgeh-mssh}) \cite[Kap. 3]{klier_media_2025}.
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.9\linewidth]{grafiken/vorgehen-mssh.drawio.png}
     \caption{TODO: vorgehen-mssh.drawio.png}
