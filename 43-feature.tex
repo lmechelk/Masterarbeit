@@ -7,7 +7,9 @@ TODO: Weitere Stichpunkte für alle Unterkapitel sammeln und ausformulieren
 \begin{itemize}
     \item Auslesen der Datei über eigenen Parser (speichereffizient per Memory Mappin)
     \begin{itemize}
-        \item Transparenz nicht nur "was" sondern "wie"
+        \item Transparenz nicht nur \textit{was} sondern \textit{wie}
+        \item Verweis auf Probleme mit etablierten Parsern (yang2025) 
+        \item Iuliani 2019 konnte D01, D12, D17 und D35 nicht korrekt parsen
     \end{itemize}
     \item Extraktion der Boxen 8-Byte-Header (Größe und 4CC-Bezeichner) 
     \item Inhalt der mdat ignorieren
@@ -35,6 +37,8 @@ TODO: Weitere Stichpunkte für alle Unterkapitel sammeln und ausformulieren
 
 \begin{itemize}
     \item Hierarchische MP4-Baum wird in eine eindimensionale Sequenz überführt
+    \item In Anlehung an das Vorgehen von Klier und Baier \cite{klier_media_2025} werden die identifizierenden 4CC der relevanten Boxen aus ihrer hierarchischen Baumstruktur in eine serialisierte, eindimensionale Token-Sequenz linearisiert, um das n-Gramm-basierte Feature-Design auf das MP4-Format zu übertragen
+    \item Während Klier und Baier für die Merkmalsextraktion auf strukturelle JPEG-Marker und eingebettete Exif-Tags zurückgreifen, werden in dieser Arbeit als direktes MP4-Äquivalent die identifizierenden 4CC der hierarchischen Boxen sowie deren tief unter-Boxen, die als Endknoten (Leafs) dienen, verwendet. Hierbei sind insbesondere die herstellerspezifischen \(udta\)-Boxen hervorzuheben.
     \item \textbf{n-Gramm-Bildung:} Die Sequenz wird mittels eines Sliding-Window-Verfahrens in 2-Gramme überführt 
     \item Fenster ist 8 Zeichen lang (erfasst exakt 2 Token) und verschiebt sich um 4 Zeichen (1 Token) weiter 
     \item Lokale Nachbarschaft unmittelbar benachbarter Boxen bleibt erhalten

@@ -1,7 +1,88 @@
 \chapter{Evaluation und Ergebnisse}
 
+
+Vorgehen der durchgeführten Evaluationen, basierend auf den etablierten Untersuchungszielen der Container-Forensik (sci, mti, sna, md).
+
+
+\begin{table}[!ht]
+    \centering\small
+    \begin{threeparttable}
+        
+        \begin{tabular}{>{\raggedright\arraybackslash}p{0.1\linewidth}>{\raggedright\arraybackslash}p{0.17\linewidth}>{\raggedright\arraybackslash}p{0.3\linewidth}>{\raggedright\arraybackslash}p{0.3\linewidth}}\toprule\toprule
+            \textbf{Kategorie}& \textbf{Ziel} & \textbf{Testdaten} (Filter) & \textbf{Trainingsdaten} (Source Digest Filter) \\\hline\hline
+ \multicolumn{4}{l}{\textbf{Native Aufnahmen }(VISION)}\\\hline\hline
+            & Gerätemodell erkennen & Nur unveränderte Originalaufnahmen (processing=original) & Ein Digest für jedes der 34 Modelle (device, processing=original)\tnote{a} \\\hline
+            & Marken erkennen & Nur unveränderte Originalaufnahmen (processing=original) & Ein Digest für jede der 10 Hersteller (brand, processing=native)\tnote{a} \\\hline
+            & Betriebssystem erkennen& Nur unveränderte Originalaufnahmen (processing=original) & Ein Digest für jeweils iOS und Android\\\hline\hline
+ \multicolumn{4}{l}{\textbf{Social Media Videos} (VISION, EVA-7K)}\\\hline\hline
+            
+            & Erkennung der Plattform& Videos nach Plattform-Upload (processing z.B. youtube, whatsapp, facebook, tiktok)& Ein Digest für jede der 5 Social-Media-Plattformen über alle Geräte hinweg (processing, tampering=native)\\\hline\hline
+ \multicolumn{4}{l}{\textbf{Synthetische Videos} (Eigener Datensitz)}\\\hline\hline
+            
+            & Erkennung des KI-Generators / KI-Modells& Videos die auf Text- oder Bildvorlagen basieren& Ein Digest für jeden KI-Generator\\\hline
+            & Erkennung von Image-to-Video und Text-to-Video& Videos die auf Text- oder Bildvorlagen basieren& Zwei Digests für jeden KI-Generator je nach Erzeugnungstyp\\\hline\hline
+ \multicolumn{4}{l}{\textbf{Gemischte Videos}}\\\hline\hline
+            
+            & 	
+            Bearbeitungs-software-Erkennung& Nachträglich bearbeitete Videos& Ein Digest pro Bearbeitungssoftware aggregiert über alle Ursprungsgeräte (tampering=/=native)\\\hline
+            & Erkennung von Bearbeitungen& Native Aufnahmen und bearbeitete Videos& ?\\\hline
+            & Unterscheidung von Nativen Aufnahmen zu KI-Aufnahmen& Native Aufnahmen und KI-generiere Videos& ?\\\hline
+            & Erkennung von Nativen Aufnahmen& Keine Einschränkung& ?\\ \bottomrule\bottomrule 
+        \end{tabular}
+
+        \begin{tablenotes}\scriptsize
+            \item[a] Das \textit{Lenovo P70A (Device 07)} nutzt nativ kein MP4-Containerformat, sondern speichert das Video als 3GP-Datei und wurde deshalb ausgeschlossen.
+        \end{tablenotes}
+
+        \caption{TODO: Übersicht Evaluation}
+        \label{tab:evaluation}
+        
+    \end{threeparttable}
+\end{table}
+
+
+
+
+
 \section{Native Aufnahmen}
-\section{Social Media}
-\section{Synthetische Inhalte}
-\section{Gemischte Inhalte}
+
+In diesem Abschnitt wird die Quellenerkennung (SCI, Source Camera Identification) für native, unveränderte Videoaufnahmen evaluiert. Das Ziel ist die präzise Differenzierung von Gerätemodellen und übergeordneten Herstellermarken anhand ihrer unverfälschten Container-Struktur. Als Test- und Trainingsdaten dienen hierbei ausschließlich unveränderte Originalaufnahmen aus VISION-Datensatz. 
+
+Für die Klassifikation auf Modell-Ebene wird ein aggregierter Source-Digest für jedes der 34 verfügbaren Gerätemodelle generiert. Für die Auswertung auf Marken-Ebene werden die extrahierten n-Gramme sämtlicher Gerätemodelle, die derselben Marke angehören (beispielsweise alle iPhone-Varianten für die Marke Apple), durch eine mathematische Mengenvereinigung (Set Union) zu einem einzigen, umfassenden Marken-Digest aggregiert. Dieses Aggregationsverfahren stellt sicher, dass die signifikante strukturelle Varianz innerhalb einer Produktlinie vollständig erfasst wird.
+
+%%%
+
+\section{Social Media Videos}
+
+Dieser Abschnitt evaluiert die Zuverlässigkeit des Verfahrens im Kontext der Plattform-Erkennung (SNA, Social Network Attribution). Der Upload von Videodateien auf Social-Media-Plattformen führt in der Regel zum Verlust der nativen Container-Signatur, da die Dateien auf den Servern neu verarbeitet werden und in eine plattformspezifische Baumstruktur überführt werden. Um nachzuweisen, dass das Similarity Hashing diese Distributionsplattformen dennoch zuverlässig klassifizieren kann, werden die Testdaten nach den jeweiligen Plattformen (z. B. YouTube, WhatsApp, Facebook, TikTok) in der Spalte gefiltert. Hier wurde zusätzlich auf die VISON-Datenbank eingegrenzt, da alle Dateien innerhalb der Eva-Datenbank noch zusätzlich verändert wurden.Der Source-Digest wird hierbei isoliert für den jeweiligen Verarbeitungstyp gebildet, ungeachtet der ursprünglichen Kamera (Marke und Modell), um die rein plattformspezifische Container-Grammatik zu abstrahieren.
+
+%%%
+
+\section{Synthetische Videos}
+
+In dieser Kategorie verlagert sich die forensische Quellenerkennung von physischer Hardware auf rein softwarebasierte Generatoren. Evaluiert wird, ob vollständig durch Text-to-Video-Modelle generierte Inhalte aus dem eigens erstellten KI-Datensatz verlässlich identifiziert werden können. Analog zur Gerätekennung werden Source-Digests für die spezifischen KI-Modelle oder übergeordnet für die KI-Entwickler generiert. Der Fokus der Untersuchung liegt darauf, ob generative KI-Modelle eine hinreichend spezifische syntaktische Signatur hinterlassen. Dies betrifft insbesondere die Integration proprietärer Metadaten oder kryptografischer Manifeste (wie C2PA-Signaturen), die typischerweise in der optionalen und explizit für proprietäre Erweiterungen vorgesehenen uuid-Box des Containers gespeichert werden und sich strukturell von nativen Aufnahmen abgrenzen lassen.
+
+%%%
+
+\section{Gemischte Videos}
+
+%%%
+
 \section{Statistische Auswertung}
+
+
+
+\begin{table}
+    \centering
+    \begin{tabular}{|c|c|c|}\hline
+ AUC Tversky& AUC Jaccard&Dataset\\\hline
+         \multicolumn{3}{|c|}{Device /Model}\\\hline
+         &  & All\\\hline
+         &  & \\\hline
+         &  & \\\hline
+         &  & \\ \hline
+    \end{tabular}
+    \caption{Caption}
+    \label{tab:placeholder}
+\end{table}
+
