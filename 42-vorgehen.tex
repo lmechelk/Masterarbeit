@@ -1,114 +1,51 @@
 \section{Vorgehen und Datenpipeline}
+\label{sec:pipeline}
 
 TODO: 5 schritte (Best Practice) struktur-extraktion, feature-exktraktion, feature-selektion, feature-repräsentation und klassifikation \cite[Fig. 4]{yang_comprehensive_2025}
 
 \subsection{Vorgehen}
 
-TODO: Stichpunkte ausformulieren
+Das Verfahren gliedert sich in fünf sequenzielle Schritte, die in Abbildung~\ref{fig:vorgehen} überblicksartig dargestellt sind. 
 
-% Grafik des Vorgehens
-
-\begin{figure}[H]
+\begin{figure}[h]
     \centering
     \includegraphics[width=1\linewidth]{grafiken/vorgehen-mp4.drawio.png}
     \caption{TODO: vorgehen-mp4.drawio.png}
     \label{fig:vorgehen}
 \end{figure}
 
-% Stichpunkte Vorgehen
-
-\begin{enumerate}
-    \item Mp4 Dateien parsen
-    \item Box-Informationen extrahieren
-    \item Box-Struktur im JSON-Format abspeichern
-    \item Box-Struktur linearisieren und als 2-Gramme tokenisieren
-    \item 2-Gramme als Similarity Digest abspeichern und die mit 8-Zeichen-Fenster auslesbar sind
-\end{enumerate}
+Im ersten Schritt werden alle MP4-Dateien der drei Datenbankquellen über einen Parser eingelesen, der die Dateistruktur effizient per Memory-Mapping traversiert um dabei bekannte Parsing-Fehler\cite[Kap.~5.4]{yang_comprehensive_2025} zu umgehen. Im zweiten Schritt werden ausschließlich der 8-Byte-Header mit Bytegröße und 4CC-Bezeichner jeder Box extrahiert, während der Inhalt der \(mdat\)-Box sowie volatile Metadaten wie \(creationTime\) oder \(modificationTime\) bewusst ausgeschlossen werden, um eine quellenunabhängige Signatur zu gewährleisten (siehe \cref{sec:feature}). Im dritten Schritt wird die extrahierte Hierarchie im JSON-Format abgespeichert, wobei die Baumstruktur vollständig erhalten bleibt und als Grundlage für die anschließende Linearisierung dient. Im vierten Schritt wird die JSON-Baumstruktur linearisiert und mittels eines Sliding-Window-Verfahrens\cite[Kap.~3]{klier_media_2025} in überlappende n-Gramme tokenisiert, wobei jedes 2-Gramm aus zwei aufeinanderfolgenden Box-Bezeichnern besteht und als 8-Zeichen-Sequenz ohne Trennzeichen kodiert wird. Im fünften Schritt werden die n-Gramme alphabetisch sortiert, Duplikate eliminiert und das Ergebnis als kompakter Similarity Digest gespeichert, der die strukturelle Signatur der Datei in einer binären Mengendarstellung repräsentiert.
 
 %%%
 
-\newpage
 \subsection{Datenpipeline}
 
-GitHub: \url{https://github.com/lmechelk/mp4-similarity-hash/}\\
+Die Implementierung des beschriebenen Vorgehens erfolgt in einer achtstufigen Datenpipeline, deren Quellcode öffentlich verfügbar ist.\footnote{\url{https://github.com/lmechelk/mp4-similarity-hash}} \cref{fig:pipeline} gibt einen Überblick über den gesamten Datenfluss, \cref{tab:beispieldaten} zeigt exemplarische Einträge des resultierenden Datensatzes. Nachfolgend wird jeder Schritt einzeln beschrieben und auf die Ausgaben, die in der Regel als CSV-Datei exportiert werden, eingegangen.\\
 
-TODO: Stichpunkte ausformulieren
+TODO: Beispieldatensätze (Schritt 4, 6, 7) in den Anhang\\
 
-% BPMN der Pipeline
-
-\begin{figure}[H]
+\begin{figure}[h]
     \centering
     \includegraphics[width=1\linewidth]{grafiken/pipeline.drawio.png}
     \caption{TODO: pipeline.drawio.png}
     \label{fig:pipeline}
 \end{figure}
 
-% Stichpunkte Pipeline
+Als Eingabe dienen in einem vorbereitenden Schritt drei Videodatenbanken: Der EVA-7K-Datensatz mit 5.684 Dateien, der VISION-Datensatz mit 1.918 Videodateien sowie ein eigens erstellter KI-Datensatz mit 61 Videos (siehe Abschnitt~\ref{sec:kidatensatz}). Jede Datei wird in \textbf{Schritt 1} über ihren absoluten Dateisystempfad \(PATH\) eindeutig referenziert.
 
-\begin{enumerate}
-    \setcounter{enumi}{-1}
-    \item \textbf{Videodatenbanken bereitstellen}
-    \begin{itemize}
-        \item EVA-7k (5.684 Dateien)
-        \item VISION (nur Videos, 1918 Dateien)
-        \item eigener KI-Datensatz
-    \end{itemize}
-    
-    \item \textbf{Pfad jeder einzelnen Videodatei auslesen}
-    \begin{itemize}
-        \item PATH (Dateipfad z.\,B. \url{C:/Testdaten/EVA/D01_flat_yt.mp4})
-    \end{itemize}
-    
-    \item \textbf{Datensätze strukturieren}
-    \begin{itemize}
-        \item DB\_NAME (Name der Datenbank z.\,B. Vision, Eva, Selfmade)
-        \item ID (Eindeutige Kennung des Geräts (\textit{Device} bei Eva/Vision) oder der AI z.\,B. D01, AI01)
-        \item BRAND (Hersteller des Smartphones oder der KI z.\,B. Samsung, Grok)
-        \item MODEL (Genaue Version des Smartphones oder der KI z.\,B. GalaxyS3Mini, Imagine\_0.9)
-        \item MEDIA\_TYPE (Dateiendung bzw. Containerformat z.\,B. MP4, MOV)
-        \item CONTENT\_SOURCE (Originäre Quelle der Videodatei, um zwischen Kameras, vollständig KI-generierten Videos mittels Text-to-Video oder Videos, die auf Bild-Vorlagen basieren (Image-to-Video), zu unterscheiden z.\,B. DIGITAL\_CAMERA, AI\_GENERATION, MIXED)
-        \item CONTENT\_TYPE (Kontext der Aufnahme z.\,B. flat, indoor, outdoor, deepfake, synthetic)
-        \item PROCESSING (Primäre Verarbeitung des Videos z.\,B. native, youtube, whatsapp, ai)
-        \item TAMPERING (Nachträgliche Veränderung des Videos (nur Eva-DB) z.\,B. None, Avidemux)
-    \end{itemize}
-    
-    \item \textbf{Videostruktur analysieren}
-    \begin{itemize}
-        \item STRUCTURE\_PRETTY (Gut lesbarer String der MP4-Struktur (nur nice to have bzw. zum Debugging) z.\,B. \texttt{moov(mvhd,trak(tkhd))})
-        \item STRUCTURE\_JSON (Exakte Baumstruktur als JSON-String, der zur N-Gram-Generierung genutzt wird z.\,B. \verb|[{"type":"moov","children":[{"type":"mvhd"}]}]|)
-    \end{itemize}
-    
-    \item \textbf{$n$-Gramme als Similarity Digest berechnen}
-    \begin{itemize}
-        \item NGRAM\_2 (Kompakter Similarity Digest (String), der die Signatur des Videos auf Basis von 2-Grammen (alphabetisch, duplikatbereinigt) repräsentiert; jeweils 8 lückenlose Zeichen entsprechen einem 2-Gramm-Feature z.\,B. moovmvhdtrakmvhdtraktkhd)
-    \end{itemize}
-    
-    \item \textbf{Datensätze in Test- und Trainingsdaten einteilen}
-    \begin{itemize}
-        \item EVA-7k: immer die erste Datei jedes Subsets (avidemux, exiftool, \dots) aus jeder Social-Media-Kategorie (Facebook, TikTok, YouTube, \dots)
-        \item VISION: immer die erste Datei jedes Content- (flat, indoor, \dots) und Processing-Types (Original, Facebook, \dots) aus jedem Device
-        \item eigener KI-Datensatz: immer die erste Datei jedes KI-Modells
-    \end{itemize}
-    
-    \item \textbf{Source-Digest erstellen}
-    \begin{itemize}
-        \item Digest für jede Kategorie anhand der Testdaten generieren, z.\,B. gruppiert nach Brand, Device, Social-Media, KI, KI-Modell
-        \item SOURCE\_DIGEST (aggregierter Similarity Digest)
-    \end{itemize}
-    
-    \item \textbf{Ähnlichkeit berechnen}
-    \begin{itemize}
-        \item GROUND\_TRUTH\_SOURCE\_DIGEST: Bezeichner für die Ground Truth, anhand der die Testdaten erstellt wurden
-        \item GROUND\_TRUTH\_MP4: Bezeichner für die Ground Truth der einzelnen Test-MP4
-        \item SIMILARITY: Wert von 0 bis 1 gem. Tversky-Berechnung (kein Penalty bei fehlenden Boxen in Testdatei, Penalty bei zusätzlichen Boxen in Testdatei)
-    \end{itemize}
-    
-    \item \textbf{Daten filtern und auswerten}
-    \begin{itemize}
-        \item ROC und AUC berechnen
-        \item Graphen erstellen
-    \end{itemize}
-\end{enumerate}
+In Schritt~2 werden die zugehörigen Metadaten je Datei strukturiert erfasst. Die Informationen werden dabei automatisiert anhand des Datensatzes, der Ordnerstruktur und der Dateibenennung ermittelt. \(DB\_NAME\) kodiert die Herkunftsdatenbank und \(ID\) identifiziert das aufnehmende Gerät bzw.\ das KI-Modell eindeutig innerhalb der Datenbank. \(BRAND\) und \(MODEL\) beschreiben Hersteller und Modellversion, etwa \textit{Samsung Galaxy S3 Mini} oder \textit{Grok Imagine~0.9}. \(MEDIATYPE\) erfasst die Dateiendung bzw.\ das Containerformat, etwa \textit{MP4} oder \textit{MOV}. \(CONTENT\_SOURCE\) unterscheidet die primäre Erzeugungsquelle in drei Klassen: \textit{DIGITALCAMERA} steht für native Kameraaufnahmen, \textit{AIGENERATION} für vollständig text- oder prompt-generierte Inhalte und \textit{MIXED} für bildbasierte Deepfakes (Image-to-Video). \(CONTENT\_TYPE\) beschreibt den Aufnahmekontext, etwa \textit{flat}, \textit{indoor}, \textit{outdoor}, \textit{deepfake} oder \textit{synthetic}. \(PROCESSING\) dokumentiert die primäre Verarbeitungsstufe der Datei, etwa \textit{native}, \textit{youtube} oder \textit{ai}. \(PROCESSING\_SM\) ist ein aus \(PROCESSING\) abgeleiteter binärer Indikator, der angibt, ob eine Datei über eine Social-Media-Plattform verarbeitet wurde. \(TAMPERING\) erfasst nachträgliche Manipulationen durch Bearbeitungssoftware und ist ausschließlich im EVA-7K-Datensatz belegt.
+
+\textbf{Schritt~3} überführt die binäre MP4-Datei in eine strukturierte Repräsentation. Der Parser traversiert die Box-Hierarchie rekursiv per Memory-Mapping und extrahiert für jede Box den 4CC-Bezeichner sowie die Schachtelungstiefe. Der Inhalt der \(mdat\)-Box sowie volatile Metadaten wie \(creation\_Time\) werden dabei explizit ausgeschlossen (siehe Abschnitt~\ref{sec:feature}). \(STRUCTURE\_JSON\) enthält den vollständigen Baum als maschinenlesbaren JSON-String und bildet die Grundlage für die nachfolgende N-Gramm-Generierung. \(STRUCTURE\_PRETTY\) speichert eine komprimierte, für Menschen lesbare Kurzdarstellung ausschließlich zu Debugging-Zwecken um z. B. fehlerhaft geparste Dateien zu identifizieren.
+
+In \textbf{Schritt~4} wird die JSON-Baumstruktur zunächst in eine lineare Token-Sequenz der 4CC-Bezeichner serialisiert. Anschließend traversiert ein Sliding-Window je nach n-Gramm-Größe entsprechend über die 4CC-Token. Jedes Fenster erzeugt ein n-Gramm-Token. Nach Überführung in eine mathematische Menge werden Duplikate eliminiert, sodass die resultierende Signatur \(NGRAM\) das syntaktische Vokabular der Containerstruktur ohne Häufigkeitsinformation repräsentiert. Der Digest wird alphabetisch sortiert gespeichert.
+
+Die Partitionierung in Trainings- und Testmengen erfolgt in \textbf{Schritt~5} datensatzspezifisch nach einer deterministischen Auswahlregel. Für EVA-7K wird jeweils die erste Datei jedes Subsets je Bearbeitungsprogramm und Social-Media-Kategorie als Trainingsdatum gewählt. Für VISION wird die erste Datei je Content-Typ und Processing-Typ pro Gerät verwendet. Für den eigenen KI-Datensatz wird jede zweite Datei pro Modell ausgewählt, um sowohl synthetische als auch Deepfake-Varianten gleichmäßig abzudecken.
+
+\textbf{Schritt~6} erzeugt für jede Untersuchungskategorie einen aggregierten Referenz-Digest. Hierzu werden die \(NGRAM\)-Mengen aller Trainingsdateien einer Kategorie mengentheoretisch vereinigt. Der resultierende \(SOURCE\_DIGEST\) repräsentiert das gemeinsame syntaktische Vokabular der Klasse, etwa gebündelt nach Hersteller, Gerät, Social-Media-Plattform oder KI-Modell.
+
+In \textbf{Schritt~7} wird jede Testdatei, die für die jeweilige Evaluation relevant ist, gegen ausgewählte Source Digests verglichen. Der \(SIMILARITY\)-Wert wird mittels asymmetrischem Tversky-Index berechnet. Boxen, die im Source Digest vorhanden, in der Testdatei jedoch nicht enthalten sind, fließen ohne Strafterm ein. Zusätzliche Boxen in der Testdatei gegenüber dem Referenz-Digest werden hingegen bestraft. \(GROUND\_TRUTH\_SOURCEDIGEST\) bezeichnet die korrekte Referenzklasse auf Digest-Ebene und \(GROUND\_TRUTH\_MP4\) die korrekte Klasse der einzelnen Test-MP4.
+
+Abschließend werden in Schritt~8 die Similarity-Scores aller Testdateien je Kategorie ausgewertet. Für jeden Schwellenwert wird die zugehörige True-Positive-Rate sowie False-Positive-Rate berechnet und als ROC-Kurve visualisiert. Der AUC-Wert wird numerisch mittels der Trapezregel über die diskreten Stützpunkte der ROC-Kurve integriert \cite{sklearn_auc_2026}\cite{pedregosa_scikit-learn_2011}.
 
 \begin{table}[htbp]
     \centering
@@ -124,8 +61,5 @@ TODO: Stichpunkte ausformulieren
     \end{tabular}%
     }
     \caption{TODO: Beispieldatensätze}
-    \label{tab:testdaten_auszug}
+    \label{tab:beispieldaten}
 \end{table}
-
-TODO: Tabelle mit Auszug der echten Datensätze
-% Siehe Anhang Test mit input testdatensätze.tex

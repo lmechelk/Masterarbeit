@@ -1,6 +1,8 @@
 %laden der Präambel mit Latexbefehlen/-klassen
 \input{00-preambel}
 
+%\includeonly{50-evaluation}
+
 \begin{document}
 %globale Einstellung für Quellcodedarstellung mit listings
 \lstset{basicstyle=\scriptsize\ttfamily,language={[LaTeX]TeX}}
@@ -8,7 +10,8 @@
 %Seitennummerierung römisch
 \pagenumbering{roman}
 
-%Titelseiten
+%TitelseitenImagine 0.9
+
 \input{00-titel}
 
 \cleardoubleemptypage
@@ -25,16 +28,16 @@
 \pagenumbering{arabic}
 \setcounter{page}{1}
 
+
+
 %Beginn der Kapitel
-\input{01-einleitung}
-	
-%\cleardoublepage	
-\input{20-grundlagen}
-\input{30-verwandtearbeiten}
-\input{40-methodik}
-\input{05-evaluation}
-\input{06-diskussion}
-\input{07-fazit}
+\include{10-einleitung}
+\include{20-grundlagen}
+\include{30-verwandtearbeiten}
+\include{40-methodik}
+\include{50-evaluation}
+%\include{06-diskussion}
+\include{60-fazit}
 
 %Literatur
 \cleardoublepage
@@ -46,7 +49,7 @@
 
 %Abkürzungs- und Symbolverzeichnis
 \cleardoublepage
-\input{98-nomenklatur}
+\include{98-nomenklatur}
 
 %Abbildungsverzeichnis
 \cleardoublepage
@@ -61,6 +64,6 @@
 %Anhang
 \cleardoublepage
 \appendix
-\input{99-anhang}
+\include{99-anhang}
 
 \end{document}

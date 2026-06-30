@@ -23,13 +23,13 @@ Hinsichtlich der konkret genutzten Formate und Codecs belegt die Studie von Gloe
 
 \begin{table}[htbp]
     \centering
-    \begin{tabular}{>{\raggedright\arraybackslash}p{0.5\linewidth}>{\raggedright\arraybackslash}p{0.44\linewidth}}\toprule\toprule
-         \textbf{Smartphones}& \textbf{Optionale Boxen}\\\hline\hline
-         BlackBerry 8310, Google Nexus 7, Motorola MileStone, Palm Pre, Samsung GT-5500i, SonyEricsson K800i& \(udta\)\\\hline
-         iPhone 4& \(wide, free, meta\)\\\hline
-         Benq S88& \(mvex, moof, mdat\) (am Dateiende)\\\hline
-         Nokia X3-00 & \(free, mdat\) (am Dateiende)\\\hline
-         Samsung SGH-D600& \(iods\)\\ \bottomrule\bottomrule
+    \begin{tabular}{>{\raggedright\arraybackslash}p{0.5\linewidth}>{\raggedright\arraybackslash}p{0.44\linewidth}}\toprule
+         \textbf{Smartphones}& \textbf{Optionale Boxen}\\\midrule
+         BlackBerry 8310, Google Nexus 7, Motorola MileStone, Palm Pre, Samsung GT-5500i, SonyEricsson K800i& \(udta\)\\\midrule
+         iPhone 4& \(wide, free, meta\)\\\midrule
+         Benq S88& \(mvex, moof, mdat\) (am Dateiende)\\\midrule
+         Nokia X3-00 & \(free, mdat\) (am Dateiende)\\\midrule
+         Samsung SGH-D600& \(iods\)\\ \bottomrule
     \end{tabular}
     \caption{Signifikante strukturelle Abweichungen in der Verwendung optionaler MP4-Atome bereits in 2014 (Eigene Darstellung nach Gloe u. a. \cite[Tab. 4]{gloe_forensic_2014})}
     \label{tab:gloe}
@@ -41,18 +41,18 @@ Zur Strukturierung dieses Forschungsfeldes schlagen Yang u.\,a. (2025) eine Taxo
 
 \begin{table}
     \centering
-    \begin{tabular}{>{\raggedright\arraybackslash}p{0.05\linewidth}>{\raggedright\arraybackslash}p{0.12\linewidth}>{\raggedright\arraybackslash}p{0.31\linewidth}>{\raggedright\arraybackslash}p{0.4\linewidth}}\toprule\toprule
-         \textbf{Typ}&  \textbf{Kategorie}&  \textbf{Eigenschaften}& \textbf{Vor- und Nachteile}\\\hline\hline
+    \begin{tabular}{>{\raggedright\arraybackslash}p{0.05\linewidth}>{\raggedright\arraybackslash}p{0.12\linewidth}>{\raggedright\arraybackslash}p{0.31\linewidth}>{\raggedright\arraybackslash}p{0.4\linewidth}}\toprule
+         \textbf{Typ}&  \textbf{Kategorie}&  \textbf{Eigenschaften}& \textbf{Vor- und Nachteile}\\\midrule
          T1&  Geordnet& 
          Komplette Ebenen-Info und strenge sequenzielle Nummerierung&+ Exakte Index-Erfassung\newline
-- Sehr anfällig für Einfügen/Löschen\\\hline
+- Sehr anfällig für Einfügen/Löschen\\\midrule
          T2&  Geordnet&  Nur pfadrelevante Infos sequenzielle Nummerierung&+ Kompakter als T1\newline
-- Anfällig für Einfügen/Löschen\\\hline
+- Anfällig für Einfügen/Löschen\\\midrule
          T3&  Geordnet&  Nur pfadrelevante Infos und nummeriert nur gleichen Box-Typ&+ Robust bei allgemeinen Änderungen\newline
-- Anfällig bei identischen Boxen davor\\\hline
+- Anfällig bei identischen Boxen davor\\\midrule
          T4&  Ungeordnet&  Nur pfadrelevante Infos und ignoriert Reihenfolge komplett&+ Robust bei abweichenden Boxen\newline
-- Anfällig bei identischen Boxen\\\hline
-         T5&  Ungeordnet&  Nur finales Feld sowie Wert und verwirft Struktur-Pfad komplett& - Vollständiger Verlust der Struktur-Infos\\ \bottomrule\bottomrule
+- Anfällig bei identischen Boxen\\\midrule
+         T5&  Ungeordnet&  Nur finales Feld sowie Wert und verwirft Struktur-Pfad komplett& - Vollständiger Verlust der Struktur-Infos\\ \bottomrule
     \end{tabular}
     \caption{Repräsentationsmodelle für Video-Container (Eigene Darstellung nach Yang u.\,a. \cite[Tab. 2]{yang_comprehensive_2025}}
     \label{tab:yang}
@@ -75,21 +75,21 @@ Innerhalb der quantitativen Container-Forensik dient die Feature-Repräsentation
 
 \begin{table}[H]
     \centering
-    \begin{tabular}{>{\raggedright\arraybackslash}p{0.15\linewidth}>{\raggedright\arraybackslash}p{0.4\linewidth}>{\raggedright\arraybackslash}p{0.4\linewidth}}\toprule\toprule
+    \begin{tabular}{>{\raggedright\arraybackslash}p{0.15\linewidth}>{\raggedright\arraybackslash}p{0.4\linewidth}>{\raggedright\arraybackslash}p{0.4\linewidth}}\toprule
  \textbf{Studie}& Yang u. a. (2020)&	
-Xiang u. a. (2021)\\\hline
-         \textbf{Verfahren}&  Quantitative Integritätsprüfung und Software-Identifikation durch Container-Charakterisierung&Forensische Analyse von MP4-Metadaten durch vektorielle Repräsentation und Dimensionsreduktion\\\hline\hline
-         \textbf{Unter-suchungs-ziele}&  MD (Manipulationserkennung), MTI (Software-Identifikation), SNA (Social-Media-Erkennung) und rudimentär SCI (Erkennung des Betriebssystems)&SCI (Brand Attribution), MTI (Software-Identifikation), SNA (Social-Media-Erkennung) und MD (Manipulationserkennung)\\\hline
-         \textbf{Feature}&  Field (Pfade) und Value (Pfade inklusive Werte) aus der Baumstruktur&Boxen sowie Felder, die als track-spezifische Features extrahiert werden\\\hline
-         \textbf{Symbolische Repräsentation} (T1 bis T5)&  \multicolumn{2}{c}{T4 (ungeordnet, extrahiert pfadrelevante Informationen, ignoriert Reihenfolge)}\\\hline
-         \textbf{Feature-Repräsentation}&  Bag-of-Words&Type-aware-Model\\\hline
+Xiang u. a. (2021)\\\midrule
+         \textbf{Verfahren}&  Quantitative Integritätsprüfung und Software-Identifikation durch Container-Charakterisierung&Forensische Analyse von MP4-Metadaten durch vektorielle Repräsentation und Dimensionsreduktion\\\midrule
+         \textbf{Unter-suchungs-ziele}&  MD (Manipulationserkennung), MTI (Software-Identifikation), SNA (Social-Media-Erkennung) und rudimentär SCI (Erkennung des Betriebssystems)&SCI (Brand Attribution), MTI (Software-Identifikation), SNA (Social-Media-Erkennung) und MD (Manipulationserkennung)\\\midrule
+         \textbf{Feature}&  Field (Pfade) und Value (Pfade inklusive Werte) aus der Baumstruktur&Boxen sowie Felder, die als track-spezifische Features extrahiert werden\\\midrule
+         \textbf{Symbolische Repräsentation} (T1 bis T5)&  \multicolumn{2}{c}{T4 (ungeordnet, extrahiert pfadrelevante Informationen, ignoriert Reihenfolge)}\\\midrule
+         \textbf{Feature-Repräsentation}&  Bag-of-Words&Type-aware-Model\\\midrule
          \textbf{Feature-Selektion}&  	
-Likelihood-Ratio-Framework &Korrelationsmatrix und spektrales Clustering \\\hline
-         \textbf{Klassifikator}&  Entscheidungsbäume &Linear Discriminant Analysis (LDA) mit Nearest Neighbor Classifier (NNC) für Multi-Klassen; Entscheidungsbäume für binäre Klassen\\\hline
-         \textbf{Datenbanken}&  \multicolumn{2}{c}{VISION und EVA-7K}\\\hline
-         \textbf{Test- und Trainingsdaten}&  Leave-one-device-out Kreuzvalidierung (34 Folds)&50/50 Split mit stratifiziertem Sampling sowie Leave-one-out Kreuzvalidierung für lokale Videos\\\hline
-         \textbf{Evaluation}& Unterscheidung von nativen und manipulierten Videos, 4 Social-Media-Plattformen&Brand Attribution, Software-Identifikation, 4 Social-Media-Plattformen und Integritätsprüfung\\\hline
-         \textbf{Metriken}& \multicolumn{2}{c}{Balanced Accuracy, True Positive Rate (TPR), True Negative Rate (TNR)}\\ \bottomrule\bottomrule
+Likelihood-Ratio-Framework &Korrelationsmatrix und spektrales Clustering \\\midrule
+         \textbf{Klassifikator}&  Entscheidungsbäume &Linear Discriminant Analysis (LDA) mit Nearest Neighbor Classifier (NNC) für Multi-Klassen; Entscheidungsbäume für binäre Klassen\\\midrule
+         \textbf{Datenbanken}&  \multicolumn{2}{c}{VISION und EVA-7K}\\\midrule
+         \textbf{Test- und Trainingsdaten}&  Leave-one-device-out Kreuzvalidierung (34 Folds)&50/50 Split mit stratifiziertem Sampling sowie Leave-one-out Kreuzvalidierung für lokale Videos\\\midrule
+         \textbf{Evaluation}& Unterscheidung von nativen und manipulierten Videos, 4 Social-Media-Plattformen&Brand Attribution, Software-Identifikation, 4 Social-Media-Plattformen und Integritätsprüfung\\\midrule
+         \textbf{Metriken}& \multicolumn{2}{c}{Balanced Accuracy, True Positive Rate (TPR), True Negative Rate (TNR)}\\ \bottomrule
     \end{tabular}
     \caption{Verfahrenssteckbriefe (Eigene Darstellung nach  Yang u. a. (2020)\cite{yang_efficient_2020} und Xiang u. a. 2021 \cite{xiang_forensic_2021})}
     \label{tab:steckbrief-quan}
@@ -130,21 +130,21 @@ Um den Verlust topologischer Informationen zu vermeiden, nutzt ein weiterer meth
 
 \begin{table}[H]
     \centering
-    \begin{tabular}{>{\raggedright\arraybackslash}p{0.15\linewidth}>{\raggedright\arraybackslash}p{0.4\linewidth}>{\raggedright\arraybackslash}p{0.4\linewidth}}\toprule\toprule
+    \begin{tabular}{>{\raggedright\arraybackslash}p{0.15\linewidth}>{\raggedright\arraybackslash}p{0.4\linewidth}>{\raggedright\arraybackslash}p{0.4\linewidth}}\toprule
  \textbf{Studie}& Iuliani u. a. (2019)&	
-Ramos López u. a. (2020)\\\hline
-         \textbf{Verfahren}&  Unüberwachte Container-Analyse mittels Dissimilarity-Metrik und Likelihood-Ratios&Unüberwachte Videoquellen-Identifikation mittels hierarchischer und dichtebasierter Clustering-Algorithmen\\\hline\hline
-         \textbf{Unter-suchungs-ziele}&  MD, SCI&SCI, SNA\\\hline
-         \textbf{Feature}&  Field und Values inklusive absoluter Pfade (z. B. moov-2/udta-2/count)&Field und Value der Boxen in vier Variationen (mit und ohne Pfad: PathField, PathFieldValue, PathOrderField, PathOrderFieldValue)\\\hline
-         \textbf{Symbolische Repräsentation} (T1 bis T5)&  T2&T2, T4\\\hline
-         \textbf{Feature-Repräsentation}&  Mengen-Repräsentation (Berechnung der prozentualen Nicht-Übereinstimmung / Mismatching Percentage)&Distanz-Matrizen\\\hline
+Ramos López u. a. (2020)\\\midrule
+         \textbf{Verfahren}&  Unüberwachte Container-Analyse mittels Dissimilarity-Metrik und Likelihood-Ratios&Unüberwachte Videoquellen-Identifikation mittels hierarchischer und dichtebasierter Clustering-Algorithmen\\\midrule
+         \textbf{Unter-suchungs-ziele}&  MD, SCI&SCI, SNA\\\midrule
+         \textbf{Feature}&  Field und Values inklusive absoluter Pfade (z. B. moov-2/udta-2/count)&Field und Value der Boxen in vier Variationen (mit und ohne Pfad: PathField, PathFieldValue, PathOrderField, PathOrderFieldValue)\\\midrule
+         \textbf{Symbolische Repräsentation} (T1 bis T5)&  T2&T2, T4\\\midrule
+         \textbf{Feature-Repräsentation}&  Mengen-Repräsentation (Berechnung der prozentualen Nicht-Übereinstimmung / Mismatching Percentage)&Distanz-Matrizen\\\midrule
          \textbf{Feature-Selektion}&  	
-Manueller Ausschluss volatiler Metadaten&Manueller Ausschluss volatiler Metadaten\\\hline
-         \textbf{Klassifikator}&  Schwellenwert-basierter Vergleich (Dissimilarity) und Likelihood-Ratio-Test&Unüberwachte Clustering-Algorithmen \\\hline
-         \textbf{Datenbanken}&  VISION&VISION, ACID\\\hline
-         \textbf{Test- und Trainingsdaten}&  Referenzvergleich (1-zu-1 für MD) und Likelihood-Berechnung mit klassenspezifischen Trainingsdaten (für SCI)&Unüberwachtes Clustering ohne vorheriges Training (Open-Set-Szenario)\\\hline
-         \textbf{Evaluation}& Unterscheidung nativer vs. bearbeiteter Videos sowie Brand Attribution&Clustering nach Marke, Modell, Gerät sowie Social Media \\\hline
-         \textbf{Metriken}& AUC&Silhouette Coefficient, Homogeneity, Completeness, Rand Index (RI)\\ \bottomrule\bottomrule
+Manueller Ausschluss volatiler Metadaten&Manueller Ausschluss volatiler Metadaten\\\midrule
+         \textbf{Klassifikator}&  Schwellenwert-basierter Vergleich (Dissimilarity) und Likelihood-Ratio-Test&Unüberwachte Clustering-Algorithmen \\\midrule
+         \textbf{Datenbanken}&  VISION&VISION, ACID\\\midrule
+         \textbf{Test- und Trainingsdaten}&  Referenzvergleich (1-zu-1 für MD) und Likelihood-Berechnung mit klassenspezifischen Trainingsdaten (für SCI)&Unüberwachtes Clustering ohne vorheriges Training (Open-Set-Szenario)\\\midrule
+         \textbf{Evaluation}& Unterscheidung nativer vs. bearbeiteter Videos sowie Brand Attribution&Clustering nach Marke, Modell, Gerät sowie Social Media \\\midrule
+         \textbf{Metriken}& AUC&Silhouette Coefficient, Homogeneity, Completeness, Rand Index (RI)\\ \bottomrule
     \end{tabular}
     \caption{Verfahrenssteckbriefe (Eigene Darstellung nach Iuliani u. a. (2029)\cite{iuliani_video_2019} und Ramos López u. a. (2020)\cite{ramos_lopez_digital_2020} (Eigene Darstellung)}
     \label{tab:steckbrief-qual}

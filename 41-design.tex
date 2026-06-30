@@ -1,22 +1,33 @@
 \section{Untersuchungsdesign}
 
-% Verfahrensteckbrief me
+Die \cref{tab:steckbrief-mp4} fasst die zentralen Designentscheidungen zusammen, und die konkrete Umsetzung folgt in der Datenpipeline in \cref{sec:pipeline}.
 
-\begin{table}[H]
+\begin{table}[h]
     \centering
-    \begin{tabular}{>{\raggedright\arraybackslash}p{0.2\linewidth}>{\raggedright\arraybackslash}p{0.75\linewidth}}\toprule\toprule
-         \textbf{Verfahren}& Syntaktisches Similarity Hashing\\\hline\hline
-         \textbf{Untersuchungsziele}& SCI (Unterscheidung nativer Kameraaufnahmen und KI-generierter Videos) und SNA (Erkennung komprimierter Social-Media-Videos)\\\hline
-         \textbf{Feature}& Extrahierte 4CC-Box-Informationen unter Ausschluss der Inhaltsdaten (\(mdat\)) und volatile Metadaten (z. B. Zeitstempel wie \(creationTime\))\\\hline
-         \textbf{Symbolische Repräsentation} (T1 bis T5)& TODO: linearisiert die in JSON erfasste hierarchische Baumstruktur in eindimensionale Token-Sequenzen, ohne vertikale Pfade zu extrahieren\\\hline
-         \textbf{Feature-Repräsentation}& n-Gramm-Sets (Similarity Digest)\\\hline
-         \textbf{Feature-Selektion}& Allowlisting relevanter Container-Boxen und Dubletteneliminierung\\\hline
-         \textbf{Klassifikator}& Approximate Matching (Ähnlichkeitsberechnung mittels Jaccard-Index oder asymmetrischem Tversky-Index)\\\hline
-         \textbf{Datenbanken}& VISION, EVA-7K und ein eigens erstellter Datensatz zu KI-generierten Videos\\\hline
-         \textbf{Test- und Trainingsdaten}& Bildung von Referenz-Hashes (Source Similarity Digests) aus einer kleinen, diversen Teilmenge (z. B. ein Bild pro Aufnahmemodus), Abgleich mit allen restlichen Testdateien\\\hline
-         \textbf{Evaluation}&Native Aufnahmen, Social Media, synthetische Inhalte und gemischte Inhalte\\\hline
-         \textbf{Metriken}&Receiver Operating Characteristic (ROC) und Area Under Curve (AUC)\\ \bottomrule\bottomrule
+    \begin{tabular}{>{\raggedright\arraybackslash}p{0.2\linewidth}>{\raggedright\arraybackslash}p{0.75\linewidth}}\toprule
+         \textbf{Verfahren}& Syntaktisches Similarity Hashing\\\midrule
+         \textbf{Untersuchungsziele}& SCI (Unterscheidung nativer Kameraaufnahmen und KI-generierter Videos) und SNA (Erkennung komprimierter Social-Media-Videos)\\\midrule
+         \textbf{Feature}& Extrahierte 4CC-Box-Informationen unter Ausschluss der Inhaltsdaten (\(mdat\)) und volatile Metadaten (z. B. Zeitstempel wie \(creationTime\))\\\midrule
+         \textbf{Symbolische Repräsentation} (T1 bis T5)& TODO: linearisiert die in JSON erfasste hierarchische Baumstruktur in eindimensionale Token-Sequenzen, ohne vertikale Pfade zu extrahieren\\\midrule
+         \textbf{Feature-Repräsentation}& n-Gramm-Sets (Similarity Digest)\\\midrule
+         \textbf{Feature-Selektion}& Allowlisting relevanter Container-Boxen und Dubletteneliminierung\\\midrule
+         \textbf{Klassifikator}& Approximate Matching (Ähnlichkeitsberechnung mittels Jaccard-Index oder asymmetrischem Tversky-Index)\\\midrule
+         \textbf{Datenbanken}& VISION, EVA-7K und ein eigens erstellter Datensatz zu KI-generierten Videos\\\midrule
+         \textbf{Test- und Trainingsdaten}& Bildung von Referenz-Hashes (Source Similarity Digests) aus einer kleinen, diversen Teilmenge (z. B. ein Bild pro Aufnahmemodus), Abgleich mit allen restlichen Testdateien\\\midrule
+         \textbf{Evaluation}&Native Aufnahmen, Social Media, synthetische Inhalte und gemischte Inhalte\\\midrule
+         \textbf{Metriken}&Receiver Operating Characteristic (ROC) und Area Under Curve (AUC)\\ \bottomrule 
     \end{tabular}
     \caption{Verfahrenssteckbrief zum Similartiy Hashing für Mp4-Dateien (Eigene Darstellung)}
     \label{tab:steckbrief-mp4}
 \end{table}
+
+Das entwickelte Verfahren ordnet sich in die quantitative Container-Forensik ein, wie sie in \cref{sec:relatedwork} systematisiert wird. Im Unterschied zu überwachten Klassifikatoren wie Entscheidungsbäumen \cite[Kap.~5]{yang_efficient_2020} oder Linear Discriminant Analysis \cite[S.~1045]{xiang_forensic_2021} setzt das vorliegende Design bewusst auf Approximate Matching. Ein Source Digest repräsentiert die aggregierte n-Gramm-Signatur einer Quellenklasse und unbekannte Dateien werden anhand ihres Ähnlichkeitswerts zum Digest eingeordnet. Dieser Ansatz erfordert kein vollständiges Trainingsset aller Zielklassen und bleibt damit auch für forensische Open-Set-Szenarien anwendbar, in denen neue Quellklassen zur Laufzeit hinzukommen können \cite[Kap.~1]{klier_media_2025}.
+
+Die Wahl gegen eine k-Fold-Kreuzvalidierung oder Leave-one-out-Evaluation begründet sich durch die forensische Aufgabenstellung. Ziel ist nicht die Generalisierung eines trainierten Modells, sondern die Prüfung, ob ein einziger repräsentativer Source Digest einer Klasse ausreicht, um unbekannte Dateien zuverlässig zuzuordnen. Die Trainingsmenge beschränkt sich daher bewusst auf eine kleine, diverse Teilmenge, während alle verbleibenden Dateien als Testmenge dienen. Dieses Vorgehen orientiert sich methodisch am Evaluationsdesign von Klier und Baier \cite[Kap.~3]{klier_media_2025} und erlaubt eine direkte Vergleichbarkeit der Ergebnisse.
+
+Das Untersuchungsdesign adressiert zwei der vier forensischen Aufgabenbereiche nach Yang et al.\ \cite[Kap.~5.4]{yang_comprehensive_2025}, nämlich die Quellkamera-Identifikation (SCI) zur Unterscheidung nativer Kameraaufnahmen und KI-generierter Videos sowie die Erkennung plattformspezifischer Signaturen durch Social-Media-Verarbeitung (SNA). 
+
+
+
+% Verfahrensteckbrief me
+
