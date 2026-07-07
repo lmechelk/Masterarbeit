@@ -1,36 +1,39 @@
 \chapter{Evaluation und Diskussion}
+\label{sec:evaluation}
 
-Dieses Kapitel evaluiert, inwiefern das entwickelte Similarity-Hashing-Verfahren für MP4-Container eine zuverlässige Quellenidentifikation ermöglicht, und beantwortet damit Teilfrage~4 der vorliegenden Arbeit (siehe\ Abschnitt~\ref{sec:ff}).\\
+Dieses Kapitel evaluiert, inwiefern das entwickelte Similarity-Hashing-Verfahren für MP4-Container eine zuverlässige Quellenidentifikation ermöglicht, und beantwortet damit Teilfrage~4 der vorliegenden Arbeit (siehe \cref{sec:ff}).
 
-TODO: Hier ggf. noch verweis auf relevante Schritte in der Pipeline (7 und 8)
+%%%
 
+\section{Analyse der Erkennungsleistung}
 
-\section{Quantitative Analyse der Erkennungsleistung}
-
-Um die Erkennungsleistung des entwickelten Verfahrens zu quantifizieren, wird für jede forensische Untersuchungskategorie die Fläche unter der Receiver-Operating-Characteristic-Kurve (\(AUC\)) berechnet. Diese Metrik bewertet die Klassifikationsleistung schwellenwertunabhängig, indem sie die True Positive Rate der False Positive Rate über alle möglichen Entscheidungsschwellen gegenüberstellt \cite[S.~2825]{pedregosa_scikit-learn_2011}. Grundlage hierfür ist eine paarweise Ähnlichkeitsberechnung und für jede Untersuchungskategorie repräsentiert ein Source~Digest die n-Gramm-Signatur der Referenzmenge. Jede Testdatei wird anschließend mittels asymmetrischem Tversky-Index verglichen, wobei fehlende Boxen nicht bestraft, zusätzliche Boxen hingegen als Abweichung gewertet werden (siehe \cref{sec:aehnlichkeit}). Der resultierende Ähnlichkeitswert zwischen 0 und~1 dient als Klassifikations-Score, aus dessen Verteilung ROC-Kurve und AUC abgeleitet werden. Um die Vergleichbarkeit zwischen den Kategorien herzustellen, wird zusätzlich der Makro-Durchschnitt aller Einzel-AUC-Werte (\(Mean~AUC\)) ausgewiesen\cite{sklearn_auc_2026}. Dies ist ein in vergleichbaren Container-Forensik-Pipelines etabliertes Vorgehen \cite[Kap.~5]{yang_comprehensive_2025}.
-
+Um die Erkennungsleistung des entwickelten Verfahrens zu quantifizieren, wird für jede forensische Untersuchungskategorie die Fläche unter der Receiver-Operating-Characteristic-Kurve (AUC) berechnet (siehe Schritt~8, \cref{sec:pipeline}). Diese Metrik bewertet die Klassifikationsleistung schwellenwertunabhängig, indem sie die True Positive Rate der False Positive Rate über alle möglichen Entscheidungsschwellen gegenüberstellt \cite[S.~2825]{pedregosa_scikit-learn_2011}. Grundlage ist der paarweise Vergleich zwischen Source~Digest und Testdatei mittels asymmetrischem Tversky-Index (siehe \cref{sec:aehnlichkeitsberechnung}), dessen resultierender Ähnlichkeitswert zwischen 0 und~1 als Klassifikations-Score in ROC-Kurve und AUC einfließt.
 
 \begin{table}[h]
     \centering
-    \begin{tabular}{lll}\toprule
-         \textbf{Kategorie der Evaluation}&  \textbf{AUC} (Tversky)& \textbf{Datenbank(en)}\\\midrule
- Gerät& 0.977&VISION\\
-         Modell&  0.974& VISION\\
-         Hersteller&  0.986& VISION\\
- Aufnahmeart& 0.504&VISION\\
- Social-Media-Platform& 0.971&VISION, EVA-7K\\
- KI-Generator& 0.898&AI\\
- Deepfakes und synthetische Inhalte& 0.546&AI\\ 
- Bearbeitungssoftware& 0.635&EVA-7K\\ 
- KI-generierte Aufnahmen& 1.000&VISION, EVA-7K, AI\\
- Native Aufnahmen& 1.000&VISION, EVA-7K, AI\\ 
- Social Media Aufnahmen& 0.992&VISION, EVA-7K, AI\\
- KI-generierte, native und Social-Media-Aufnahmen& 0.997&VISION, EVA-7K, AI\\ \bottomrule
-    \end{tabular}
-    \caption{Erkennungsleistung der Container-Auswertung (AUC) über alle Untersuchungsziele}
-    \label{tab:auc}
+    \begin{threeparttable}
+        \begin{tabular}{lll}\toprule
+             \textbf{Kategorie der Evaluation}&  \textbf{AUC} (Tversky)& \textbf{Datenbank(en)}\\\midrule
+     Gerät& 0.977&VISION\tnote{a}\\
+             Modell&  0.974& VISION\tnote{a}\\
+             Hersteller&  0.986& VISION\tnote{a}\\
+     Aufnahmeart& 0.504&VISION\tnote{a}\\
+     Social-Media-Platform& 0.972&VISION, EVA-7K\tnote{b}\\
+     KI-Generator& 0.898&AI\\
+     Deepfakes und synthetische Inhalte& 0.546&AI\\ 
+     Bearbeitungssoftware& 0.552&EVA-7K\\ 
+     KI-generierte Aufnahmen& 1.000&VISION, EVA-7K, AI\\
+     Native Aufnahmen& 0.933&VISION, EVA-7K, AI\\ 
+     Social Media Aufnahmen& 0.628&VISION, EVA-7K, AI\\ \bottomrule
+        \end{tabular}
+            \begin{tablenotes}\scriptsize
+            \item[a] Nur native Aufnahmen
+            \item[b] Nur Aufnahmen, die durch Social-Media-Upload verändert wurden
+        \end{tablenotes}
+        \caption{Erkennungsleistung der Container-Auswertung (AUC) über alle Untersuchungsziele (Eigene Darstellung basierend auf Daten von Shullani u. a.\cite{shullani_vision_2017} und Yang u. a.\cite{yang_efficient_2020})}
+        \label{tab:auc}
+    \end{threeparttable}
 \end{table}
-
 
 Es wird dargelegt, dass die Klassifikationsleistung des MP4-Similarity-Hashing bei der Quellengeräte- und Markenidentifikation (Gerät: 0.977; Hersteller: 0.986) nahezu identisch zu den Referenzwerten von Klier und Baier ausfällt, welche das MSSH-Verfahren initial für JPEG-Bildstrukturen evaluierten und dort AUC-Werte zwischen 0.949 und 0.992 verzeichneten \cite[Tab. 3]{klier_media_2025}. Dies belegt die erfolgreiche Adaption der n-Gramm-Sequenzierung von statischen Bild- auf hierarchische Video-Container.
 
@@ -71,40 +74,57 @@ Für die Klassifikation KI-generierter Aufnahmen und die Separation von Deepfake
 &298
 \\ \bottomrule
     \end{tabular}
-    \caption{Anzahl der n-Gramm-Paare und Größe des SD (n=2)}
+    \caption{Anzahl der n-Gramm-Paare und Größe des SD bei n=2 (Eigene Darstellung)}
     \label{tab:anzahl}
 \end{table}
 
 Anknüpfend an das methodische Vorgehen der Tokenisierung (siehe \cref{kap:feature}) quantifiziert dieser Abschnitt zudem die strukturelle Komplexität der extrahierten Repräsentationen. Durch die 4CC-Bezeichner resultiert für die 2-Gramm-Basis eine fixe Merkmalslänge von acht Bytes. Die statistische Auswertung (siehe \cref{tab:anzahl}) belegt, dass der Similarity Digest einer Einzeldatei aus durchschnittlich 36 einzigartigen Paaren besteht und einen äußerst kompakten Speicherbedarf von im Schnitt 288 Bytes pro Video aufweist. Eine Ausweitung der Token-Sequenz auf größere Intervalle verursacht hingegen eine signifikante Expansion des benötigten Speicherbedarfs. Die Implementierung von 3-Grammen bewirkt einen relativen Anstieg der Digest-Größe um 60 Prozent, während 4-Gramme eine Zunahme um 125 Prozent gegenüber der 2-Gramm-Basis bewirken.
 
-Für die vorliegende metrikbasierte Evaluierung der Klassifikationsleistung (AUC) wird dennoch konsequent das 2-Gramm-Modell angewandt. Es wird dargelegt, dass eine Erhöhung der n-Gramm-Länge auf n=3 oder n=4 keine abweichenden oder feingranulareren Datenstrukturen für die Klassifikation offenbart. Diese Stagnation des Informationsgewinns deckt sich mit den methodischen Beobachtungen von Klier und Baier, welche nachweisen, dass größere n-Gramme zwar das Datenvolumen signifikant steigern, die absolute Anzahl der einzigartigen Similarity Digests pro Untersuchungsziel jedoch konstant bleibt \cite[Tab. 2]{klier_media_2025}. Die 2-Gramm-Sequenzierung bildet folglich das methodische Optimum zwischen algorithmischer Effizienz und forensischer Trennschärfe ab.
+Für die vorliegende metrikbasierte Evaluierung der Klassifikationsleistung (AUC) wird dennoch konsequent das 2-Gramm-Modell angewandt. Es wird dargelegt, dass eine Erhöhung der n-Gramm-Länge auf n=3 oder n=4 keine abweichenden oder feingranulareren Datenstrukturen für die Klassifikation offenbart (siehe Auswertung nativer Aufnahmen auf Hersteller-Ebene in \cref{sec:hersteller}). Diese Stagnation des Informationsgewinns deckt sich mit den methodischen Beobachtungen von Klier und Baier, welche nachweisen, dass größere n-Gramme zwar das Datenvolumen signifikant steigern, die absolute Anzahl der einzigartigen Similarity Digests pro Untersuchungsziel jedoch konstant bleibt \cite[Tab. 2]{klier_media_2025}. Die 2-Gramm-Sequenzierung bildet folglich das methodische Optimum zwischen algorithmischer Effizienz und forensischer Trennschärfe ab.
+
+\begin{table}
+    \centering
+    \begin{tabular}{l>{\raggedleft\arraybackslash}p{3cm}>{\raggedleft\arraybackslash}p{3cm}>{\raggedleft\arraybackslash}p{3cm}}\toprule
+         \textbf{Videoart}&  \textbf{Anzahl Testvideos}&  \textbf{Anzahl einzigartige Source Digests}& \textbf{Anteil einzigartige SD}\\\midrule
+         Nativ&  584&  22& 4 \%\\
+         Künstlich&  30&  8& 27 \%\\
+         Social Media&  1.296&  13& 1 \%\\
+         Bearbeitet&  2.736&  47& 2 \%\\ \midrule
+ \textbf{Alle}& \textbf{4.646}& \textbf{82}&\textbf{2 \%}\\\bottomrule
+    \end{tabular}
+    \caption{Einzigartige Source Digests (n=2) je Videoart der Testdaten aus den Vision-\cite{shullani_vision_2017}, EVA-7K-\cite{yang_efficient_2020} und KI-Datensatzen (Eigene Darstellung)}
+    \label{tab:unique}
+\end{table}
+
+Die in Tabelle~\ref{tab:unique} dargestellten Werte zeigen, dass die Anzahl der Testvideos je Videoart deutlich größer ist als die Zahl der eindeutigen Source Digests. Dadurch entstehen bei der ROC-Auswertung nur wenige unterschiedliche Schwellenstufen, was die teils zackigen Kurvenverläufe erklärt. Über alle Testdaten hinweg stehen 4.646 Testvideos 82 eindeutigen Source Digests gegenüber. Dies zeigte sich insbesondere bei der Analyse der Aufnahmearten (\textit{flat}, \textit{indoor}, \textit{outdoor}) in \cref{sec:aufnahmeart}, da sich zwischen den einzelnen Aufnahmearten eines Gerätes keine belastbare Unterscheidung feststellen ließ.
+
+Diese Diskrepanz zwischen der Anzahl der Testgeräte und der Anzahl eindeutiger Source Digests korrespondiert unmittelbar mit dem in \cref{sec:geraete} dargelegten Befund zur Geräte-Ebene. Von den insgesamt 34 im VISION-Datensatz enthaltenen Geräten lassen sich neun Gruppen identifizieren, innerhalb derer jeweils zwei bis vier Geräte eine bei n=2 vollständig identische Container-Grammatik aufweisen (siehe \cref{tab:identischesd}).
 
 %%%
 
 \section{Auswertung nach Kategorien}
 
-Anknüpfend an die quantitative Gesamtbetrachtung erfolgt im vorliegenden Kapitel die detaillierte Evaluation der Klassifikationsleistung, differenziert nach den jeweiligen forensischen Untersuchungskategorien. Zur Gewährleistung einer methodisch belastbaren Auswertung bedarf es einer strikten Partitionierung der zugrundeliegenden Datenbasis in spezifische Referenz- und Testmengen.
-Die exakte Konfiguration dieser Evaluierungsszenarien sowie die entsprechende Filterung der Trainings- und Testdaten für die spezifischen Zielsetzungen sind systematisch in \cref{tab:szenarien} zusammengefasst. Diese methodische Abgrenzung soll sicherstellen, dass die in den nachfolgenden Unterkapiteln dargelegten Metriken die funktionale Trennschärfe des Similarity Hashing für die jeweilige isolierte Problemstellung präzise abbilden.
+Im vorliegenden Abschnitt erfolgt die detaillierte Evaluation der Klassifikationsleistung, differenziert nach den jeweiligen forensischen Untersuchungskategorien. Die exakte Konfiguration dieser Evaluierungsszenarien sowie die entsprechende Filterung der Trainings- und Testdaten für die spezifischen Zielsetzungen sind systematisch in \cref{tab:szenarien} zusammengefasst. Diese methodische Abgrenzung soll sicherstellen, dass die in den nachfolgenden Unterkapiteln dargelegten Metriken die funktionale Trennschärfe des Similarity Hashing für die jeweilige isolierte Problemstellung präzise abbilden.
 
 \begin{table}[H]
     \centering\small
     \begin{threeparttable}
         
-        \begin{tabular}{>{\raggedright\arraybackslash}p{0.25\linewidth}>{\raggedright\arraybackslash}p{0.34\linewidth}>{\raggedright\arraybackslash}p{0.3\linewidth}}\toprule
+        \begin{tabular}{>{\raggedright\arraybackslash}p{0.24\linewidth}>{\raggedright\arraybackslash}p{0.32\linewidth}>{\raggedright\arraybackslash}p{0.33\linewidth}}\toprule
               \textbf{Kategorie / Ziel}& \textbf{Testdaten}& \textbf{Trainingsdaten}\\\midrule
-              Geräte erkennen\tnote{a}& Unveränderte Originalaufnahmen& Ein Digest für jedes der 34 Geräte\\\midrule
-  Modell erkennen\tnote{a}& Unveränderte Originalaufnahmen&Ein Digest für jedes der 28 Modelle\\\midrule
-              Hersteller erkennen\tnote{a}& Unveränderte Originalaufnahmen& Ein Digest für jede der 10 Hersteller\\\midrule
-  Aufnahmeart erkennen\tnote{a}& Unveränderte Originalaufnahmen&Jeweils ein Digest für Aufnahmetypen Outdoor, Indoor und Flat\\\midrule
+              Geräte erkennen\tnote{a}& 525 unveränderte Originalaufnahmen& Ein Digest für jedes der 34 Geräte aus jeweils 3 nativen Aufnahmen\\\midrule
+  Modell erkennen\tnote{a}& 525 unveränderte Originalaufnahmen&Ein Digest für jedes der 28 Modelle aus jeweils 3 bis 9 nativen Aufnahmen\\\midrule
+              Hersteller erkennen\tnote{a}& 525 unveränderte Originalaufnahmen& Ein Digest für jede der 10 Hersteller aus jeweils 3 bis 39 nativen Aufnahmen\\\midrule
+  Aufnahmeart erkennen\tnote{a}& 525 unveränderte Originalaufnahmen&Jeweils ein Digest für Aufnahmetypen Outdoor, Indoor und Flat aus jeweils 34 nativen Aufnahmen\\\midrule
             
-              Erkennung der Social-Media-Plattform& Native Aufnahmen und Videos, die durch Social-Media-Upload verändert wurden, ohne weitere Bearbeitung& Ein Digest für jede der 5 Social-Media-Plattformen über alle Geräte hinweg\\\midrule
+              Erkennung der Social-Media-Plattform& 1.880 native Aufnahmen und Videos, die durch Social-Media-Upload verändert wurden, ohne weitere Bearbeitung& Ein Digest für jede der 5 Social-Media-Plattformen über alle Geräte hinweg aus jeweils 79 bis 184 durch Social Media veränderte Aufnahmen\\\midrule
             
-              KI-Modell erkennen& Videos, die auf Text- oder Bildvorlagen basieren& Ein Digest für jedes der 11 KI-Modelle\\\midrule
-              Erkennung von Image-to-Video und Text-to-Video\tnote{b}& Videos, die auf Text- oder Bildvorlagen basieren& Jeweils ein Digest für synthetische Videos und Deepfakes\\\midrule
+              KI-Modell erkennen& 30 Videos, die auf Text- oder Bildvorlagen basieren& Ein Digest für jedes der 11 KI-Modelle aus jeweils 1 bis 7 Videos\\\midrule
+              Erkennung von Image-to-Video und Text-to-Video\tnote{b}& 21 Videos, die auf Text- oder Bildvorlagen basieren& Jeweils ein Digest für synthetische Videos und Deepfakes aus jeweils 10 bis 12 Videos\\\midrule
             
              	
-             Bearbeittungssoftware erkennen& Bearbeitete Videos& Ein Digest für jede der 9 Bearbetungsarten\\\midrule
-              Ki-generierte, native und Social Media Aufnahmen erkennen& Alle Videos, die nicht nachträglich bearbeitet wurden& Ein Digest jeweils für alle der 3 Arten: KI-generiert, Social-Media und native Aufnahmen\\\bottomrule
+             Bearbeittungssoftware erkennen& 3.039 native und bearbeitete Videos& Ein Digest für jede der 9 Bearbetungsarten aus jeweils 392 Videos\\\midrule
+              Ki-generierte, native und Social Media Aufnahmen erkennen& 4.646 Videos (gesamter Testdatensatz)& Ein Digest jeweils für alle der 3 Arten: KI-generiert, Social-Media und native Aufnahmen mit jeweils 31 bis 526 Videos\\\bottomrule
         \end{tabular}
 
         \begin{tablenotes}\scriptsize
@@ -112,153 +132,446 @@ Die exakte Konfiguration dieser Evaluierungsszenarien sowie die entsprechende Fi
             \item[b] Reduktion auf die Datensätze der IDs AI01, AI02, AI04, AI07 und AI11, da nur dort jeweils Videos der Kategorie synthetisch und Deepfake zur Verfügung stehen
         \end{tablenotes}
 
-        \caption{Evaluationsszenarien samt Eingrenzung der Trainings- und Testdaten}
+        \caption{Evaluationsszenarien samt Eingrenzung der Trainings- und Testdaten (Eigene Darstellung)}
         \label{tab:szenarien}
         
     \end{threeparttable}
 \end{table}
 
+Ein Auszug der generierten Source Digests findet sich im Anhang dieser Arbeit, gegliedert nach Geräte-, Modell- und Herstellerebene (siehe \cref{tab:sourcedigests_vision}), nach Social-Media-Plattformen (siehe \cref{tab:sourcedigests_eva}) sowie nach KI-Modellen (siehe \cref{tab:sourcedigests_ki}).
+
 %%%
 
 \subsection{Native Aufnahmen}
 
-In diesem Abschnitt wird die Quellenerkennung (SCI, Source Camera Identification) für native, unveränderte Videoaufnahmen evaluiert. Das Ziel ist die präzise Differenzierung von Geräten (\cref{fig:auc_geraete}), Modellen (\cref{fig:auc_modell}) und übergeordneten Herstellermarken (\cref{fig:auc_hersteller}) anhand ihrer unverfälschten Container-Struktur. Als Test- und Trainingsdaten dienen hierbei ausschließlich unveränderte Originalaufnahmen aus dem VISION-Datensatz. \footnote{Gemäß Errata (\url{https://lesc.dinfo.unifi.it/VISION/README.txt}) wurden fehlerhafte Aufnahmen der Geräte D03 (Huawei P9) und D19 (Apple iPhone 6 Plus) für die Evaluation nicht weiter berücksichtigt, da eine fehlerhafte Klassifikation als native Inhalte vorlag. Zusätzlich wurde das Gerät D07 (Lenovo P70-A) bei der Erkennung von nativen Aufnahmen ausgeschlossen, da die Containerstruktur im 3GP-Format vorliegenden Dateien nicht zuverlässig extrahiert werden konnte.}
+In diesem Abschnitt wird die Quellenerkennung (SCI, Source Camera Identification) für native, unveränderte Videoaufnahmen evaluiert. Das Ziel ist die Differenzierung von Geräten (\cref{fig:auc_geraete}), Modellen (\cref{fig:auc_modell}) und übergeordneten Herstellermarken (\cref{fig:auc_hersteller}) anhand ihrer unverfälschten Container-Struktur. Als Test- und Trainingsdaten dienen hierbei ausschließlich unveränderte Originalaufnahmen aus dem VISION-Datensatz\cite{shullani_vision_2017}. \footnote{Gemäß Errata (\url{https://lesc.dinfo.unifi.it/VISION/README.txt}) wurden fehlerhafte Aufnahmen der Geräte D03 (Huawei P9) und D19 (Apple iPhone 6 Plus) für die Evaluation nicht weiter berücksichtigt, da eine fehlerhafte Klassifikation als native Inhalte vorlag. Zusätzlich wurde das Gerät D07 (Lenovo P70-A) bei der Erkennung von nativen Aufnahmen ausgeschlossen, da die Containerstruktur im 3GP-Format vorliegenden Dateien nicht zuverlässig extrahiert werden konnte.}
 
-Für die Klassifikation auf Modell-Ebene wird ein aggregierter Source-Digest für jedes der 28 verfügbaren Gerätemodelle generiert. Für die Auswertung auf Marken-Ebene werden die extrahierten n-Gramme sämtlicher Gerätemodelle, die derselben Marke angehören (beispielsweise alle iPhone-Varianten für die Marke Apple), durch eine mathematische Mengenvereinigung zu einem einzigen, umfassenden Marken-Digest aggregiert. Dieses Aggregationsverfahren stellt sicher, dass die signifikante strukturelle Varianz innerhalb einer Produktlinie vollständig erfasst wird. Auf Geräteebene wird für jedes der 34 Geräte anhand ihrer IDs ein Source Digest gebildet.\\
+Für die Klassifikation auf Modell-Ebene wird ein aggregierter Source-Digest für jedes der 28 verfügbaren Gerätemodelle generiert. Für die Auswertung auf Hersteller-Ebene werden die extrahierten n-Gramme sämtlicher Gerätemodelle, die derselben Marke angehören (beispielsweise alle iPhone-Varianten für die Marke Apple), durch eine mathematische Mengenvereinigung zu einem einzigen, umfassenden Hersteller-Source-Digest aggregiert. Dieses Aggregationsverfahren stellt sicher, dass die signifikante strukturelle Varianz innerhalb einer Produktlinie vollständig erfasst wird. Auf Geräteebene wird für jedes der 34 Geräte anhand ihrer IDs ein Source Digest gebildet.
 
-% Gerät
+%%%
 
-\begin{figure}[!h]
-    \centering
-    \includegraphics[width=1\linewidth]{grafiken/roc/devices.png}
-    \caption{ROC-Analyse und AUC-Werte zur Quellkamera-Identifikation (SCI) auf Geräte-Ebene mittels 2-Gramm-Similarity-Hashing (VISION-Datensatz)}
-    \label{fig:auc_geraete}
-\end{figure}
-
-\begin{figure}[!h]
-    \centering
-    \includegraphics[width=1\linewidth]{grafiken/roc/models.png}
-    \caption{ ROC-Analyse und AUC-Werte zur Quellkamera-Identifikation (SCI) auf Modell-Ebene mittels 2-Gramm-Similarity-Hashing (VISION-Datensatz)}
-    \label{fig:auc_modell}
-\end{figure}
+\subsubsection{Hersteller}
+\label{sec:hersteller}
 
 \begin{figure}[!h]
     \centering
     \includegraphics[width=1\linewidth]{grafiken/roc/brands.png}
-    \caption{ROC-Analyse und AUC-Werte zur Quellkamera-Identifikation (SCI) auf Hersteller-Ebene mittels 2-Gramm-Similarity-Hashing (VISION-Datensatz)}
+    \caption{ROC-Analyse und AUC-Werte zur Quellkamera-Identifikation (SCI) auf Hersteller-Ebene mittels 2-Gramm-Similarity-Hashing mit dem VISION-Datensatz\cite{shullani_vision_2017} (Eigene Darstellung)}
     \label{fig:auc_hersteller}
 \end{figure}
 
 \begin{figure}[!h]
     \centering
+    \includegraphics[width=1\linewidth]{grafiken/roc/brands_long4.png}
+    \caption{ROC-Analyse und AUC-Werte zur Quellkamera-Identifikation (SCI) auf Hersteller-Ebene mittels 4-Gramm-Similarity-Hashing mit dem VISION-Datensatz\cite{shullani_vision_2017} (Eigene Darstellung)}
+    \label{fig:auc_hersteller4}
+\end{figure}
+
+Die Aggregation der Metadaten auf Hersteller-Ebene (siehe \cref{fig:auc_hersteller}) resultiert in der höchsten Klassifikationsleistung dieser Versuchsreihe zu nativen Videos mit einem AUC von 0.986. Insbesondere die Marken Apple, Microsoft, LG, Sony und Wiko lassen sich strukturell exzellent differenzieren und erreichen fehlerfreie Erkennungsraten. Diese Präzision begründet sich durch herstellerspezifische Besonderheiten in der Container-Architektur. Apple nutzt extensiv proprietäre QuickTime-Atome, Microsoft integriert spezifische Windows-Metadaten-Container und LG verwendet gesonderte Container zur Authentifizierung. Einen architektonischen Kontrast bildet Sony, dessen Geräte den minimalistischsten Container im gesamten Datensatz erzeugen und lediglich 25 unterschiedliche 2-Gramme aufweisen. Eine bemerkenswerte forensische Ausnahme stellt zudem der Hersteller Wiko dar. Die Marke integriert kein einziges proprietäres oder herstellerexklusives 2-Gramm, weshalb die 100-prozentige Erkennungsrate ausschließlich durch eine im Datensatz absolut einzigartige Anordnung der Standard-Atome erreicht wird. Der Wechsel von 2- auf 4-Gramm verändert das Ergebnis nur marginal, da der Hersteller-AUC von 0.9862 auf 0.9864 (siehe \cref{fig:auc_hersteller4}) steigt und die per Hersteller erzielten Einzelwerte weitgehend stabil bleiben. Für diese Ebene liefert die größere n-Gramm-Länge damit keinen Informationsgewinn und deshalb wird in den folgenden Auswertungen ausschließlich das 2-Gramm-Modell verwendet.
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{l>{\raggedright\arraybackslash}p{0.8\linewidth}}
+        \toprule
+        \textbf{Hersteller} & \textbf{Charakteristisches Merkmal} \\
+        \midrule
+        Apple & Proprietäre QuickTime-Atome (z. B. \(chan\), \(wave\), \(colr\), \(gmhd\), \(gmin\), \(mebx\))\\
+        Microsoft & Windows-spezifischer Metadaten-Container \(Xtra\) \\
+        LG & Authentifizierungs-Container \(auth\) \\
+        Samsung & Container \(smrd\), \(smta\), \(SDLN\) \\
+        Sony & Minimalcontainer mit nur 25 einzigartigen 2-Grammen, exklusives Atom \(uuid\) \\
+        Wiko & Keine exklusiven Atome, Unterscheidung über Standard-Atom-Reihenfolge \\
+        \bottomrule
+    \end{tabular}
+\caption{Herstellerspezifische Alleinstellungsmerkmale der 2-Gramm-Digests (Eigene Darstellung)}
+\label{tab:hersteller_merkmale}
+\end{table}
+
+%%%
+
+\subsubsection{Modell}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=1\linewidth]{grafiken/roc/models.png}
+    \caption{ROC-Analyse und AUC-Werte zur Quellkamera-Identifikation (SCI) auf Modell-Ebene mittels 2-Gramm-Similarity-Hashing mit dem VISION-Datensatz \cite{shullani_vision_2017} (Eigene Darstellung)}
+    \label{fig:auc_modell}
+\end{figure}
+
+Bei der Klassifikation der spezifischen Modelle (siehe \cref{fig:auc_modell}) wird eine Trennschärfe mit einem AUC von 0.974 gemessen. Eine Auswertung der Falsch-Positiv-Paare zeigt, dass rund 5 Prozent aller fehlklassifizierten Modell-Kombinationen bereits bei n=2 einen Ähnlichkeitswert von exakt 1.0 aufweisen, etwa bei OnePlus A3000 und A3003, Huawei Honor5 und P89 sowie Huawei P9 und P9lite. Diese vollständige strukturelle Ununterscheidbarkeit bleibt auch bei n=4 unverändert bestehen.
+
+Den deutlichsten Einzelfall bildet OnePlus A3000 und A3003, das sich selbst bei n=4 nicht auflösen lässt, was angesichts zweier Varianten derselben Baureihe mit vermutlich identischer Firmware- und Encoder-Konfiguration plausibel erscheint. Das Muster tritt jedoch auch systematisch über Herstellergrenzen hinweg bei Budget-Android-Geräten mit vermutlich identischen Referenzdesigns auf, etwa bei Honor5 und Zenfone2Laser oder Xiaomi RedmiNote3 gegenüber Zenfone2Laser, P89 und Honor5, jeweils mit einer Ähnlichkeit von 1.0. Dies deutet auf identische Hardware-Encoder sowie Standard-Implementierungen des Android-Media-Frameworks hin, die dieselbe Container-Grammatik erzeugen, ein Effekt, der bei preisgünstigen Geräten mit häufig geteilten Chipsatz-Referenzdesigns besonders ausgeprägt ist.
+
+Eine weitere Anomalie zeigt OnePlus A3003 im Vergleich zu fremden Herstellern. Es erzeugt hohe Falsch-Positiv-Werte gegenüber Huawei P9 und P9lite (0.970) sowie Samsung GalaxyS3 (0.933). Eine abgestufte Betrachtung weiterer Android-Modelle zeigt kontinuierlich abnehmende Ähnlichkeit über Asus Zenfone2Laser, Huawei P89 und Honor5 (je 0.882) bis zur AscendG6 (0.875) und dem Sony XperiaZ1Compact (0.840), während der Abgleich mit Apple-Geräten durchgehend auf 0.39 bis 0.41 abfällt. Dies untermauert, dass die Verwechslungsgefahr strikt auf das Android-Ökosystem beschränkt bleibt.
+
+Ein vergleichbares Phänomen zeigt sich im Apple-Ökosystem. iPhone5 (siehe \cref{tab:similarity_iphone5}, iPhone5c und iPhone6 sowie iPhone4 und iPad2 werden ebenfalls mit einer Ähnlichkeit von 1.0 wechselseitig fehlklassifiziert. Da Apple über Gerätegenerationen und Produktkategorien hinweg eine einheitliche QuickTime-Basisstruktur verwendet, liegt hier vermutlich eine geräteübergreifende Konstanz der Firmware vor, die sich von der herstellerübergreifenden Ursache im Android-Fall unterscheidet.
+
+\begin{table}
+    \centering
+    \small
+    \begin{tabular}{>{\raggedright\arraybackslash}p{1.5cm}>{\raggedright\arraybackslash}p{1.7cm}>{\raggedright\arraybackslash}p{4.4cm}l>{\raggedright\arraybackslash}p{1.2cm}>{\raggedright\arraybackslash}p{1.2cm}>{\raggedright\arraybackslash}p{1.4cm}}\toprule
+         \textbf{ground \_truth \_source}&  \textbf{ground \_truth \_mp4}&  \textbf{filename}&  \textbf{tp}&  \textbf{similarity \_2}&  \textbf{similarity \_3}& \textbf{similarity \_4}\\\midrule
+         iPhone5&  iphone5&  D29\_V\_outdoor\_move\_0002.mov&  True&  1.000&  1.000& 1.000\\
+         iPhone5&  iphone5c&  D05\_V\_outdoor\_move\_0002.mov&  False&  1.000&  1.000& 1.000\\
+         iPhone5&  iphone6&  D15\_V\_outdoor\_move\_0002.mov&  False&  1.000&  1.000& 1.000\\
+         iPhone5&  ipadmini&  D20\_V\_outdoor\_move\_0002.mov&  False&  1.000&  1.000& 1.000\\
+         iPhone5&  iphone6&  D06\_V\_outdoor\_move\_0002.mov&  False&  0.920&  0.906& 0.909\\
+         iPhone5&  iphone5c&  D14\_V\_outdoor\_move\_0002.mov&  False&  0.846&  0.804& 0.780\\
+         iPhone5&  zenfone2laser&  D23\_V\_outdoor\_move\_0002.mp4&  False&  0.588&  0.361& 0.211\\
+         iPhone5&  a3000&  D25\_V\_outdoor\_move\_0002.mp4&  False&  0.571&  0.351& 0.205\\
+         iPhone5&  p9&  D03\_V\_outdoor\_move\_0002.mp4&  False&  0.559&  0.333& 0.211\\
+         iPhone5&  ascendg6&  D33\_V\_outdoor\_move\_0002.mp4&  False&  0.500&  0.294& 0.194\\ \bottomrule
+    \end{tabular}
+    \caption{Auszug der Ähnlichkeitsberechnungen für das Modell iPhone5 aus dem VISION-Datensatz\cite{shullani_vision_2017} (Eigene Darstellung)}
+    \label{tab:similarity_iphone5}
+\end{table}
+
+%%%
+
+\subsubsection{Geräte}
+\label{sec:geraete}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=1\linewidth]{grafiken/roc/devices.png}
+    \caption{ROC-Analyse und AUC-Werte zur Quellkamera-Identifikation (SCI) auf Geräte-Ebene mittels 2-Gramm-Similarity-Hashing mit dem VISION-Datensatz\cite{shullani_vision_2017} (Eigene Darstellung)}
+    \label{fig:auc_geraete}
+\end{figure}
+
+Die Evaluation auf Ebene der individuellen physischen Endgeräte (siehe \cref{fig:auc_geraete}) erzielt einen durchschnittlichen AUC-Wert von 0.977. Eine detaillierte Betrachtung der strukturellen Ähnlichkeiten offenbart jedoch Herausforderungen bei der Differenzierung nah verwandter Geräte desselben Herstellers. Insgesamt lassen sich neun Gruppen von Geräten identifizieren, deren Source-Digest bei n=2 vollständig identisch ist (siehe \cref{tab:identischesd}). Auffällig ist, dass sich diese Gruppen nicht nur innerhalb einzelner Modelle wie D01, D22 und D26 (GalaxyS3Mini und GalaxyTrendPlus) bilden, sondern auch modellübergreifend innerhalb derselben Produktfamilie auftreten, etwa bei D05, D15, D19 und D29, welche die Modelle iPhone5, iPhone5c, iPhone6 und iPhone6Plus zusammenfassen, sowie bei D02, D09, D10 und D18, welche die Modelle iPhone4 und iPhone4s betreffen. Exemplarisch ist hierbei das Gerät D32 (OnePlus A3003) anzuführen, welches mit dem Gerät D25 (OnePlus A3000) eine berechnete Ähnlichkeit (Similarity) von 1,0 aufweist (siehe Auszug der Ähnlichkeitsberechnungen in \cref{tab:similarity_geraete}), obgleich der Digest von D32 vier zusätzlichen 2-Gramme enthält. Diese maximale Ähnlichkeitsbewertung verdeutlicht, dass die Container-Grammatik innerhalb einer eng verwandten Hardware-Generation oftmals eine so weitreichende Schnittmenge aufweist, dass das Fehlen einer Bestrafung für zusätzliche Boxen im asymmetrischen Tversky-Index zu vereinzelten falsch-positiven Zuordnungen führt. Die in \cref{tab:identischesd} aufgeführten Gruppen zeigen somit, dass dieses Phänomen kein Einzelfall des Modellpaars A3000 und A3003 ist, sondern eine strukturelle Eigenschaft des Verfahrens auf Geräte-Ebene darstellt, sobald mehrere Geräte auf eine sehr ähnliche Firmware- oder Encoder-Konfiguration zurückgreifen.
+
+Eine vollständige paarweise Auswertung aller neun Gruppen bestätigt, dass innerhalb jeder dieser Gruppen keinerlei Trennschärfe zwischen den betroffenen Geräten besteht. So liegt die Ähnlichkeit zwischen D25 und D32 in beiden Richtungen bei 1,0 und unterscheidet sich damit nicht vom jeweiligen Selbstvergleich eines Geräts mit sich selbst, dasselbe gilt für D03/D16, D02/D09, D10/D18, D13/D14, D08/D31 sowie die Dreiergruppen D01/D22/D26 und D23/D28/D30. Geräte derselben Modellreihe oder mit identischer Firmware- und Encoder-Basis lassen sich mit dem 2-Gramm-Similarity-Hashing folglich nicht auf Geräte-Ebene unterscheiden. Der hohe Gesamt-AUC von 0.977 wird damit maßgeblich durch die übrigen, strukturell gut unterscheidbaren Geräte getragen.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ll}
+\toprule
+\textbf{Lfd.} & \textbf{Gerät (Modell)} \\
+\midrule
+1 & D05 (iPhone5c), D15 (iPhone6), D19 (iPhone6Plus), D29 (iPhone5) \\
+2 & D23 (Zenfone2Laser), D28 (P8), D30 (Honor5c) \\
+3 & D01 (GalaxyS3Mini), D22 (GalaxyTrendPlus), D26 (GalaxyS3Mini) \\
+4 & D08 (GalaxyTab3), D31 (GalaxyS4Mini) \\
+5 & D02 (iPhone4s), D09 (iPhone4) \\
+6 & D10 (iPhone4s), D18 (iPhone5c) \\
+7 & D13 (iPad2), D14 (iPhone5c) \\
+8 & D03 (P9), D16 (P9Lite) \\
+9 & D25 (A3000), D32 (A3003) \\
+\bottomrule
+\end{tabular}
+\caption{Identische Source-Digest der Geräte mit Modellbezeichnung (Eigene Darstellung)}
+\label{tab:identischesd}
+\end{table}
+
+\begin{table}
+    \centering
+    \small
+    \begin{tabular}{>{\raggedright\arraybackslash}p{1.5cm}>{\raggedright\arraybackslash}p{1.7cm}>{\raggedright\arraybackslash}p{4.4cm}l>{\raggedright\arraybackslash}p{1.2cm}>{\raggedright\arraybackslash}p{1.2cm}>{\raggedright\arraybackslash}p{1.4cm}}\toprule
+         \textbf{ground \_truth \_source}&  \textbf{ground \_truth \_mp4}&  \textbf{filename}&  \textbf{tp}&  \textbf{similarity \_2}&  \textbf{similarity \_3}& \textbf{similarity \_4}\\\midrule
+         D32&  d25&  D25\_V\_flat\_move\_0002.mp4&  False&  1.0&  1.0& 1.0
+\\
+         D32&  d32&  D32\_V\_flat\_move\_0002.mp4&  True&  1.0&  1.0& 1.0
+\\
+         D32&  d03&  D03\_V\_flat\_move\_0002.mp4&  False&  0.970588&  0.944444& 0.921053
+\\
+ D32& d31& D31\_V\_outdoor\_still\_0001.mp4& False& 0.6875& 0.617647&0.555556
+\\
+         D32&  d20&  D20\_V\_indoor\_move\_0002.mov&  False&  0.408163&  0.25& 0.148148
+\\
+         D32&  d29&  D29\_V\_outdoor\_still\_0002.mov&  False&  0.392157&  0.22807& 0.129032
+\\ \bottomrule
+    \end{tabular}
+    \caption{Auszug der Ähnlichkeitsberechnungen für das Gerät \(D32\) aus dem VISION-Datensatz\cite{shullani_vision_2017} (Eigene Darstellung)}
+    \label{tab:similarity_geraete}
+\end{table}
+
+%%%
+
+\subsubsection{Aufnahmeart}
+\label{sec:aufnahmeart}
+
+\begin{figure}[!h]
+    \centering
     \includegraphics[width=1\linewidth]{grafiken/roc/contenttype.png}
-    \caption{ROC-Analyse und AUC-Werte zur Quellkamera-Identifikation (SCI) auf Ebene der Aufnahmeart mittels 2-Gramm-Similarity-Hashing (VISION-Datensatz)}
+    \caption{ROC-Analyse und AUC-Werte zur Quellkamera-Identifikation (SCI) auf Ebene der Aufnahmeart mittels 2-Gramm-Similarity-Hashing mit dem VISION-Datensatz\cite{shullani_vision_2017} (Eigene Darstellung)}
     \label{fig:auc_aufnahmeart}
 \end{figure}
 
-Die Evaluation auf Ebene der individuellen physischen Endgeräte (siehe \cref{fig:auc_geraete}) erzielt einen durchschnittlichen AUC-Wert von 0.977. Eine detaillierte Betrachtung der strukturellen Ähnlichkeiten offenbart jedoch singuläre Herausforderungen bei der Differenzierung nah verwandter Geräte desselben Herstellers. Exemplarisch ist hierbei das Gerät D32 (OnePlus A3003) anzuführen, welches mit dem Gerät D25 (OnePlus A3000) eine berechnete Ähnlichkeit (Similarity) von 1,0 aufweist, obgleich der Digest von D32 aus vier zusätzlichen 2-Grammen konstituiert wird. Diese maximale Ähnlichkeitsbewertung verdeutlicht, dass die Container-Grammatik innerhalb einer eng verwandten Hardware-Generation oftmals eine so weitreichende Schnittmenge aufweist, dass das Fehlen einer Bestrafung für zusätzliche Boxen im asymmetrischen Tversky-Index zu vereinzelten falsch-positiven Zuordnungen führt.
+Abschließend wird die Trennschärfe hinsichtlich der physikalischen Aufnahmeart (Flat, Indoor, Outdoor) evaluiert (siehe \cref{fig:auc_aufnahmeart}). Wie mit einem AUC von 0.504 zu erwarten, bildet das Verfahren hierbei lediglich eine Gleichverteilung nach. Auffällig ist zudem der stark gezackte Verlauf der ROC-Kurven, der sich unmittelbar aus der Ununterscheidbarkeit der Dateien innerhalb eines einzelnen Geräts erklärt. Wie der Auszug in \cref{tab:similarity_aufnahmeart_d01} für Gerät D01 zeigt, erzielen alle 18 betrachteten Aufnahmen unabhängig von der tatsächlichen Aufnahmeart (Flat, Indoor, Outdoor) durchgehend eine Ähnlichkeit von 1,0 bei n=2 bis n=4, da der Similarity-Hash ausschließlich die Container-Struktur und nicht den Bildinhalt erfasst. Da somit pro Gerät nur ein einziger, feststehender Ähnlichkeitswert existiert, kann der Klassifikator nicht kontinuierlich zwischen richtig-positiven und falsch-positiven Aufnahmen unterscheiden, sondern trifft für jede Datei eines Geräts dieselbe Entscheidung. Dies führt dazu, dass die ROC-Kurve nicht als glatte, monoton verlaufende Linie, sondern als Treppenfunktion mit wenigen, großen Sprüngen erscheint, da sich der Schwellenwert je Gerät stets gleichzeitig auf mehrere Dateien auswirkt. Abgesehen von den Geräten D24 (Xiaomi RedmiNote3) und D32 (OnePlus A3003), welche in Abhängigkeit des Content-Types eine leicht modifizierte Containerstruktur generierten, konnten keine messbaren Differenzen bei den extrahierten n-Grammen nach Aufnahmeumgebung nachgewiesen werden. Dieses Resultat ist plausibel, da bei der Erstellung des VISION-Datensatzes keine veränderten manuellen Kameraeinstellungen je nach Content-Type vorgenommen wurden \cite[Kap. 3]{shullani_vision_2017}.
 
-% Modell
-
-Bei der Klassifikation der spezifischen Gerätemodelle (siehe \cref{fig:auc_modell}) wird eine vergleichbare Trennschärfe mit einem AUC von 0.974 gemessen. Eine signifikante Anomalie stellt in dieser Untersuchungskategorie abermals das Modell OnePlus A3003 (D32) dar, welches ungewöhnlich hohe Falsch-Positiv-Raten in Bezug auf ausgewählte Samsung-Modelle (Ähnlichkeitswert von 0.933) sowie Huawei-Modelle (0.970) generiert. Dies ist auf die Nutzung weitgehend identischer Hardware-Encoder sowie auf Standard-Implementierungen innerhalb des Android-Media-Frameworks zurückzuführen, welche über Herstellergrenzen hinweg dieselbe Container-Grammatik erzeugen \cite{yang_comprehensive_2025}. Eine versuchsweise Erhöhung der n-Gramm-Länge auf n=4 senkt die absoluten Ähnlichkeitswerte in diesen spezifischen Fehlerfällen zwar leicht auf 0.921 respektive 0.823 ab, kann die zugrundeliegende strukturelle Gleichheit der Android-Basisarchitekturen jedoch nicht vollständig auflösen.
-
-% Hersteller
-
-Die Aggregation der Metadaten auf Hersteller-Ebene (siehe \cref{fig:auc_hersteller}) resultiert in der höchsten Klassifikationsleistung dieser Versuchsreihe mit einem AUC von 0.986. Insbesondere die Marken Apple, Microsoft, LG, Sony und Wiko lassen sich strukturell exzellent differenzieren und erreichen fehlerfreie Erkennungsraten. Diese Präzision begründet sich durch herstellerspezifische Besonderheiten in der Container-Architektur. Apple nutzt extensiv proprietäre QuickTime-Atome, Microsoft integriert spezifische Windows-Metadaten-Container und LG verwendet gesonderte Container zur Authentifizierung. Einen architektonischen Kontrast bildet Sony, dessen Geräte den minimalistischsten Container im gesamten Datensatz erzeugen und lediglich 25 unterschiedliche 2-Gramme aufweisen. Eine bemerkenswerte forensische Ausnahme stellt zudem der Hersteller Wiko dar. Die Marke integriert kein einziges proprietäres oder herstellerexklusives 2-Gramm, weshalb die 100-prozentige Erkennungsrate ausschließlich durch eine im Datensatz absolut einzigartige Anordnung (Topologie) der Standard-Atome erreicht wird.
-
-% Aufnahmeart
-
-Abschließend wird die Trennschärfe hinsichtlich der physikalischen Aufnahmeart (Flat, Indoor, Outdoor) evaluiert (siehe \cref{fig:auc_aufnahmeart}). Wie mit einem AUC von 0.504 zu erwarten, bildet das Verfahren hierbei lediglich eine Gleichverteilung nach. Abgesehen von den Geräten D24 (Xiaomi RedmiNote3) und D32 (OnePlus A3003), welche in Abhängigkeit des Content-Types eine leicht modifizierte Containerstruktur generierten, konnten keine messbaren Differenzen bei den extrahierten n-Grammen nach Aufnahmeumgebung nachgewiesen werden. Dieses Resultat ist methodisch zwingend plausibel, da bei der Erstellung des VISION-Datensatzes keine veränderten manuellen Kameraeinstellungen je nach Content-Type vorgenommen wurden \cite[Kap. 3]{shullani_vision_2017}. Folglich hinterlässt die physische Umgebung keine Spuren in der Syntax des MP4-Containers.
+\begin{table}[H]
+    \centering
+    \small
+    \begin{tabular}{>{\raggedright\arraybackslash}p{1.4cm}>{\raggedright\arraybackslash}p{1.5cm}>{\raggedright\arraybackslash}p{4.7cm}l>{\raggedright\arraybackslash}p{1.2cm}>{\raggedright\arraybackslash}p{1.2cm}>{\raggedright\arraybackslash}p{1.4cm}}\toprule
+         \textbf{ground \_truth \_source}&  \textbf{ground \_truth \_mp4}&  \textbf{filename}&  \textbf{tp}&  \textbf{similarity \_2}&  \textbf{similarity \_3}& \textbf{similarity \_4}\\\midrule
+         FLAT&  flat&  D01\_V\_flat\_move\_0002.mp4&  True&  1.0&  1.0& 1.0\\
+         FLAT&  flat&  D01\_V\_flat\_panrot\_0001.mp4&  True&  1.0&  1.0& 1.0\\
+         FLAT&  flat&  D01\_V\_flat\_still\_0001.mp4&  True&  1.0&  1.0& 1.0\\
+         FLAT&  indoor&  D01\_V\_indoor\_move\_0002.mp4&  False&  1.0&  1.0& 1.0\\
+         FLAT&  indoor&  D01\_V\_indoor\_panrot\_0001.mp4&  False&  1.0&  1.0& 1.0\\
+         FLAT&  indoor&  D01\_V\_indoor\_panrot\_0002.mp4&  False&  1.0&  1.0& 1.0\\
+         FLAT&  indoor&  D01\_V\_indoor\_still\_0001.mp4&  False&  1.0&  1.0& 1.0\\
+         FLAT&  indoor&  D01\_V\_indoor\_still\_0002.mp4&  False&  1.0&  1.0& 1.0\\
+         FLAT&  outdoor&  D01\_V\_outdoor\_move\_0002.mp4&  False&  1.0&  1.0& 1.0\\
+         FLAT&  outdoor&  D01\_V\_outdoor\_move\_0003.mp4&  False&  1.0&  1.0& 1.0\\
+         FLAT&  outdoor&  D01\_V\_outdoor\_move\_0004.mp4&  False&  1.0&  1.0& 1.0\\
+         FLAT&  outdoor&  D01\_V\_outdoor\_panrot\_0001.mp4&  False&  1.0&  1.0& 1.0\\
+         FLAT&  outdoor&  D01\_V\_outdoor\_panrot\_0002.mp4&  False&  1.0&  1.0& 1.0\\
+         FLAT&  outdoor&  D01\_V\_outdoor\_panrot\_0003.mp4&  False&  1.0&  1.0& 1.0\\
+         FLAT&  outdoor&  D01\_V\_outdoor\_panrot\_0004.mp4&  False&  1.0&  1.0& 1.0\\
+         FLAT&  outdoor&  D01\_V\_outdoor\_still\_0001.mp4&  False&  1.0&  1.0& 1.0\\
+         FLAT&  outdoor&  D01\_V\_outdoor\_still\_0002.mp4&  False&  1.0&  1.0& 1.0\\
+         FLAT&  outdoor&  D01\_V\_outdoor\_still\_0003.mp4&  False&  1.0&  1.0& 1.0\\
+         FLAT&  outdoor&  D01\_V\_outdoor\_still\_0004.mp4&  False&  1.0&  1.0& 1.0\\ \bottomrule
+    \end{tabular}
+    \caption{Auszug der Ähnlichkeitsberechnungen für \(FLAT\) von Gerät D01 aus dem VISION-Datensatz\cite{shullani_vision_2017} (Eigene Darstellung)}
+    \label{tab:similarity_aufnahmeart_d01}
+\end{table}
 
 %%%
 
 \subsection{Social-Media-Videos}
 
-Dieser Abschnitt evaluiert die Zuverlässigkeit des Verfahrens im Kontext der Plattform-Erkennung (SNA, Social Network Attribution). Der Upload von Videodateien auf Social-Media-Plattformen (\cref{fig:auc_sm}) führt in der Regel zum Verlust der nativen Container-Signatur, da die Dateien auf den Servern neu verarbeitet werden und in eine plattformspezifische Baumstruktur überführt werden. Um nachzuweisen, dass das Similarity Hashing diese Distributionsplattformen dennoch zuverlässig klassifizieren kann, werden die Testdaten nach den jeweiligen Plattformen (z. B. YouTube, WhatsApp, Facebook, TikTok) und nativen Aufnahmen gefiltert. Die nachträglich veränderten Videos, die außerdem in der Eva-Datenbank vorhanden sind, wurden explizit ausgeschlossen. Der Source-Digest wird hierbei isoliert für den jeweiligen Verarbeitungstyp der Social-Media-Plattform gebildet, ungeachtet der ursprünglichen Kamera, um die rein plattformspezifische Container-Grammatik zu abstrahieren.\\
+Dieser Abschnitt evaluiert die Zuverlässigkeit des Verfahrens im Kontext der Plattform-Erkennung (SNA, Social Network Attribution). Der Upload von Videodateien auf Social-Media-Plattformen (\cref{fig:auc_sm}) führt in der Regel zum Verlust der nativen Container-Signatur, da die Dateien auf den Servern neu verarbeitet werden und in eine plattformspezifische Baumstruktur überführt werden. Um nachzuweisen, dass das Similarity Hashing diese Distributionsplattformen dennoch zuverlässig klassifizieren kann, werden die Testdaten nach den jeweiligen Plattformen (z. B. YouTube, WhatsApp, Facebook, TikTok) und nativen Aufnahmen gefiltert. Die nachträglich veränderten Videos, die außerdem in der Eva-Datenbank vorhanden sind, wurden explizit ausgeschlossen. Der Source-Digest wird hierbei isoliert für den jeweiligen Verarbeitungstyp der Social-Media-Plattform gebildet, ungeachtet der ursprünglichen Kamera, um die rein plattformspezifische Container-Grammatik zu abstrahieren.
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=1\linewidth]{grafiken/roc/sm2.png}
-    \caption{ROC-Analyse und AUC-Werte zur Zuordnung zu Social-Media-Plattformen (SNA) mittels 2-Gramm-Similarity-Hashing (Vision- und EVA-7K-Datensatz)}
+    \caption{ROC-Analyse und AUC-Werte zur Zuordnung zu Social-Media-Plattformen (SNA) mittels 2-Gramm-Similarity-Hashing mit dem Vision- \cite{shullani_vision_2017} und EVA-7K-Datensatz \cite{yang_efficient_2020} (Eigene Darstellung)}
     \label{fig:auc_sm}
 \end{figure}
 
-Die Auswertung der Klassifikationsleistung zur Zuordnung zu sozialen Netzwerken (siehe \cref{fig:auc_sm}) weist eine Trennschärfe mit AUC-Wert von 0.971 aus. Insbesondere für die Plattformen Facebook, TikTok, WhatsApp und YouTube wird eine fehlerfreie Erkennungsrate von 1.000 erzielt. Diese hohe Präzision resultiert aus der serverseitigen Transkodierung der Netzwerke, bei der die nativen Strukturen verworfen und in eine plattformspezifische Baumstruktur überführt werden \cite[Kap. 5.4.4]{yang_comprehensive_2025}. Die strukturelle Analyse zeigt, dass die extrahierte n-Gramm-Struktur für TikTok geräteübergreifend vollständig identisch ist. Ein vergleichbares Verhalten ist bei WhatsApp, YouTube und Facebook zu erkennen. Bei diesen Plattformen liegt nach der Verarbeitung eine geräteübergreifend identische Reihenfolge der Container-Boxen vor, welche sich lediglich durch das Vorhandensein einzelner, abweichender Container unterscheidet \cite[Kap. 4]{yang_efficient_2020}. Die Stringenz dieser Standardisierung der Plattform-Encoder wird zusätzlich dadurch belegt, dass selbst bei dem nativ ausgeschlossenen Gerät Lenovo P70-A (D07) in den zugehörigen Social-Media-Derivaten keine Auffälligkeiten in der Struktur der n-Gramme erkannt werden konnten.
+Die Auswertung der Klassifikationsleistung zur Zuordnung zu sozialen Netzwerken (siehe \cref{fig:auc_sm}) weist eine Trennschärfe mit einem Gesamt-AUC-Wert von 0,972 aus. Für die Plattformen Facebook, TikTok, WhatsApp und YouTube wird jeweils eine fehlerfreie Erkennungsrate von 1,000 erzielt. Diese hohe Präzision resultiert aus der serverseitigen Transkodierung der Netzwerke, bei der die nativen Containerstrukturen verworfen und in eine plattformspezifische Baumstruktur überführt werden. Die strukturelle Analyse der extrahierten n-Gramme zeigt, dass die Boxreihenfolge für TikTok, WhatsApp, YouTube und Facebook nach der Verarbeitung geräteübergreifend vollständig identisch ist, sie unterscheidet sich lediglich durch das Vorhandensein einzelner, plattformspezifischer Zusatzcontainer. Da diese Angleichung unabhängig vom Ursprungsgerät erfolgt, gehen bei diesen vier Plattformen sämtliche strukturellen Rückschlüsse auf das Aufnahmegerät verloren. Die Stringenz dieser Standardisierung der Plattform-Encoder wird zusätzlich dadurch belegt, dass selbst bei dem nativ ausgeschlossenen Gerät Lenovo P70-A (D07) auf Grund der 3GP-Dateiendung in den zugehörigen Social-Media-Derivaten keine gerätespezifischen Auffälligkeiten in der Struktur der n-Gramme erkannt werden konnten.
 
-Eine signifikante Abweichung von dieser Homogenisierung weist die Plattform Weibo auf, welche mit einem AUC-Wert von 0.854 eine messbar geringere Klassifikationsleistung verzeichnet. Im Kontrast zu den übrigen Netzwerken enthalten Weibo-Derivate weiterhin stark variierende Containerstrukturen. Da die native Architektur bei der serverseitigen Verarbeitung durch diese Plattform nicht vollständig überschrieben wird, bleiben strukturelle Varianzen erhalten, welche weiterhin direkte Rückschlüsse auf das ursprüngliche Aufnahmegerät zulassen und somit eine rein plattformspezifische Klassifikation erschweren \cite[Kap. 5]{xiang_forensic_2021}.
+Eine signifikante Abweichung von dieser Homogenisierung weist die Plattform Weibo auf, welche mit einem AUC-Wert von 0,858 eine messbar geringere Klassifikationsleistung verzeichnet. Im Gegensatz zu den übrigen Netzwerken enthalten Weibo-Derivate weiterhin stark variierende Containerstrukturen, deren n-Gramm-Zusammensetzung je nach Ursprungsgerät differiert. Da die native Architektur bei der serverseitigen Verarbeitung durch diese Plattform nicht vollständig überschrieben wird, bleiben strukturelle Varianzen erhalten, welche weiterhin Rückschlüsse auf das ursprüngliche Aufnahmegerät zulassen.
+
+%%%
+
+\subsubsection{Bearbeitete Videos}
+
+In diesem Abschnitt wird die Identifikation der Bearbeitungssoftware (MTI, Manipulation Tool Identification) evaluiert. Das Ziel ist die Unterscheidung von neun softwarespezifischen Bearbeitungsarten sowie unveränderten Originalaufnahmen anhand ihrer jeweiligen Container-Struktur. Als Testdaten dienen sämtliche nativen und bearbeiteten Videos des EVA-7K-Datensatzes, wodurch sowohl automatisiert erzeugte (ffmpeg1 bis ffmpeg5, Exiftool) als auch manuell durchgeführte Bearbeitungen (Avidemux, Kdenlive, Adobe Premiere) sowie unveränderte native Aufnahmen in die Auswertung einfließen. Für jede der neun Bearbeitungsarten sowie für die native Klasse wird jeweils ein eigener Source Digest aus den zugehörigen Videos der Trainingsmenge gebildet, indem die extrahierten 2-Gramme aller Videos der jeweiligen Kategorie zu einem gemeinsamen Referenz-Digest vereinigt werden.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=1\linewidth]{grafiken/roc/tampered.png}
+    \caption{ROC-Analyse und AUC-Werte zur Identifikation der Bearbeitungssoftware (MTI) mittels 2-Gramm-Similarity-Hashing mit dem EVA-7K-Datensatz\cite{yang_efficient_2020} (Eigene Darstellung)}
+    \label{fig:auc_bearbeitungen}
+\end{figure}
+
+Die Auswertung zur Identifikation der Bearbeitungssoftware (siehe Abb.~\ref{fig:auc_bearbeitungen}) offenbart eine gravierende methodische Schwäche des Verfahrens für diese Untersuchungsfrage, welche sich in einem globalen AUC-Wert von 0,552 niederschlägt und damit nahezu auf dem Niveau einer zufälligen Klassifikation liegt. Auch die klassenweise Betrachtung bestätigt dieses Bild durchgängig. Die native Klasse erreicht einen AUC-Wert von 0,546 und lässt sich damit kaum von bearbeiteten Videos unterscheiden. Die vier untersuchten ffmpeg-Varianten ffmpeg1 bis ffmpeg4 erzielen mit jeweils 0,533 den niedrigsten Wert der gesamten Auswertung, während ffmpeg5 mit 0,627 als einzige Kategorie einen etwas höheren Wert erreicht. Die manuell durchgeführten Bearbeitungen mit Kdenlive (0,574) und Avidemux (0,557) liegen geringfügig über dem Gesamtdurchschnitt, während Adobe Premiere (0,545) und Exiftool (0,542) ein ähnlich niedriges Niveau wie die ffmpeg-Gruppe aufweisen.
+
+\begin{table}[!h]
+    \centering
+    \small
+    \begin{tabular}{>{\raggedright\arraybackslash}p{1.4cm}>{\raggedright\arraybackslash}p{1.5cm}>{\raggedright\arraybackslash}p{4.7cm}l>{\raggedright\arraybackslash}p{1.2cm}>{\raggedright\arraybackslash}p{1.2cm}>{\raggedright\arraybackslash}p{1.4cm}}\toprule
+         \textbf{ground \_truth \_source}&  \textbf{ground \_truth \_mp4}&  \textbf{filename}&  \textbf{tp}&  \textbf{similarity \_2}&  \textbf{similarity \_3}& \textbf{similarity \_4}\\\midrule
+         native&  native&  D01\_V\_indoor\_move\_0002.mp4&  True&  1.0&  1.0& 1.0\\
+         native&  avidemux&  D01\_V\_outdoor\_move\_0002.mp4&  False&  1.0&  1.0& 1.0\\
+         native&  ffmpeg1&  D01\_V\_indoor\_move\_0002.mp4&  False&  1.0&  1.0& 1.0\\
+         native&  exiftool&  D12\_V\_indoor\_move\_0002.mp4&  False&  1.0&  1.0& 1.0\\
+         native&  exiftool&  D06\_V\_indoor\_move\_0002.mov&  False&  0.960&  0.962& 0.964\\
+         native&  exiftool&  D09\_V\_outdoor\_move\_0002.mov&  False&  0.962&  0.947& 0.917\\ \bottomrule
+    \end{tabular}
+    \caption{Auszug der Ähnlichkeitsberechnungen für die Bearbeitungssoftwareerkennung mit dem EVA-7K-Datensatz\cite{yang_efficient_2020} (Eigene Darstellung)}
+    \label{tab:similarity_bearbeitung_eva7k}
+\end{table}
+
+Ein exemplarischer Auszug der zugrunde liegenden Ähnlichkeitsberechnungen findet sich in Tabelle~\ref{tab:similarity_bearbeitung_eva7k}, welche sowohl unveränderte als auch durch Exiftool tatsächlich modifizierte Container gegenüberstellt.
+
+Diese durchgängig marginale Trennschärfe ist mathematisch direkt auf die Eigenschaften des verwendeten asymmetrischen Tversky-Index zurückzuführen. Da dieser Index explizit so konfiguriert ist, dass er das Fehlen von Container-Boxen in der zu untersuchenden Testdatei nicht bestraft, können softwareseitige Reduktionen der Metadatenstruktur nicht als Abweichungsmerkmal erkannt werden. Folglich wird ein bearbeitetes Video, dem durch den Export lediglich Boxen wie \(udta\) oder \(free\) entnommen wurden, fälschlicherweise mit einer nahezu maximalen Ähnlichkeit zur Originalquelle bewertet, was die Erkennungsleistung für Manipulationen unabhängig vom eingesetzten Werkzeug massiv herabstuft. Die geringe Streuung der Werte zwischen den einzelnen Bearbeitungsprogrammen bestätigt zudem, dass die beobachtete Schwäche eine grundsätzliche Limitation des gewählten Ähnlichkeitsmaßes für diese Untersuchungsfrage darstellt.
+
 
 %%%
 
 \subsection{Synthetische Videos}
 
-In dieser Kategorie verlagert sich die forensische Quellenerkennung von physischer Hardware auf rein softwarebasierte Generatoren. Evaluiert wird, ob vollständig durch Image-to- und Text-to-Video-Modelle (\cref{fig:auc_ai} und \ref{fig:auc_dfsynth}) generierte Inhalte aus dem eigens erstellten KI-Datensatz verlässlich identifiziert werden können. Analog zur Gerätekennung werden Source-Digests für die spezifischen KI-Modelle generiert. Der Fokus der Untersuchung liegt darauf, ob generative KI-Modelle eine hinreichend spezifische syntaktische Signatur hinterlassen. Dies betrifft insbesondere die Integration proprietärer Metadaten oder kryptografischer Manifeste (wie C2PA-Signaturen), die typischerweise in der optionalen uuid-Box des Containers gespeichert werden und sich strukturell von nativen Aufnahmen abgrenzen lassen.\\
+In dieser Kategorie verlagert sich die forensische Quellenerkennung von physischer Hardware auf rein softwarebasierte Generatoren. Evaluiert wird, ob vollständig durch Image-to- und Text-to-Video-Modelle (\cref{fig:auc_ai} und \ref{fig:auc_dfsynth}) generierte Inhalte aus dem eigens erstellten KI-Datensatz verlässlich identifiziert werden können. Analog zur Gerätekennung werden Source-Digests für die spezifischen KI-Modelle generiert. Der Fokus der Untersuchung liegt darauf, ob generative KI-Modelle eine hinreichend spezifische syntaktische Signatur hinterlassen. Dies betrifft insbesondere die Integration proprietärer Metadaten oder kryptografischer Manifeste (wie C2PA-Signaturen), die typischerweise in der optionalen \(uuid\)-Box des Containers gespeichert werden und sich strukturell von nativen Aufnahmen abgrenzen lassen.\\
+
+%%%
+
+\subsubsection{KI-Modell}
+
+Die Evaluation der spezifischen KI-Generatoren (siehe \cref{fig:auc_ai}) erzielt einen AUC-Wert von 0.898. Eine detaillierte Analyse der zugrundeliegenden Source Digests offenbart, dass sich die Identifikation primär auf spezifische Container-Boxen stützt, die bei nativen Smartphone-Aufnahmen nahezu nie in Erscheinung treten. Insbesondere zeichnet sich die Mehrheit der untersuchten KI-Modelle durch die Integration der Atome \(btrt\) (Bit Rate Box), \(sbgp\) (Sample-to-Group Box) sowie \(sgpd\) (Sample Group Description Box) aus, wodurch eine charakteristische KI-Signatur in der Metadaten-Topologie erzeugt wird.
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=1\linewidth]{grafiken/roc/ai.png}
-    \caption{ROC-Analyse und AUC-Werte zur Identifikation von KI-Modellen mittels 2-Gramm-Similarity-Hashing (Eigener KI-Datensatz)}
+    \caption{ROC-Analyse und AUC-Werte zur Identifikation von KI-Modellen mittels 2-Gramm-Similarity-Hashing mit dem eigenen KI-Datensatz (Eigene Darstellung)}
     \label{fig:auc_ai}
 \end{figure}
+
+Eine vertiefte Betrachtung der paarweisen Ähnlichkeitswerte zeigt zwei klar abgrenzbare Gruppen innerhalb der untersuchten Modelle. Eine erste Gruppe bestehend aus OmniFlash, Veo3.1, Sora2, Imagine0.9, Imagine1.5, Pika1.5 sowie Pika2.5 weist untereinander durchgehend Ähnlichkeitswerte zwischen 0,92 und 1,0 auf, da alle genannten Modelle die Boxen \(btrt\), \(sbgp\) und \(sgpd\) gleichermaßen integrieren und sich dadurch kaum voneinander unterscheiden lassen. Innerhalb dieser Gruppe tritt folglich eine erhöhte gegenseitige Verwechslungsgefahr auf.
+
+Die Auswertung zeigt jedoch auch signifikante strukturelle Inkonsistenzen innerhalb der Modellfamilien auf, was den durchschnittlichen Erkennungswert reduziert. So produzieren spezifische Generatoren, wie etwa die Ausprägungen Pika 2.0 und Pika 2.2, Container-Strukturen, die keine dieser eindeutigen Fremdatome aufweisen und sich stattdessen stark an der Grammatik nativer Aufnahmen orientieren. Quantitativ zeigt sich dies daran, dass Pika2.2 gegenüber OmniFlash, Veo3.1 und Sora2 lediglich Ähnlichkeitswerte von 0,65 beziehungsweise 0,62 erreicht, während Pika2.0 mit Werten zwischen 0,62 und 0,64 eine noch geringere strukturelle Nähe zu dieser Gruppe zeigt. Diese strukturelle Unauffälligkeit erhöht das Risiko von falsch-positiven Zuordnungen bei diesen spezifischen Modellen.
+
+Die beiden Versionsstände KlingAIVideo2.6 und KlingAIVideo3.0, die einen wechselseitigen Ähnlichkeitswert von 1,0 erzielen, weisen auf 2-Gramm-Ebene identische Source Digests auf. Gegenüber allen übrigen KI-Modellen bleibt die Kling-Familie hingegen mit Werten zwischen 0,72 und 0,93 klar abgrenzbar, Eine Unterscheidung einzelner Versionsstände eines Herstellers ist demnach mit dem vorliegenden Verfahren nicht in jedem Fall möglich, während die Zuordnung zum jeweiligen Hersteller möglich bleibt.
+
+Ergänzend zu den strukturellen Gemeinsamkeiten der übrigen Anbieter ist das Fehlen der \(uuid\)-Box bei Grok zu nennen. Da diese Box branchenweit als Träger des C2PA-Manifests fungiert und maßgeblich zur beschriebenen KI-Signatur beiträgt, ist zu erwarten, dass diese KI-Videos schlechter beim Vergleich gegen native Videos abschneiden.
+
+%%%
+
+\subsubsection{Deepfakes und synthethische Videos}
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=1\linewidth]{grafiken/roc/dfsynth.png}
-    \caption{ROC-Analyse und AUC-Werte zur unterscheidung von synthetischen Videos und Deepfakes mittels 2-Gramm-Similarity-Hashing (Eigener KI-Datensatz)}
+    \caption{ROC-Analyse und AUC-Werte zur unterscheidung von synthetischen Videos und Deepfakes mittels 2-Gramm-Similarity-Hashing mit dem eigenen KI-Datensatz (Eigene Darstellung)}
     \label{fig:auc_dfsynth}
 \end{figure}
 
-% Model
-
-Die Evaluation der spezifischen KI-Generatoren (siehe \cref{fig:auc_ai}) erzielt einen AUC-Wert von 0.898. Eine detaillierte Analyse der zugrundeliegenden Source Digests offenbart, dass sich die Identifikation primär auf spezifische Container-Boxen stützt, die bei nativen Smartphone-Aufnahmen nahezu nie in Erscheinung treten. Insbesondere zeichnet sich die Mehrheit der untersuchten KI-Modelle durch die Integration der Atome \(btrt\) (Bit Rate Box), \(sbgp\) (Sample-to-Group Box) sowie \(sgpd\) (Sample Group Description Box) aus, wodurch eine charakteristische KI-Signatur in der Metadaten-Topologie erzeugt wird. Die Auswertung zeigt jedoch auch signifikante strukturelle Inkonsistenzen innerhalb der Modellfamilien auf, was den durchschnittlichen Erkennungswert reduziert. So produzieren spezifische Generatoren, wie etwa die Ausprägungen Pika 2.0 und Pika 2.2, Container-Strukturen, die keine dieser eindeutigen Fremdatome aufweisen und sich stattdessen stark an der Grammatik nativer Aufnahmen orientieren. Diese strukturelle Unauffälligkeit erhöht das Risiko von falsch-positiven Zuordnungen bei diesen spezifischen Modellen.
-
-% df synth
-
-Die Differenzierung zwischen bild- als auch videobasierten Deepfakes und vollständig synthetisierten Text-to-Video-Inhalten (siehe \cref{fig:auc_dfsynth}) verzeichnet hingegen einen niedrigen AUC-Wert von lediglich 0.546. Um eine methodisch belastbare und symmetrische Vergleichsbasis zu gewährleisten, wurde diese Auswertung zwingend auf jene KI-Datensätze limitiert, in denen das jeweilige Modell sowohl Deepfakes als auch synthetische Repräsentationen zur Verfügung stellte (spezifisch die Modelle AI01, AI02, AI04, AI07 und AI11). Der gemessene AUC-Wert, welcher sich de facto einer stochastischen Gleichverteilung annähert, belegt, dass eine rein syntaktische Separation dieser beiden Erzeugungsarten auf Container-Ebene durch das 2-Gramm-Hashing nicht realisierbar ist. Daraus ist abzuleiten, dass die zugrundeliegenden KI-Plattformen unabhängig vom initialen Input identische, standardisierte Prozesse für die finale MP4-Generierung anwenden. Aus dieser Limitation resultiert für zukünftige Forschungsarbeiten (Future Work) die Notwendigkeit, zu evaluieren, ob jenseits der einfachen Container-Topologie alternative forensische Artefakte existieren, die eine verlässliche Unterscheidung zwischen synthetischen Inhalten und Deepfakes ermöglichen.
+Die Differenzierung zwischen bild- als auch videobasierten Deepfakes und vollständig synthetisierten Text-to-Video-Inhalten (siehe \cref{fig:auc_dfsynth}) verzeichnet einen sehr niedrigen AUC-Wert von lediglich 0.546. Um eine methodisch belastbare und symmetrische Vergleichsbasis zu gewährleisten, wurde diese Auswertung zwingend auf jene KI-Datensätze limitiert, in denen das jeweilige Modell sowohl Deepfakes als auch synthetische Repräsentationen zur Verfügung stellte (spezifisch die Modelle AI01, AI02, AI04, AI07 und AI11). Der gemessene AUC-Wert, welcher sich de facto einer stochastischen Gleichverteilung annähert, belegt, dass eine rein syntaktische Separation dieser beiden Erzeugungsarten auf Container-Ebene durch das 2-Gramm-Hashing nicht realisierbar ist. Daraus ist abzuleiten, dass die zugrundeliegenden KI-Plattformen unabhängig vom initialen Input identische, standardisierte Prozesse für die finale MP4-Generierung anwenden. Aus dieser Limitation resultiert für zukünftige Forschungsarbeiten (Future Work) die Notwendigkeit, zu evaluieren, ob jenseits der einfachen Container-Topologie alternative forensische Artefakte existieren, die eine verlässliche Unterscheidung zwischen synthetischen Inhalten und Deepfakes ermöglichen.
 
 %%%
 
 \subsection{Gemischte Videos}
 
-Der abschließende Teil der kategorialen Auswertung (\cref{fig:auc_bearbeitungen} und \ref{fig:auc_mixed}) widmet sich der Identifikation von Manipulationssoftware (MTI) sowie der übergeordneten Klassifikation der drei primären Erzeugerquellen (native Aufnahmen, Social-Media-Derivate und KI-generierte Inhalte). Zur Evaluation der Bearbeitungssoftware dienen modifizierte EVA-7K-Videos als Testdaten, welche gegen neun softwarespezifische Source Digests klassifiziert werden. Die übergeordnete Separation der drei primären Erzeugerkategorien, mit jeweils einem Source Digest über jede Kategorie hinweg, wurde hingegen nur auf unveränderten Videos der Vision- und EVA-7K-Datensätze durchgeführt.
-
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=1\linewidth]{grafiken/roc/tampered.png}
-    \caption{ROC-Analyse und AUC-Werte zur Identifikation der Bearbeitungssoftware (MTI) mittels 2-Gramm-Similarity-Hashing (EVA-7K-Datensatz)}
-    \label{fig:auc_bearbeitungen}
-\end{figure}
-
-
-\begin{figure}[!h]
-    \centering
-    \includegraphics[width=1\linewidth]{grafiken/roc/mixed.png}
-    \caption{ROC-Analyse und AUC-Werte zur Identifikation von KI-generierten, nativen und Social Media Videos unter Ausschluss nachträglich bearbeiteter Videos mittels 2-Gramm-Similarity-Hashing (Vision-, EVA-7K- und eigener KI-Datensatz)}
-    \label{fig:auc_mixed}
-\end{figure}
+Dieser Abschnitt widmet sich der übergeordneten kategorialen Klassifikation der drei primären Erzeugerquellen (native Aufnahmen, Social-Media-Derivate und KI-generierte Inhalte). Die Separation der drei Erzeugerkategorien, mit jeweils einem Source Digest über jede Kategorie hinweg, wurde anhand aller Videos der KI-, Vision- und EVA-7K-Datensätze durchgeführt.
 
 \begin{figure}[!h]
     \centering
     \includegraphics[width=1\linewidth]{grafiken/roc/mixed2.png}
-    \caption{ROC-Analyse und AUC-Werte zur Identifikation von KI-generierten, nativen und Social Media Videos mittels 2-Gramm-Similarity-Hashing (Vision-, EVA-7K- und eigener KI-Datensatz)}
+    \caption{ROC-Analyse und AUC-Werte zur Identifikation von KI-generierten, nativen und Social Media Videos mittels 2-Gramm-Similarity-Hashing mit dem Vision-\cite{iuliani_video_2019}, EVA-7K.\cite{yang_efficient_2020} und KI-Datensatz (Eigene Darstellung)}
     \label{fig:auc_mixed2}
 \end{figure}
 
-Die Evaluation zur Identifikation der spezifischen Bearbeitungssoftware (siehe \cref{fig:auc_bearbeitungen}) offenbart jedoch eine signifikante methodische Schwäche des Verfahrens, welche sich in einem AUC-Wert von 0.635 niederschlägt. Bei der Klassifikation manipulierter Videos aus dem EVA-7K-Datensatz, die unter anderem mit Programmen wie Avidemux, ExifTool, FFmpeg, Kdenlive und Adobe Premiere bearbeitet wurden, wird lediglich eine marginale Trennschärfe (AUC-Werte zwischen 0.641 und 0.709) erreicht. Diese Limitierung ist mathematisch direkt auf die Eigenschaften des verwendeten asymmetrischen Tversky-Index zurückzuführen. Da dieser Index explizit so konfiguriert ist, dass er das Fehlen von Container-Boxen in der zu untersuchenden Testdatei nicht bestraft, können softwareseitig bedingte Reduktionen der Metadatenstruktur (Tampering) nicht als distinktes Abweichungsmerkmal erkannt werden \cite[Kap. 3.5]{klier_media_2025}. Folglich wird ein bearbeitetes Video, dem durch den Export lediglich Atome entnommen wurden, fälschlicherweise mit einer nahezu maximalen Ähnlichkeit zur Originalquelle bewertet, was die Erkennungsleistung für Manipulationen massiv herabstuft.\\
+\begin{table}[!h]
+    \centering
+    \small
+    \begin{tabular}{>{\raggedright\arraybackslash}p{1.4cm}>{\raggedright\arraybackslash}p{1.5cm}>{\raggedright\arraybackslash}p{4.7cm}l>{\raggedright\arraybackslash}p{1.2cm}>{\raggedright\arraybackslash}p{1.2cm}>{\raggedright\arraybackslash}p{1.4cm}}\toprule
+         \textbf{ground \_truth \_source}&  \textbf{ground \_truth \_mp4}&  \textbf{filename}&  \textbf{tp}&  \textbf{similarity \_2}&  \textbf{similarity \_3}& \textbf{similarity \_4}\\\midrule
+         AI&  ai&  AI\_01\_02\_synth.mp4&  True&  1.0&  1.0& 1.0\\
+         AI&  camera&  D21\_V\_flat\_still\_0001.mp4
+&  False&  0.7&  0.5625& 0.470588
+\\
+         AI&  camera&  D05\_V\_indoor\_move\_0002.mov&  False&  0.538462&  0.396552& 0.301587
+\\
+         AI&  yoututbe&  D01\_V\_flatYT\_move\_0002.mp4&  False&  0.972222&  0.947368& 0.925
+\\
+         AI&  whattsapp&  D12\_V\_flatWA\_still\_0002.mp4&  False&  0.653846&  0.52& 0.416667
+\\
+         CAMERA&  camera&  D01\_V\_flat\_move\_0002.mp4&  True&  1.0&  1.0& 1.0
+\\
+         CAMERA&  ai&  AI10\_02\_df.mp4&  False&  0.931034&  0.785714& 0.703704
+\\
+ CAMERA& ai& AI02\_02\_synth.mp4& False& 0.74359& 0.642857&0.590909
+\\
+         CAMERA&  facebook&  D01\_V\_indoor\_move\_0002.mp4&  False&  0.972222&  0.868421& 0.825
+\\
+         CAMERA&  youtube&  D23\_V\_outdoor\_move\_0002.mp4&  False&  0.730769&  0.592593& 0.5
+\\ \bottomrule
+    \end{tabular}
+    \caption{Auszug der Ähnlichkeitsberechnungenmit kategorieübergreifenden Referenz-Source-Digests anhand des Vision-\cite{iuliani_video_2019}, EVA-7K.\cite{yang_efficient_2020} und KI-Datensatzes (Eigene Darstellung)}
+    \label{tab:similarity_ki_vs_native}
+\end{table}
 
-TODO: Mixed 2 ergänzen -> \cref{fig:auc_mixed2} (auch in Tabelle oben)
+Der wechselseitige Vergleich der Source Digests in \cref{tab:similarity_ki_vs_native} verdeutlicht die strukturelle Distanz zwischen KI-generierten und nativen Kameraaufnahmen. Beim Abgleich nativer Aufnahmen gegen den KI-Referenz-Source-Digest schwankt die Similarity im 2-Gramm-Verfahren zwischen 0,539 und 0,700 und im 4-Gramm-Verfahren sogar nur zwischen 0,302 und 0,471. In der Gegenrichtung, also beim Abgleich von einzelnen KI-Videos gegen den nativen Referenz-Source-Digest, liegt die Similarity im 2-Gramm-Verfahren zwischen 0,744 und 0,931, bzw. im 4-Gramm-Verfahren zwischen 0,591 und 0,704. Diese Asymmetrie zeigt, dass KI-generierte Videos gegenüber dem nativen Digest tendenziell höhere Restähnlichkeiten aufweisen als umgekehrt, was auf eine größere strukturelle Varianz innerhalb der nativen Kameraaufnahmen im Vergleich zur relativ homogenen Struktur KI-generierter Containerformate hindeutet.
 
-Im deutlichen Kontrast dazu belegt die finale übergeordnete Auswertung (siehe \cref{fig:auc_mixed}) eine hohe Klassifikationsleistung bei der Separation der drei fundamentalen Video-Kategorien. Die Unterscheidung zwischen nativen Aufnahmen, Social-Media-Videos und KI-generierten Inhalten verzeichnet einen AUC-Wert von 0.997. Native Kameraaufnahmen sowie vollständig synthetische Inhalte werden hierbei jeweils fehlerfrei mit einem AUC von 1.000 identifiziert, während die Erkennung von Social-Media-Videos einen Wert von 0.992 erreicht. Dieses Resultat validiert, dass sich Containerstrukturen von Smartphone-Kameras, die serverseitigen Codierungspipelines sozialer Netzwerke sowie die Algorithmen generativer KI-Modelle auf der syntaktischen Ebene der MP4-Container fundamental voneinander unterscheiden und dies eine präzise sowie skalierbare Vorfilterung mittels 2-Gramm-Similarity-Hashing ermöglicht wird.
+\begin{figure}[h]
+    \centering
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \begin{forest}
+        for tree={
+            edge={-latex},
+            grow'=east,
+            parent anchor=east,
+            child anchor=west,
+            font=\scriptsize\ttfamily,
+            edge path={
+                \noexpand\path[\forestoption{edge}]
+                (!u.parent anchor) -- +(5pt,0) |- (.child anchor)\forestoption{edge label};
+            },
+            s sep=2pt,
+            l sep=10pt,
+        }
+        [AI01\_01\_\\synth.mp4, align=center
+            [ftyp]
+            [uuid, for tree={fill=purple!15, draw=purple!60}]
+            [moov
+                [mvhd]
+                [trak, for tree={fill=blue!15, draw=blue!60}
+                    [...]
+                ]
+                [trak , for tree={fill=green!15, draw=green!60}
+                    [...]
+                ]
+                [udta, for tree={fill=orange!15, draw=orange!60}
+                    [meta [hdlr] [ilst]]
+                ]
+            ]
+            [free]
+            [mdat, for tree={fill=red!30, draw=red!80, thick}]
+        ]
+        \end{forest}
+        \subcaption{AI01 (Google Flow OmniFlash, synthetisch)}
+        \label{fig:tree_ai01}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \begin{forest}
+        for tree={
+            edge={-latex},
+            grow'=east,
+            parent anchor=east,
+            child anchor=west,
+            font=\scriptsize\ttfamily,
+            edge path={
+                \noexpand\path[\forestoption{edge}]
+                (!u.parent anchor) -- +(5pt,0) |- (.child anchor)\forestoption{edge label};
+            },
+            s sep=2pt,
+            l sep=10pt,
+        }
+        [D09\_V\_\\flat\_move\_\\0001.mov, align=center
+            [ftyp]
+            [wide]
+            [mdat, for tree={fill=red!30, draw=red!80, thick}]
+            [moov
+                [mvhd]
+                [trak, for tree={fill=blue!15, draw=blue!60}
+                    [...]
+                ]
+                [trak, for tree={fill=green!15, draw=green!60},
+                    [...]
+                ]
+            ]
+            [udta, for tree={fill=orange!15, draw=orange!60}
+                [\textcopyright{}mod]
+                [\textcopyright{}swr]
+                [\textcopyright{}day]
+                [\textcopyright{}xyz]
+                [\textcopyright{}mak]
+            ]
+            [free]
+            [meta [hdlr] [keys] [ilst] [free]]
+        ]
+        \end{forest}
+        \subcaption{D09 (Apple iPhone4, nativ)}
+        \label{fig:tree_d09}
+    \end{minipage}
+    \caption{Gegenüberstellung der MP4-Struktur eines KI-generierten Videos (links) und einer nativen Kameraaufnahme\cite{shullani_vision_2017} (rechts) (Eigene Darstellung)}
+    \label{fig:tree_comparison}
+\end{figure}
+
+Eine ergänzende strukturelle Auffälligkeit betrifft die Positionierung der \(mdat\)-Box innerhalb der Container-Hierarchie (siehe \cref{fig:tree_comparison} als gekürzte Gegenüberstellung der Beispiele aus \cref{sec:grundlagen}). Bei den untersuchten KI-generierten Videos steht die \(mdat\)-Box auffällig häufig als letzte Box der Gesamtstruktur, nachdem die vollständige \(moov\)-Struktur inklusive sämtlicher Metadaten-Container bereits durchlaufen wurde. Das Modell Veo 3.1 wich als einziges Modell im untersuchten KI-Datensatz von dieser Struktur ab. Bei nativen Kameraaufnahmen variiert diese Position hingegen deutlich stärker, da die \(mdat\)-Box, wie am Beispiel von D09 ersichtlich, teils bereits unmittelbar nach der Kompatibilitätsdeklaration \(ftyp\) und noch vor der \(moov\)-Struktur platziert wird. Bei rund zwei Dritteln der individuellen Geräte des VISION-Datensatzes tritt die \(mdat\)-Box bereits unmittelbar nach den einleitenden Boxen auf, statt wie im ISO-Standard vorgesehen erst nach der vollständigen \(moov\)-Struktur. Dieser Unterschied lässt sich plausibel auf die unterschiedlichen Erzeugungsprozesse zurückführen, da native Aufnahmegeräte den Mediendatenstrom typischerweise kontinuierlich während der Aufnahme schreiben und die Metadaten erst nachträglich anfügen, während cloudbasierte KI-Generatoren die vollständige Metadatenstruktur offenbar bereits vor dem Schreiben der eigentlichen Bilddaten finalisieren. Da dieses Merkmal bislang nicht systematisch für die Klassifikation ausgewertet wurde, obwohl es sich mit geringem Aufwand aus der bereits vorliegenden Baumstruktur ableiten ließe, stellt die relative Position der \(mdat\)-Box im Gesamtbaum ein vielversprechendes zusätzliches Feature für zukünftige Arbeiten dar.
+
+Im deutlichen Kontrast dazu belegt die finale übergeordnete Auswertung (siehe \cref{fig:auc_mixed2}) eine hohe Klassifikationsleistung bei der Separation der drei fundamentalen Video-Kategorien. KI-generierte Inhalte werden hierbei jeweils mit einem AUC von 1,0 identifiziert, während die Erkennung von Social-Media-Videos nur einen Wert von 0,628 erreicht. Dieses Resultat validiert, dass sich Containerstrukturen von Smartphone-Kameras, die serverseitigen Codierungspipelines sozialer Netzwerke sowie die Algorithmen generativer KI-Modelle auf der syntaktischen Ebene der MP4-Container fundamental voneinander unterscheiden, wodurch eine Vorfilterung mittels 2-Gramm-Similarity-Hashing ermöglicht wird.
 
 %%%
 
 \section{Kritische Würdigung und methodische Limitationen}
 
-Hinsichtlich der algorithmischen Effizienz und Skalierbarkeit sind die Ergebnisse des Verfahrens als hochgradig ausreichend und zielführend zu bewerten. Gegenüber qualitativen und baumbasierten Strukturanalysen, die beim Abgleich mit Referenzdaten oftmals eine rechenintensive lineare Komplexität aufweisen, bietet das vorliegende Modell entscheidende architektonische Vorteile. Die Komprimierung der extrahierten Strukturmerkmale in einen kompakten Similarity Digest ermöglicht performante Vergleiche großer Datenmengen und liefert somit einen effizienten Ansatz zur Bewältigung der kontinuierlich wachsenden forensischen Datenflut. Die Ergebnisse für die Vorfilterung (die Erkennung von nativen, Social-Media- und KI-Klassen) sowie für die Marken-Identifikation (SCI) sind exzellent und beweisen die Eignung des Verfahrens für Erstbewertungsverfahren.
+Hinsichtlich der Effizienz und Skalierbarkeit sind die Ergebnisse des Verfahrens als zielführend zu bewerten. Gegenüber qualitativen und baumbasierten Strukturanalysen, die beim Abgleich mit Referenzdaten oftmals eine rechenintensive lineare Komplexität aufweisen, bietet das vorliegende Modell entscheidende architektonische Vorteile. Die Komprimierung der extrahierten Strukturmerkmale in einen kompakten Similarity Digest mit durchschnittlich 36 einzigartigen 2-Grammen und rund 288 Byte je Video ermöglicht performante Vergleiche großer Datenmengen und liegt damit in derselben Größenordnung wie das JPEG-Verfahren von Klier und Baier \cite[Kap. 4]{kliermedia2025}, das für vergleichbare Digest-Größen AUC-Werte über 0,90 auf Geräte-, Modell- und Markenebene erzielt. Die Ergebnisse für die Herstellererkennung (AUC 0,986) und für die Identifikation KI-generierter Aufnahmen (AUC 1,000) sind hoch und belegen die Eignung des Verfahrens für eine schnelle Erstbewertung großer Datenmengen. Auch native Aufnahmen lassen sich mit einem AUC von 0,933 noch zuverlässig von anderen Erzeugungsquellen abgrenzen. Deutlich schwächer fällt hingegen die Erkennung von Social-Media-Aufnahmen mit einem AUC von lediglich 0,628 aus, was die Eignung des Verfahrens für eine grobe Vorfilterung nicht grundsätzlich infrage stellt, jedoch auf eine eingeschränkte Trennschärfe bei bereits durch Plattform-Uploads verarbeiteten Inhalten hinweist.
 
-Trotz dieser Skalierbarkeit offenbaren sich bei der funktionalen Trennschärfe signifikante methodische Limitationen, wodurch die Ergebnisse für spezifische Untersuchungsziele als unzureichend eingestuft werden müssen. Eine gravierende Schwachstelle manifestiert sich bei der Identifikation von Bearbeitungssoftware (MTI) sowie der generellen Manipulationserkennung, welche lediglich einen AUC-Wert von 0.635 erreicht. Diese Unzulänglichkeit ist direkt auf die mathematischen Eigenschaften des verwendeten asymmetrischen Tversky-Index zurückzuführen. Da dieser Index das Fehlen spezifischer Container-Boxen in der Testdatei nicht bestraft, wird eine softwareseitige Reduktion der Metadatenstruktur durch das Similarity Hashing nicht als distinktes Abweichungsmerkmal klassifiziert. Konkurrierende quantitative Verfahren, welche auf Entscheidungsbäumen basieren und absolute Worthäufigkeiten erfassen, sind hier deutlich überlegen und folglich für die Manipulationserkennung zu präferieren \cite[Kap. 5]{xiang_forensic_2021}.
+Trotz dieser Skalierbarkeit offenbaren sich bei der funktionalen Trennschärfe mehrere signifikante methodische Limitationen, wodurch die Ergebnisse für spezifische, feingranulare Untersuchungsziele als unzureichend eingestuft werden müssen. Die gravierendste Schwachstelle zeigt sich bei der Identifikation der Bearbeitungssoftware (MTI) sowie der generellen Manipulationserkennung, welche lediglich einen globalen AUC-Wert von 0,552 erreicht. Diese Unzulänglichkeit ist unmittelbar auf die mathematischen Eigenschaften des verwendeten asymmetrischen Tversky-Index zurückzuführen. Da dieser Index das Fehlen spezifischer Container-Boxen in der Testdatei explizit nicht bestraft, wird eine softwareseitige Reduktion der Metadatenstruktur nicht als Abweichungsmerkmal erkannt, wodurch bearbeitete Videos fälschlicherweise eine nahezu maximale Ähnlichkeit zur nativen Referenzquelle aufweisen. Konkurrierende quantitative Verfahren, die auf Entscheidungsbäumen basieren und absolute Worthäufigkeiten auswerten, erzielen für dieselbe Aufgabenstellung deutlich überlegene Werte, etwa eine Balanced Accuracy von 97,6 Prozent \cite[S. 951]{yangefficient2020} beziehungsweise durchschnittliche F1-Scores von rund 0,99 \cite[S. 1045]{xiangforensic2021}, und sind für die Manipulationserkennung folglich klar zu präferieren.
 
-Eine weitere Einschränkung zeigt sich bei der Klassifikation von KI-Inhalten. Die mangelhafte Trennschärfe zwischen bildbasierten Deepfakes und vollständig synthetisierten Text-to-Video-Inhalten (AUC 0.546) belegt, dass eine rein syntaktische Separation dieser Erzeugungsarten auf Container-Ebene durch das 2-Gramm-Hashing nicht realisierbar ist. Daraus ist abzuleiten, dass KI-Plattformen unabhängig vom initialen Input identische, standardisierte Muxing-Prozesse für die MP4-Generierung anwenden, wodurch keine klassifizierbaren Differenzen in der reinen Container-Grammatik entstehen.
+Eine zweite wesentliche Limitation zeigt sich auf der Geräte- und Modellebene innerhalb der nativen Aufnahmen. Obwohl der Gesamt-AUC von 0,977 zunächst überzeugend wirkt, belegt die detaillierte Fehleranalyse, dass neun Gerätegruppen bei n=2 vollständig identische Source-Digests aufweisen. Bemerkenswert ist dabei, dass diese strukturelle Ununterscheidbarkeit nicht auf Geräte derselben Modellreihe beschränkt bleibt, sondern auch herstellerübergreifend bei Budget-Android-Geräten mit vermutlich identischen Chipsatz-Referenzdesigns auftritt, etwa zwischen Asus Zenfone 2 Laser, Huawei Honor 5 und Huawei P8. Da die reine Container-Grammatik in diesen Fällen ausschließlich das zugrunde liegende Android-Media-Framework beziehungsweise die Firmware-Basis widerspiegelt und nicht die tatsächliche Herkunftsmarke, wird der hohe Gesamt-AUC-Wert im Wesentlichen von den übrigen, strukturell gut unterscheidbaren Geräten getragen. Diese Beobachtung relativiert die Aussagekraft eines einzelnen aggregierten AUC-Wertes für die Geräte- und Modellebene erheblich und deckt sich mit den Befunden von Yang et al., die eine herstellerübergreifende Angleichung der Container-Topologie durch gemeinsam genutzte Implementierungen als grundsätzliche Grenze der isolierten syntaktischen Analyse benennen \cite[Kap. 5.4.6]{yangcomprehensive2025}.
 
-Zusätzlich wird die Präzision auf der Modell-Ebene durch hohe Falsch-Positiv-Raten limitiert, welche durch die Nutzung identischer Betriebssystem-Komponenten hervorgerufen werden. Die strukturelle Ununterscheidbarkeit spezifischer Smartphones (wie bestimmte OnePlus- und Huawei-Modelle) begründet sich in der Verwendung identischer Android-Media-Framework-Implementierungen, welche herstellerübergreifend dieselbe Topologie erzeugen \cite[Kap. 5.4.6]{yang_comprehensive_2025}. Die daraus resultierende strukturelle Angleichung lässt sich durch eine isolierte syntaktische Analyse nicht auflösen.
+Eine weitere Einschränkung betrifft die Klassifikation KI-generierter Inhalte. Während die Zuordnung zu einzelnen KI-Generatoren mit einem AUC von 0,898 belastbar gelingt, kann keine Unterscheidung zwischen bildbasierten Deepfakes und vollständig text-generierten Videos getroffen werden. Dies deutetet darauf hin, dass die zugrunde liegenden KI-Plattformen unabhängig vom initialen Input und unabhängig vom konkreten Versionsstand identische, standardisierte Muxing-Prozesse für die finale MP4-Erzeugung anwenden, wodurch auf rein syntaktischer Container-Ebene keine klassifizierbaren Unterschiede entstehen. Da für diese neuartige Untersuchungskategorie keine etablierten Referenzwerte aus der Literatur existieren, stellen die berichteten Metriken zwar eine neuartige Bemessungsgrundlage dar, ihre Aussagekraft wird jedoch durch den geringen Umfang des eigenen Datensatzes von 61 Videos eingeschränkt.
 
-Zusammenfassend lässt sich die vierte Teilforschungsfrage dahingehend beantworten, dass die Ergebnisse des Similarity Hashing für die Gruppierung von Erzeugerquellen und die schnelle Identifikation unmodifizierter Originale hinreichend belastbar und ausreichend sind. Für feingranulare forensische Fragestellungen, insbesondere den Nachweis von Videomanipulationen durch Software-Encoder oder die Differenzierung synthetischer Sub-Kategorien, erweist sich die Methode in ihrer jetzigen Form jedoch als unzureichend.
+Methodisch gesondert einzuordnen ist der niedrige AUC-Wert von 0,504 bei der Unterscheidung der Aufnahmeart Flat, Indoor und Outdoor. Dieser Wert resultiert nicht unbedingt aus einer inhaltlichen Schwäche des Similarity Hashing, sondern aus einem Artefakt des Evaluationsdesigns. Da der VISION-Datensatz bei der Erstellung keine variierenden Kameraeinstellungen je Content-Type vorsieht, erzeugt jedes Gerät unabhängig von der tatsächlichen Aufnahmeart stets denselben Similarity-Wert, wodurch der Klassifikator strukturell nicht zwischen richtig-positiven und falsch-positiven Aufnahmen unterscheiden kann. Verstärkt wird dieser Effekt dadurch, dass die insgesamt 4.646 Testvideos des Gesamtdatensatzes, die zu einem erheblichen Anteil gerade durch die verschiedenen Aufnahmearten je Gerät entstehen, lediglich 82 einzigartige Source Digests hervorbringen. Trotz der großen zugrunde liegenden Datenmenge steht damit für die ROC-Auswertung nur eine geringe Anzahl unterschiedlicher Schwellenstufen zur Verfügung, was die Aussagekraft des berechneten AUC-Wertes für diese Teilfragestellung zusätzlich einschränkt. Dieser Befund weist somit weniger auf eine grundsätzliche Limitation des Verfahrens selbst hin, sondern legt nahe, dass für die Unterscheidung der Aufnahmeart in zukünftigen Arbeiten gezielt nach zielführenderen Artefakten innerhalb der Container-Struktur gesucht werden sollte.
+
+Schließlich ist die Aussagekraft sämtlicher Ergebnisse durch die Datenbasis selbst begrenzt. VISION und EVA-7K stammen aus den Jahren 2017 und 2020 und bilden weder aktuelle Smartphone-Generationen noch moderne Verarbeitungssoftware ab, während der ergänzende eigene KI-Datensatz mit 61 Videos und 11 Modellversionen für belastbare Aussagen zur Generalisierbarkeit auf das gesamte, sich rasch weiterentwickelnde Feld generativer Videomodelle vergleichsweise klein bleibt. Die Frage, ob sich Videos aktueller Smartphone-Generationen immernoch so gut von KI-Videos unterscheiden lassen, bleibt dementsprechend offen.
+
+Zusammenfassend lässt sich festhalten, dass das entwickelte Similarity-Hashing-Verfahren für die grobe Kategorisierung eine belastbare und praktisch nutzbare Erstbewertung liefert. Für feingranulare forensische Fragestellungen, namentlich den Nachweis konkreter Software-Manipulationen, die Unterscheidung von Geräten mit identischer Hardware-Referenz sowie die Differenzierung von Deepfakes gegenüber vollständig synthetischen Inhalten oder einzelnen Modellversionen, erweist sich die Methode in ihrer jetzigen Form hingegen als unzureichend.

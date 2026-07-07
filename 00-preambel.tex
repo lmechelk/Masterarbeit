@@ -1,88 +1,122 @@
-%Dokumentklasse und Spracheinstellung
-%für elektronische Veröffentlichung (Standard)
+% ============================================================
+% DOKUMENTKLASSE UND SPRACHE
+% ============================================================
+% für elektronische Veröffentlichung (Standard)
 \documentclass[11pt,oneside,paper=A4,DIV=11,BCOR=0mm,abstract=true,headsepline,headings=normal,ngerman]{scrreprt}
-%für Druck (doppelseitig)
+% für Druck (doppelseitig)
 %\documentclass[11pt,twoside,paper=A4,DIV=11,BCOR=8mm,abstract=true,headsepline,headings=normal,ngerman]{scrreprt}
 
 \usepackage{babel}
 \usepackage[utf8]{inputenc}
 
-%Schriftart
+% ============================================================
+% SCHRIFTART
+% ============================================================
 \usepackage{libertine}
 \usepackage{libertinust1math}
 \usepackage[T1]{fontenc}
 
-%Typographie
+% ============================================================
+% TYPOGRAFIE
+% ============================================================
 \usepackage[auto]{microtype}
 \clubpenalty = 10000
 \widowpenalty = 10000
 \displaywidowpenalty = 10000
 
-%Mathe, Symbole, EInheitendarstellung, Chemie
+% ============================================================
+% MATHE, SYMBOLE, EINHEITEN, CHEMIE
+% ============================================================
 \usepackage{amsmath}
 \usepackage{amsxtra}
 \usepackage{eurosym}
-\usepackage{siunitx}  
+\usepackage{siunitx}
 \sisetup{locale=DE}
 \usepackage[version=4]{mhchem}
 \usepackage{chemfig}
 
-%Einbindung von Bildern, Tabellen, pdf-Seiten, Quellcode
+% ============================================================
+% LOGIK-HILFSPAKET (für nomencl-Bedingungen \ifstrequal)
+% ============================================================
+\usepackage{etoolbox} % NEU: wird von \ifstrequal in der Nomenklatur benötigt
+
+% ============================================================
+% FARBEN UND GRAFIKPROGRAMME
+% ============================================================
 \usepackage{graphicx}
+\usepackage[table]{xcolor} % ANGEPASST: Option "table" ergänzt für \columncolor in Tabellen
+\usepackage{tikz}
+\usetikzlibrary{fit, backgrounds, positioning, decorations.pathreplacing, arrows.meta, positioning}
+\usepackage[edges]{forest} % ANGEPASST: Duplikat entfernt, edges-Option direkt hier geladen
+\usepackage{dirtree}
+
+% ============================================================
+% TABELLEN UND FLOATS
+% ============================================================
 \usepackage{multirow,multicol,booktabs}
 \usepackage{threeparttable}
 \usepackage{longtable}
-\usepackage{rotating}
+\usepackage{xltabular}   % Seitenumbrüche + flexible Spalten
 \usepackage{ltablex}
-\usepackage{subfig}
-\captionsetup[subtable]{position=top}
+\usepackage{array}       % erweiterte Spaltendefinitionen
+\usepackage{float}       % Positionierung (H-Option)
+\usepackage{seqsplit}    % Umbruch langer Zeichenketten
+\usepackage{rotating}
+\usepackage{pdflscape}   % Drehen ganzer PDF-Seiten
+
+% ============================================================
+% ABBILDUNGEN, TEILABBILDUNGEN, EINGEBETTETE DOKUMENTE
+% ============================================================
 \usepackage{pdfpages}
+\usepackage{subcaption} % ANGEPASST: ersetzt subfig, siehe Hinweis unten
+\captionsetup[subtable]{position=top}
+
+% ============================================================
+% TEXTGESTALTUNG UND CODE
+% ============================================================
 \usepackage{listings}
+\usepackage{minted}
 \usepackage{blindtext}
 \usepackage{csquotes}
-
-%Tabellen
-\usepackage{xltabular} % Erlaubt Seitenumbrüche + flexible Spalten
-\usepackage{booktabs}
-\usepackage{array}      % Für erweiterte Spaltendefinitionen
-\usepackage{float} % Positionierung
-
-%Durchgestrichener Text
-\usepackage[normalem]{ulem}
-
-%Darstellung von URL
+\usepackage[normalem]{ulem} % durchgestrichener Text
 \usepackage{url}
 \urlstyle{same}
-
-%Darstellung Code
-\usepackage{minted}
-
-%Darstellung Kommentare
 \usepackage{comment}
 
-%Fussnoten, auch für Tabellen
+% ============================================================
+% FUSSNOTEN
+% ============================================================
 \usepackage{footnote}
-\makesavenoteenv{tabular} 
+\makesavenoteenv{tabular}
+\usepackage{chngcntr}
+\counterwithout{footnote}{section} % entkoppelt Fußnoten vom Hauptkapitel
 
-% Ermöglicht das Drehen der PDF-Seite
-\usepackage{pdflscape} 
+% Fußnotenmarkierung linksbündig statt hochgestellt
+\deffootnote{1.5em}{1em}{%
+    \makebox[1.5em][l]{\thefootnotemark}%
+}
+\interfootnotelinepenalty=10000 % Fußnoten nicht umbrechen
 
-%Darstellung der Literaturangaben
+% ============================================================
+% LITERATURVERZEICHNIS
+% ============================================================
 \usepackage[
-backend=biber,
-style=numeric,
-sorting=none,
-citestyle=numeric-comp,
-maxbibnames=10,
-giveninits=true
+    backend=biber,
+    style=numeric,
+    sorting=none,
+    citestyle=numeric-comp,
+    maxbibnames=10,
+    giveninits=true
 ]{biblatex}
 
 \renewcommand*{\labelnamepunct}{\addcolon\addspace}
 
-%Speicherort der Literaturangaben (*.bib Datei)
+% Speicherort der Literaturangaben (*.bib-Datei)
 \bibliography{literatur/literaturdatenbank}
 
-%Nomenklatur
+% ============================================================
+% NOMENKLATUR (ABKÜRZUNGS- UND SYMBOLVERZEICHNIS)
+% ============================================================
 \usepackage[intoc, german]{nomencl}
 \renewcommand{\nomname}{Abkürzungs- und Symbolverzeichnis}
 \setlength{\nomitemsep}{-\parsep}
@@ -96,23 +130,14 @@ giveninits=true
   \ifstrequal{#1}{E}{\nomenclheader{Lateinische Symbole}}{
   \ifstrequal{#1}{G}{\nomenclheader{Griechische Symbole}}{
   \ifstrequal{#1}{O}{\nomenclheader{Operatoren}}{
-  \ifstrequal{#1}{X}{\nomenclheader{Tiefgestelle Indizes}}{
-  \ifstrequal{#1}{Y}{\nomenclheader{Hochgestelle Indizes}}{}}}}}}
+  \ifstrequal{#1}{X}{\nomenclheader{Tiefgestellte Indizes}}{
+  \ifstrequal{#1}{Y}{\nomenclheader{Hochgestellte Indizes}}{}}}}}}
  \itemsep\nomitemsep
 }
 
-%Fussnoten
-%Markierung in der Fußnote selbst weder hochgestellt noch kleiner gesetzt
-%\deffootnote{1em}{1em}{\thefootnotemark\ }
-%linksbündige Fußnotenmarkierungen
-\deffootnote{1.5em}{1em}{%
-	\makebox[1.5em][l]{\thefootnotemark}%
-}
-
-%Fussnoten nicht umbrechen
-\interfootnotelinepenalty=10000
-
-%Gestaltung der Bildunterschrift und Tabellenüberschirften sowieTitelseitenangaben
+% ============================================================
+% GESTALTUNG VON BILDUNTERSCHRIFTEN, TABELLEN, TITELSEITE
+% ============================================================
 \addtokomafont{caption}{\small}
 \setkomafont{captionlabel}{\sffamily\bfseries}
 \setkomafont{author}{\large}
@@ -122,32 +147,37 @@ giveninits=true
 \addtokomafont{dedication}{\raggedright}
 
 \renewcaptionname{ngerman}{\figurename}{Abb.}
-\renewcaptionname{ngerman}{\tablename}{Tab.} 
+\renewcaptionname{ngerman}{\tablename}{Tab.}
 
-%Tabellenumgebungen mit Schriftgröße 10 und 7
+% Tabellenumgebungen mit Schriftgröße 10 und 7
 \newenvironment{tabular10}{%
-	\fontsize{10}{12}\selectfont\tabular
+    \fontsize{10}{12}\selectfont\tabular
 }{%
-	\endtabular
+    \endtabular
 }
 
 \newenvironment{tabular7}{%
-	\fontsize{7}{12}\selectfont\tabular
+    \fontsize{7}{12}\selectfont\tabular
 }{%
-	\endtabular
+    \endtabular
 }
 
+% ============================================================
+% EXTERNE DATENDATEI (Titel, Autor, etc.)
+% ============================================================
 \input{00-daten}
 
-%Verweise und Referenzen, pdf-Einstellungen
+% ============================================================
+% VERWEISE, REFERENZEN, PDF-METADATEN
+% ============================================================
+% WICHTIG: hyperref muss möglichst spät geladen werden,
+% cleveref direkt danach
 \usepackage[
-pdftitle={\VARtitel},
-pdfsubject={\VARtyp},
-pdfauthor={\VARname},
-pdfkeywords={},  
-%Links nicht einrahmen
-hidelinks
+    pdftitle={\VARtitel},
+    pdfsubject={\VARtyp},
+    pdfauthor={\VARname},
+    pdfkeywords={},
+    hidelinks % Links nicht einrahmen
 ]{hyperref}
 
 \usepackage[german]{cleveref}
-

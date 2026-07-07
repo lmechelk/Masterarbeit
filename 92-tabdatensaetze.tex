@@ -1,0 +1,97 @@
+% Trainingsdaten
+
+\begin{sidewaystable}[!h]
+    \centering
+    \small
+    \begin{tabular}{lllllllll}\hline
+         \textbf{db\_name} & \textbf{id} & \textbf{brand} & \textbf{model} & \textbf{content\_source} & \textbf{content\_
+type}& \textbf{media\_
+type}& \textbf{processing} & \textbf{tampering} \\\hline
+         VISION & D01 & Samsung & GalaxyS3Mini & DIGITAL\_CAMERA & FLAT & MP4 & ORIGINAL & NATIVE \\\hline
+         VISION & D01 & Samsung & GalaxyS3Mini & DIGITAL\_CAMERA & FLAT & MP4 & WHATSAPP & NATIVE \\\hline
+         VISION & D02 & Apple & iPhone4s & DIGITAL\_CAMERA & FLAT & MOV & ORIGINAL & NATIVE \\\hline
+         EVA-7K & D01 & Samsung & GalaxyS3Mini & DIGITAL\_CAMERA & INDOOR & MP4 & FACEBOOK & NATIVE \\\hline
+         EVA-7K & D01 & Samsung & GalaxyS3Mini & DIGITAL\_CAMERA & INDOOR & MP4 & FACEBOOK & AVIDEMUX \\\hline
+         EVA-7K & D01 & Samsung & GalaxyS3Mini & DIGITAL\_CAMERA & INDOOR & MP4 & FACEBOOK & EXIFTOOL \\\hline
+         EVA-7K & D01 & Samsung & GalaxyS3Mini & DIGITAL\_CAMERA & INDOOR & MP4 & FACEBOOK & FFMPEG3 \\\hline
+         EVA-7K & D01 & Samsung & GalaxyS3Mini & DIGITAL\_CAMERA & INDOOR & MP4 & FACEBOOK & KDENLIVE \\\hline
+         EVA-7K & D01 & Samsung & GalaxyS3Mini & DIGITAL\_CAMERA & INDOOR & MP4 & FACEBOOK & PREMIERE \\\hline
+         AI & AI01 & GoogleFlow & OmniFlash & AI\_GENERATION & SYNTHETIC & MP4 & ORIGINAL & NATIVE \\\hline
+         AI & AI01 & GoogleFlow & OmniFlash & MIXED & DEEPFAKE & MP4 & ORIGINAL & NATIVE \\\hline
+         AI & AI04 & Grok & Imagine1.5 & MIXED & DEEPFAKE & MP4 & ORIGINAL & NATIVE \\\hline
+    \end{tabular}
+\caption{Auszug ausgewählter Metadatenspalten aus dem Trainingsdatensatz mit dem Vision-, EVA-7K- und KI-Datensatz (Eigene Darstellung basierend auf Daten von Shullani u. a.\cite{shullani_vision_2017} und Yang u. a.\cite{yang_efficient_2020})}
+\label{tab:train}
+\end{sidewaystable}
+
+
+
+
+
+% SD Vision
+
+\begin{sidewaystable}[h]
+    \centering
+    \small
+    \begin{tabular}{>{\raggedright\arraybackslash}p{0.08\linewidth}>{\raggedright\arraybackslash}p{0.1\linewidth}p{0.05\linewidth}p{0.7\linewidth}}\hline
+         \textbf{source\_
+label}& \textbf{filter} & \textbf{file\_
+count}& \textbf{ngram\_2} \\\hline
+         Apple\_
+ORIGINAL& \{brand: Apple, processing: ORIGINAL\} & 39 & \seqsplit{avc1avcCavcCcolrchanwavecolrsttsdinfdrefdrefstbledtselstelstmdiaelsttrefesdssttsfreemetafrmamp4aftypwidegmhdgmingminhdlrhdlrdinfhdlrkeyshdlrminfilstfreeilsttrakilstudtakeysilstmdatmoovmdhdhdlrmdiamdhdmebxsttsmetahdlrminfgmhdminfsmhdminfvmhdmoovmvhdmp4achanmp4aesdsmvhdtraksdtpstscsmhdhdlrstblstsdstcometastcotrakstcoudtastscstszstsdavc1stsdmebxstsdmp4astsssdtpstszstcosttsstscsttsstsstaptedtstkhdedtstkhdtapttraktkhdtrefmdiaudta\textcopyright makudta\textcopyright modudta\textcopyright swrvmhdhdlrwavefrmawidemdat\textcopyright day\textcopyright mak\textcopyright mod\textcopyright day\textcopyright xyzmakfree\textcopyright mak\textcopyright swr\textcopyright mod\textcopyright mak\textcopyright mod\textcopyright swr\textcopyright swr\textcopyright day\textcopyright xyzmak\textcopyright xyzmod}\\\hline
+ iPhone5c\_
+ORIGINAL& \{'model': 'iPhone5c', 'processing': 'ORIGINAL'\}& 9&\seqsplit{avc1avcCavcCcolrchanwavecolrsttsdinfdrefdrefstbledtselstelstmdiaelsttrefesdssttsfreemetafrmamp4aftypwidegmhdgmingminhdlrhdlrdinfhdlrkeyshdlrminfilstfreeilsttrakilstudtakeysilstmdatmoovmdhdhdlrmdiamdhdmebxsttsmetahdlrminfgmhdminfsmhdminfvmhdmoovmvhdmp4achanmp4aesdsmvhdtraksdtpstscsmhdhdlrstblstsdstcometastcotrakstcoudtastscstszstsdavc1stsdmebxstsdmp4astsssdtpstszstcosttsstscsttsstsstaptedtstkhdedtstkhdtapttraktkhdtrefmdiaudta\textcopyright{}makudta\textcopyright{}modvmhdhdlrwavefrmawidemdat\textcopyright{}day\textcopyright{}mak\textcopyright{}day\textcopyright{}xyz\textcopyright{}makfree\textcopyright{}mak\textcopyright{}swr\textcopyright{}mod\textcopyright{}swr\textcopyright{}swr\textcopyright{}day\textcopyright{}xyz\textcopyright{}mod}\\\hline
+ D29\_
+ORIGINAL& \{'id': 'D29', 'processing': 'ORIGINAL'\}& 3&\seqsplit{avc1avcCavcCcolrchanwavecolrsttsdinfdrefdrefstbledtselstelstmdiaelsttrefesdssttsfrmamp4aftypwidegmhdgmingminhdlrhdlrdinfhdlrkeyshdlrminfkeysilstmdatmoovmdhdhdlrmdiamdhdmebxsttsmetahdlrminfgmhdminfsmhdminfvmhdmoovmvhdmp4achanmp4aesdsmvhdtraksdtpstscsmhdhdlrstblstsdstcometastcotrakstscstszstsdavc1stsdmebxstsdmp4astsssdtpstszstcosttsstscsttsstsstaptedtstkhdedtstkhdtapttraktkhdtrefmdiavmhdhdlrwavefrmawidemdat}\\\hline
+         Xiaomi\_
+ORIGINAL& \{'brand': 'Xiaomi', 'processing': 'ORIGINAL'\}& 3& \seqsplit{avc1avcCavcCpaspdinfdrefdrefstblesdssttsfreemdatftypmoovhdlrkeyshdlrminfilsttrakkeysilstmdhdhdlrmdiamdhdmetahdlrminfsmhdminfvmhdmoovmvhdmp4aesdsmvhdmetamvhdudtapaspsttssmhddinfstblstsdstcofreestcotrakstscstcostsdavc1stsdmp4astssstszstszstscsttsstsssttsstsztkhdmdiatraktkhdudta\textcopyright{}xyzvmhddinf\textcopyright{}xyzmeta}\\\hline
+ RedmiNote3\_
+ORIGINAL& \{'model': 'RedmiNote3', 'processing': 'ORIGINAL'\}& 3&\seqsplit{avc1avcCavcCpaspdinfdrefdrefstblesdssttsfreemdatftypmoovhdlrkeyshdlrminfilsttrakkeysilstmdhdhdlrmdiamdhdmetahdlrminfsmhdminfvmhdmoovmvhdmp4aesdsmvhdmetamvhdudtapaspsttssmhddinfstblstsdstcofreestcotrakstscstcostsdavc1stsdmp4astssstszstszstscsttsstsssttsstsztkhdmdiatraktkhdudta\textcopyright{}xyzvmhddinf\textcopyright{}xyzmeta}\\ \hline
+    \end{tabular}
+\caption{Auszug Source Digests für Geräte-, Modell- und Herstellererkennung mit dem VISION-Datensatz ((Eigene Darstellung basierend auf Daten von Shullani u. a.\cite{shullani_vision_2017})}
+\label{tab:sourcedigests_vision}
+\end{sidewaystable}
+
+
+% SD Eva
+
+\begin{sidewaystable}[h]
+    \centering
+    \small
+    \begin{tabular}{>{\raggedright\arraybackslash}p{0.08\linewidth}>{\raggedright\arraybackslash}p{0.1\linewidth}p{0.05\linewidth}p{0.7\linewidth}}\hline
+         \textbf{source\_
+label}& \textbf{filter} & \textbf{file\_
+count}& \textbf{ngram\_2} \\\hline
+         WHATSAPP\_
+NATIVE& \{'processing': 'WHATSAPP', 'tampering': 'NATIVE'\} & 105 & \seqsplit{avc1avcCavcCcolravcCpaspbeamwidecolrsttsdinfdrefdrefstblesdssttsfreemdiaftypbeamhdlrminfmdhdhdlrmdiamdhdminfsmhdminfvmhdmoovmvhdmp4aesdsmvhdtrakpaspsttssdtpstscsmhddinfstblstsdstcomdatstcotrakstscstszstsdavc1stsdmp4astsssdtpstssstscstszstcosttsstscsttsstsstkhdfreetraktkhdvmhddinfwidemoov}\\\hline
+ YOUTUBE\_
+NATIVE& \{'processing': 'YOUTUBE', 'tampering': 'NATIVE'\}& 184&\seqsplit{avc1avcCavcCbtrtavcCsttsbtrtsttscttsstsccttsvmhddinfdrefdrefstbledtselstelstmdiaesdssttsfreemdatftypfreeftypmoovhdlrilsthdlrminfilstmdatiodstrakmdatmoovmdhdhdlrmdiamdhdmetahdlrminfdinfminfsmhdminfvmhdmoovmvhdmp4aesdsmvhdiodsmvhdtraksmhddinfsmhdmdatsmhdudtastblstsdstcostszstcotrakstcoudtastscstcostscstszstsdavc1stsdmp4astsscttsstssstscstssvmhdstszsmhdstszstcostszstsssttsstscsttsstsstkhdedtstkhdmdiatraktkhdudtametavmhddinfvmhdtrak}\\\hline
+ DIGITAL\_
+CAMERA\_
+avidemux& \{'content\_source': 'DIGITAL\_CAMERA', 'tampering': 'avidemux'\}& 316&\seqsplit{avc1avcCavcCpaspavcCsttscttsstsccttsvmhddinfdrefdrefstbledtselstelstmdiaesdssttsfreemdatftypfreeftypmoovhdlrilsthdlrkeyshdlrminfilstfreeilstmdatkeysilstmdatmoovmdhdhdlrmdiamdhdmetahdlrminfdinfminfsmhdminfvmhdmoovmvhdmp4aesdsmvhdtrakpaspsttssbgpudtasgpdsbgpsmhddinfsmhdmdatsmhdudtastblstsdstcosgpdstcostszstcotrakstcoudtastscstcostscstszstsdavc1stsdmp4astsscttsstssstscstssvmhdstszsmhdstszstcostszstsssttsstscsttsstsstkhdedtstkhdmdiatraktkhdudtametavmhddinfvmhdtrak}\\\hline
+ DIGITAL\_
+CAMERA\_
+exiftool& \{'content\_source': 'DIGITAL\_CAMERA', 'tampering': 'exiftool'\}& 316&\seqsplit{avc1avcCavcCpaspavcCsttscttsstsccttsvmhddinfdrefdrefstbledtselstelstmdiaesdssttsfreemdatftypfreeftypmoovhdlrilsthdlrkeyshdlrminfilstfreeilstmdatkeysilstmdatmoovmdhdhdlrmdiamdhdmetahdlrminfdinfminfsmhdminfvmhdmoovmvhdmp4aesdsmvhdtrakpaspsttssbgpudtasgpdsbgpsmhddinfsmhdmdatsmhdudtastblstsdstcosgpdstcostszstcotrakstcoudtastscstcostscstszstsdavc1stsdmp4astsscttsstssstscstssvmhdstszsmhdstszstcostszstsssttsstscsttsstsstkhdedtstkhdmdiatraktkhdudtametavmhddinfvmhdtrak}\\\hline
+    \end{tabular}
+\caption{Auszug Source Digests für Social-Media-Verarbeitung und Bearbeitungssoftware mit dem Vision- und EVA-7K-Datensatz (Eigene Darstellung basierend auf Daten von Shullani u. a.\cite{shullani_vision_2017} und Yang u. a.\cite{yang_efficient_2020})}
+\label{tab:sourcedigests_eva}
+\end{sidewaystable}
+
+% SD AI
+
+\begin{sidewaystable}[h]
+    \centering
+    \small
+    \begin{tabular}{>{\raggedright\arraybackslash}p{0.08\linewidth}>{\raggedright\arraybackslash}p{0.1\linewidth}p{0.05\linewidth}p{0.7\linewidth}}\hline
+         \textbf{source\_
+label}& \textbf{filter} & \textbf{file\_
+count}& \textbf{ngram\_2} \\\hline
+ Veo3.1& \{'model': 'Veo3.1'\}& 2&\seqsplit{avc1avcCavcCbtrtbtrtsttscttsstscdinfdrefdrefstbledtselstelstmdiaesdsbtrtfreemdatftypuuidhdlrilsthdlrminfilstfreemdatmoovmdhdhdlrmdiamdhdmetahdlrminfsmhdminfvmhdmoovmvhdmp4aesdsmvhdtraksbgpudtasgpdsbgpsmhddinfstblstsdstcosgpdstcotrakstscstszstsdavc1stsdmp4astsscttsstszstcosttsstscsttsstsstkhdedtstraktkhdudtametauuidmdatuuidmoovvmhddinf}\\\hline
+ Imagine1.5& \{'model': 'Imagine1.5'\}& 7&\seqsplit{avc1avcCavcCbtrtavcCcolrbtrtsttscolrbtrtcttsstscdinfdrefdrefstbledtselstelstmdiaesdsbtrtfreemdatftypmoovhdlrilsthdlrminfilstfreemdhdhdlrmdiamdhdmetahdlrminfsmhdminfvmhdmoovmvhdmp4aesdsmvhdtraksbgpudtasgpdsbgpsmhddinfstblstsdstcosgpdstcotrakstscstszstsdavc1stsdmp4astsscttsstszstcosttsstscsttsstsstkhdedtstraktkhdudtametavmhddinf}\\\hline
+ Sora2& \{'model': 'Sora2'\}& 5&\seqsplit{avc1avcCavcCbtrtbtrtsttscttsstscdinfdrefdrefstbledtselstelstmdiaesdsbtrtfreemdatftypuuidhdlrilsthdlrminfilstfreemdhdhdlrmdiamdhdmetahdlrminfsmhdminfvmhdmoovmvhdmp4aesdsmvhdtraksbgpudtasgpdsbgpsmhddinfstblstsdstcosgpdstcotrakstscstszstsdavc1stsdmp4astsscttsstszstcosttsstscsttsstsstkhdedtstraktkhdudtametauuidmoovvmhddinf}\\\hline
+ Pika2.5& \{'model': 'Pika2.5'\}& 6&\seqsplit{avc1avcCavcCbtrtbtrtsttscttsstscdinfdrefdrefstbledtselstelstmdiaesdsbtrtfreemdatftypmoovhdlrilsthdlrminfilstfreemdhdhdlrmdiamdhdmetahdlrminfsmhdminfvmhdmoovmvhdmp4aesdsmvhdtraksbgpudtasgpdsbgpsmhddinfstblstsdstcosgpdstcotrakstcoudtastscstszstsdavc1stsdmp4astsscttsstszstcosttsstscsttsstsstkhdedtstraktkhdudtametavmhddinf}\\\hline
+ AI& \{'db\_name': 'AI'\}& 31& \seqsplit{avc1avcCavcCbtrtavcCcolravcCsttsbtrtsttscolrbtrtcttsstscdinfdrefdrefstbledtselstelstmdiaesdsbtrtfreemdatftypfreeftypmoovftypuuidhdlrilsthdlrkeyshdlrminfilstfreekeysilstmdatmoovmdhdhdlrmdiamdhdmetahdlrminfsmhdminfvmhdmoovmvhdmp4aesdsmvhdtraksbgptraksbgpudtasgpdsbgpsmhddinfstblstsdstcosgpdstcotrakstcoudtastscstszstsdavc1stsdmp4astsscttsstszstcosttsstscsttsstsstkhdedtstraktkhdudtametauuidmdatuuidmoovvmhddinf}\\ \hline
+    \end{tabular}
+\caption{Auszug Source Digests für KI-generierte Inhalte (Eigene Darstellung)}
+\label{tab:sourcedigests_ki}
+\end{sidewaystable}

@@ -4,8 +4,49 @@ Die etablierte Videoforensik stützt sich primär auf die Analyse des audiovisue
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=1\linewidth]{grafiken/yang2025.drawio.png}
-    \caption{TODO: yang2025.drawio.png}
+    \resizebox{15cm}{!}{%
+    \begin{tikzpicture}[
+        box/.style={
+            draw, rounded corners, thick,
+            minimum width=4.2cm, minimum height=3.4cm,
+            text width=3.9cm,
+            align=center, font=\small,
+            inner sep=8pt
+        },
+        arr/.style={-latex, thick}
+    ]
+
+    \node[box] (kreation) at (0,0) {
+        \textbf{Kreation} \\[4pt]
+        Wo kommt es her? \\[4pt]
+        (SCI -- Source Camera Identification / Hardware-Ebene)
+    };
+
+    \node[box] (bearbeitung) at (5.2,0) {
+        \textbf{Bearbeitung} \\[4pt]
+        Womit wurde es gespeichert oder gerendert? \\[4pt]
+        (MTI -- Manipulation Tool Identification / Software-Ebene)
+    };
+
+    \node[box] (distribution) at (10.4,0) {
+        \textbf{Distribution} \\[4pt]
+        Wie wurde es verbreitet? \\[4pt]
+        (SNA -- Social Network Attribution / Plattform-Ebene)
+    };
+
+    \node[box] (integritaet) at (15.6,0) {
+        \textbf{Integrität} \\[4pt]
+        Wurde der Inhalt semantisch verfälscht? \\[4pt]
+        (MD -- Video Manipulation Detection / Fälschungs-Ebene)
+    };
+
+    \draw[arr] (kreation.east) -- (bearbeitung.west);
+    \draw[arr] (bearbeitung.east) -- (distribution.west);
+    \draw[arr] (distribution.east) -- (integritaet.west);
+
+    \end{tikzpicture}%
+    }
+    \caption{Forensische Aufgabenbereiche der Container-Analyse (Eigene Darstellung in Anlehnung an Yang u. a. \cite{yang_comprehensive_2025})}
     \label{fig:yang}
 \end{figure}
 
@@ -81,12 +122,12 @@ Xiang u. a. (2021)\\\midrule
          \textbf{Verfahren}&  Quantitative Integritätsprüfung und Software-Identifikation durch Container-Charakterisierung&Forensische Analyse von MP4-Metadaten durch vektorielle Repräsentation und Dimensionsreduktion\\\midrule
          \textbf{Unter-suchungs-ziele}&  MD (Manipulationserkennung), MTI (Software-Identifikation), SNA (Social-Media-Erkennung) und rudimentär SCI (Erkennung des Betriebssystems)&SCI (Brand Attribution), MTI (Software-Identifikation), SNA (Social-Media-Erkennung) und MD (Manipulationserkennung)\\\midrule
          \textbf{Feature}&  Field (Pfade) und Value (Pfade inklusive Werte) aus der Baumstruktur&Boxen sowie Felder, die als track-spezifische Features extrahiert werden\\\midrule
-         \textbf{Symbolische Repräsentation} (T1 bis T5)&  \multicolumn{2}{c}{T4 (ungeordnet, extrahiert pfadrelevante Informationen, ignoriert Reihenfolge)}\\\midrule
+         \textbf{Symbolische Repräsentation} (T1 bis T5)&  T4 (ungeordnet, extrahiert pfadrelevante Informationen, ignoriert Reihenfolge)&T4\\\midrule
          \textbf{Feature-Repräsentation}&  Bag-of-Words&Type-aware-Model\\\midrule
          \textbf{Feature-Selektion}&  	
 Likelihood-Ratio-Framework &Korrelationsmatrix und spektrales Clustering \\\midrule
          \textbf{Klassifikator}&  Entscheidungsbäume &Linear Discriminant Analysis (LDA) mit Nearest Neighbor Classifier (NNC) für Multi-Klassen; Entscheidungsbäume für binäre Klassen\\\midrule
-         \textbf{Datenbanken}&  \multicolumn{2}{c}{VISION und EVA-7K}\\\midrule
+         \textbf{Datenbanken}&  VISION und EVA-7K&VISION und EVA-7K\\\midrule
          \textbf{Test- und Trainingsdaten}&  Leave-one-device-out Kreuzvalidierung (34 Folds)&50/50 Split mit stratifiziertem Sampling sowie Leave-one-out Kreuzvalidierung für lokale Videos\\\midrule
          \textbf{Evaluation}& Unterscheidung von nativen und manipulierten Videos, 4 Social-Media-Plattformen&Brand Attribution, Software-Identifikation, 4 Social-Media-Plattformen und Integritätsprüfung\\\midrule
          \textbf{Metriken}& \multicolumn{2}{c}{Balanced Accuracy, True Positive Rate (TPR), True Negative Rate (TNR)}\\ \bottomrule
@@ -114,11 +155,6 @@ Einen repräsentativen Ansatz für diese Methodik präsentierten Yang u.\,a. (20
 TODO: Zusammenfassende Grafik von xiang und yang2020\\
 
 Die forensische Stärke von Bag-of-Words-Modellen und der generellen quantitativen Pipeline liegt in ihrer enormen Effizienz. Ein methodischer Nachteil bezüglich des topologischen Kontextes entsteht lediglich dann, wenn als Vorstufe eine ungeordnete symbolische Repräsentation wie T5 gewählt wird. Bei T5 wird die Information über die exakte Pfadtiefe und die Eltern-Kind-Beziehung der Boxen vollständig verworfen und ausschließlich die Häufigkeit finaler Feldwerte gezählt, was die Unterscheidung stark ähnlicher Containerstrukturen signifikant erschwert \cite{yang_comprehensive_2025}.\\
-
-TODO: Zusammenfassung der Genauigkeit?
-
-% Die empirische Leistungsfähigkeit quantitativer Modelle wird durch exzellente Erkennungsraten belegt. Der an \textit{Bag-of-Words} angelehnte Ansatz erreicht in Kombination mit Entscheidungsbäumen eine Balanced Accuracy von 98,5\,\% bei der allgemeinen Integritätsprüfung zwischen originalen und manipulierten Videos; die spezifische Identifikation der verwendeten Manipulationssoftware gelingt mit einer Genauigkeit von 97,6\,\% \cite{yang_efficient_2020} [1, 2]. Die Weiterentwicklung durch \textit{Type-aware}-Algorithmen steigert diese Präzision und erzielt sowohl bei der Zuordnung zu sozialen Netzwerken als auch bei der Identifikation der Bearbeitungssoftware durchschnittliche F1-Werte von 0,99 \cite{xiang_forensic_2021} [3, 4]. Die aktuelle Meta-Analyse von Yang u.\,a. (2025) bestätigt diese Resultate und fasst zusammen, dass quantitative Verfahren bei der Identifikation von Software und Netzwerken nahezu fehlerfrei arbeiten (F1 und Accuracy > 0,99), während die spezifische Identifikation einzelner Quellkameramodelle (\textit{Source Camera Identification}) weiterhin methodisches Verbesserungspotenzial aufweist \cite{yang_comprehensive_2025}.
-
 
 %%%
 
@@ -154,29 +190,17 @@ Ein grundlegendes Framework für diesen Ansatz legten Iuliani u.\,a. (2019) vor,
 
 TODO: Anschauliche Grafik erstellen aus Iuliani Fig 1 (komplette Bäume 2er Mp4s) und Ramos Table 3 (die 4 Features) \\
 
-Die Limitierung streng geordneter Strukturauswertungen (vergleichbar mit den Repräsentationen T1 und T2 nach der Taxonomie von Yang u.\,a. \cite{yang_comprehensive_2025}) liegt in ihrer Inflexibilität. Der strikte Abgleich sequenzieller Pfade scheitert häufig in der Praxis, da bereits triviale, von der Software initiierte Einfügungen oder Verschiebungen optionaler Boxen (wie \textit{free} oder \textit{udta}) die nachfolgenden Indizes verschieben. Dies verursacht eine signifikante Veränderung der abgebildeten Container-Reihenfolge, was den direkten forensischen Strukturvergleich erschwert.\\
-
-TODO: Zusammenfassung der Genauigkeit?
-
-%Die forensische Wirksamkeit pfadbasierter Analysen zeigt sich insbesondere bei der Erkennung subtiler Manipulationen und der Markenzuordnung. Das Likelihood-Ratio-Modell von Iuliani u.\,a. (2019) erzielt bei der Integritätsprüfung eine perfekte Trennschärfe (AUC = 1,0) für Videos, die über soziale Netzwerke geteilt oder ohne Re-Encoding (mittels FFmpeg) geschnitten wurden \cite{iuliani_video_2019} [8, 9]. Selbst bei minimalen Metadaten-Manipulationen (wie durch ExifTool) erreicht das Verfahren bei 70\,\% der getesteten Geräte einen AUC-Wert von über 0,82 und bei der Markenidentifikation fast durchgehend einen Wert von 1,0 \cite{iuliani_video_2019} [9, 10]. Die pfadbasierten Clustering-Ansätze von Ramos-López u.\,a. (2020) belegen zudem, dass unüberwachte Dichte-Algorithmen (wie OPTICS) Videos effektiv ohne vorheriges Training nach Herstellermarken gruppieren können \cite{ramos_lopez_digital_2020} [11, 12]. Dabei werden auf großen forensischen Datensätzen Rand-Index-Werte von 0,89 (VISION-Datensatz) bis 0,94 (ACID-Datensatz) erreicht \cite{ramos_lopez_digital_2020} [12, 13].
-
+Die Limitierung streng geordneter Strukturauswertungen (vergleichbar mit den Repräsentationen T1 und T2 nach der Taxonomie von Yang u.\,a. \cite{yang_comprehensive_2025}) liegt in ihrer Inflexibilität. Der strikte Abgleich sequenzieller Pfade scheitert häufig in der Praxis, da bereits triviale, von der Software initiierte Einfügungen oder Verschiebungen optionaler Boxen (wie \textit{free} oder \textit{udta}) die nachfolgenden Indizes verschieben. Dies verursacht eine signifikante Veränderung der abgebildeten Container-Reihenfolge, was den direkten forensischen Strukturvergleich erschwert.
 
 %%%
 
 \subsection{Limitationen bestehender Verfahren}
+Trotz der nachgewiesenen forensischen Nutzbarkeit der Container-Struktur weisen die bisherigen Ansätze mehrere Limitationen auf, die für die vorliegende Arbeit von Bedeutung sind.
 
-TODO: Stichpunkte ausformulieren
+Eine erste Einschränkung betrifft die Robustheit der extrahierten Merkmale. Li u. a. weisen nach, dass die syntaktische Struktur eines MP4-Containers gegenüber Standard-Verarbeitungsschritten wie einer Rekonstruktion ohne vorherige Transkodierung (Re-Muxing) hochgradig volatil ist \cite[Kap. I]{li_learning_2024}. Da bereits ein einfaches Neuverpacken der Datei ohne inhaltliche Veränderung des Bitstroms zu einer veränderten Boxreihenfolge oder zum Entfernen einzelner Boxen führen kann, ist die Zuverlässigkeit rein strukturbasierter Verfahren unmittelbar von der Verarbeitungshistorie der untersuchten Datei abhängig. Dies steht im Spannungsfeld zu den Ergebnissen von Gloe u. a. und Yang u. a., welche die Container-Struktur primär als stabilen, herstellerspezifischen Fingerabdruck einordnen \cite{gloe_forensic_2014}, \cite{yang_comprehensive_2025}.
 
-\begin{itemize}
-    \item T1 und T2 reagiert stark auf minimale Strukturveränderungen
-    \item  T3 und T4, sind aber fehleranfällig bei identischen Boxen \cite{yang_comprehensive_2025}
-    \item Bei Re-Muxing kann oft kein Rückschluss mehr auf Originalkamera (SCI) gewonnen werden, da die Boxen überschrieben werden \cite{li_learning_2024}
-\end{itemize}
+Eine zweite Limitation ergibt sich aus der eingeschränkten Vergleichbarkeit bestehender Studien. Die untersuchten Arbeiten unterscheiden sich signifikant in Umfang und Herkunft ihrer Datensätze sowie den betrachteten Software-Systemen, was eine einheitliche methodische Evaluation erschwert \cite[Tab. 6]{yang_comprehensive_2025}. So fokussieren sich beispielsweise Datensätze wie VISION primär auf native Smartphone-Aufnahmen und Social-Media-Derivate \cite[Kap. 1]{shullani_vision_2017}, während Datensätze wie EVA-7K explizit für die Erkennung klassischer Manipulationssoftware konzipiert wurden \cite[Kap. 1]{yang_efficient_2020}.
 
+Drittens fokussieren sich die bisherigen Arbeiten nahezu ausschließlich auf native Kameraaufnahmen, Social-Media-Verarbeitungen oder klassische Manipulationswerkzeuge. Die rasant wachsende Klasse KI-generierter Videos, die zunehmend ebenfalls im MP4-Containerformat ausgegeben wird, bleibt in der bestehenden Literatur und den zugehörigen Datensätzen weitgehend unberücksichtigt \cite[Kap. 1]{shullani_vision_2017}, \cite[Kap. 1]{yang_efficient_2020}. Es ist daher offen, ob sich die etablierten Feature-Design-Ansätze auf diese neue Erzeugungsquelle übertragen lassen oder ob generative Modelle eine grundlegend abweichende syntaktische Signatur aufweisen, die eigene methodische Anpassungen erfordert.
 
-% hier alter text
-%Die systematische Betrachtung der etablierten Analyseverfahren offenbart methodische Herausforderungen bei der Modellierung der Containerstruktur. Bisherige Ansätze zwingen die Forensik bei der symbolischen Repräsentation in ein Dilemma: Streng geordnete Modelle (wie T1 und T2) erfassen die Topologie präzise, reagieren aber auf minimale strukturelle Varianzen oder eingefügte Boxen äußerst fehleranfällig. Ungeordnete Modelle (insbesondere T5) skalieren durch ihre Abstraktion zwar hervorragend, verwerfen den hierarchischen Kontext der Metadaten jedoch vollständig \cite{yang_comprehensive_2025}.
-%
-%Darüber hinaus weisen containerbasierte Ansätze eine grundlegende Schwachstelle auf: die Anfälligkeit gegenüber trivialem \textit{Re-Muxing} (Stream Copy) \cite{li_learning_2024}. Li u.\,a. (2024) kritisieren, dass die native, herstellerspezifische Container-Struktur durch einen einfachen Kopiervorgang mittels gängiger Software-Encoder überschrieben und durch die Signatur der Software ersetzt werden kann, ohne dass eine rechenintensive Transcodierung des audiovisuellen Bitstroms erfolgt \cite{li_learning_2024}. Für maschinelle Klassifikatoren, die auf starre Container-Strukturen trainiert wurden, geht der ursprüngliche forensische Fingerabdruck des Aufnahmegeräts dadurch verloren, was die Bestimmung der Originalquelle drastisch erschwert.
-%
-%Diese Limitationen verdeutlichen die Notwendigkeit eines flexiblen und fehlertoleranten Analyseverfahrens auf syntaktischer Ebene. Die Transformation der hierarchischen Metadatenstrukturen in sequenzielle Token, gepaart mit einem \textit{Similarity Hashing} -- dem methodischen Kern dieser Arbeit --, bietet das Potenzial, die Skalierbarkeit quantitativer Verfahren zu wahren und den kontextuellen Pfadverlust zu verhindern \cite{klier_media_2025}. Gleichzeitig soll dadurch eine höhere algorithmische Resilienz gegenüber standardkonformen Strukturverschiebungen erzielt werden.
+Aus diesen drei Limitationen leitet sich der in dieser Arbeit verfolgte Forschungsbedarf ab, ein Feature-Design zu entwickeln und zu evaluieren, das explizit auch generative KI-Modelle als Erzeugungsquelle einbezieht und auf seine Robustheit hin untersucht wird.

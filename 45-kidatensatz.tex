@@ -1,31 +1,53 @@
-\section{Eigener KI-Video-Datensatz}
+\section{Erstellung des Eigenen KI-Video-Datensatzes}
 \label{sec:kidatensatz}
 
-\begin{itemize}
-    \item Auswahl der Generatoren
-    \item Vorgehen der Erstellung von Testvideos
-    \item Text-Prompts und Bildvorlagen
-    \item Link auf Datensatz
-    \item Generative KI-Modelle können bereits jetzt fotorealistische Videos anhand von Text oder Deepfakes mittels Bildmaterial generieren und überwiegend im MP4-Containerformat ausgeben (siehe Table 2)
-    \item z. B. Imagine 0.9 von xAI das über die Plattform Grok angeboten wird
-\end{itemize}
+Da die etablierten Referenzdatensätze VISION und EVA-7K vor dem technologischen Durchbruch aktueller generativer KI-Modelle entstanden sind, enthalten sie keine synthetisch erzeugten MP4-Container. Zur Schließung dieser Lücke wurde im Rahmen dieser Arbeit ein eigener, frei verfügbarer Datensatz\footnote{Der Datensatz sowie die zugehörige Dokumentation zur Generierung jedes Videos stehen unter \url{https://bit.ly/4wivVOy} zur Verfügung} aus KI-generierten Videos zusammengestellt, dessen Struktur in \cref{tab:ki-modelle} zusammengefasst ist. Eine feingranulare Übersicht des KI-Datensatzes nach Anbieter, Modell, Content-Typ, Erhebungsmethode und thematischen Prompt-Clustern findet sich ebenfalls in der Anlage in \cref{tab:aidb} .
 
+\begin{table}[htbp]
+\centering
+\begin{tabular}{llll}
+\toprule
+\textbf{Modell}  
+& \textbf{Anbieter}& \textbf{Plattform}& \textbf{Anzahl Dateien} \\
+\midrule
+Imagine~0.9  
+& xAI& Grok 
+& 2 \\
+Imagine~1.5  
+& xAI& Grok 
+& 14 \\
+Pika~1.5  
+& PikaArt& PikaLabs 
+& 4 \\
+Pika~2.0  
+& PikaArt& PikaLabs 
+& 4 \\
+Pika~2.2  
+& PikaArt& PikaLabs 
+& 4 \\
+Pika~2.5  
+& PikaArt& PikaLabs 
+& 11 \\
+Sora~2  
+& Microsoft& Bing& 10 \\
+OmniFlash  
+& Google& Flow& 4 \\
+Veo~3.1  
+& Google& Gemini& 4 \\
+KlingAIVideo~2.6  
+& Kuaishou& KlingAI 
+& 2 \\
+KlingAIVideo~3.0  & Kuaishou& KlingAI & 2 \\
+\midrule
+\multicolumn{2}{l}{\textbf{Gesamt}} & & \textbf{61} \\
+\bottomrule
+\end{tabular}
+\caption{Übersicht der verwendeten KI-Generatoren im eigenen Datensatz}
+\label{tab:ki-modelle}
+\end{table}
 
-\input{tabellen/kivideogeneratoren}
+Generative KI-Modelle können bereits jetzt fotorealistische Videos anhand von Text-Prompts oder mittels Bildvorlagen generieren und geben diese überwiegend im MP4-Containerformat aus. Die Videodateien des Datensatzes stammen aus zwei unterschiedlichen Quellen. Ein Teil wurde eigenständig über Text- und Bild-Prompts generiert, während ein weiterer Teil direkt aus den frei verfügbaren Katalogen der jeweiligen Anbieter heruntergeladen wurde, um zusätzliche Diversität hinsichtlich Modellversionen und Erzeugungsparametern abzubilden. Die Erstellung sowie Sammlung der Videodateien erfolgte im Zeitraum vom 20.01. bis zum 20.06.2026.
 
+Bei der Auswahl der Generatoren wurde bewusst auf leicht zugängliche und zum Erhebungszeitpunkt aktuelle Modelle zurückgegriffen. Außerdem lag der Fokus auf eine breite Auswahl von Generatoren, um möglichst viele einzigarte Referenz-Source-Digest zu bilden. Die strukturierte Erhebung von forensischem Testmaterial unterliegt bei kommerziellen Modellen erheblichen Limitationen, da die Anbieter restriktive Inhaltsfilter (Safety Guardrails) implementieren, die grundsätzlich die Verarbeitung semantisch kritischer Prompts systematisch verweigern \cite{openai_safety_2025}. Dies zeigte sich insbesondere bei Modellen von Microsoft und Google, die während der Generierung wiederholt die finale Ausgabe des Videos verweigerten, sobald Themen wie Falschinformationen oder simulierte Drohnenaufnahmen adressiert wurden \cite{google_gemini_2023}.
 
-%%% Notizen: Leicht zugängliche und State-of-the-Art Modelle. Besonders Grok, da diese jeden Prompt angenommen und generiert haben. Modelle von Microsoft und Google hatten hier verschäfte Sperren und verweigerten während der Generierung des Videos die finale Erstellung. Insbesondere Themen wie Fake-News oder Drohnenaufnahmen.
-
-% verweis auf quellen zu nutzerbesch
-
-% "Die strukturierte Erhebung von forensischem Testmaterial unterliegt bei kommerziellen Modellen wie Gemini oder Sora Limitationen, da die Anbieter restriktive Inhaltsfilter (Safety Guardrails) implementieren, die die Verarbeitung semantisch kritischer Prompts verweigern \cite[vgl.][Kap. Safety]{openai_sora_2024}."
-%zur Untersuchung von Videoquellenerkennung bei Desinformation und Deepfakes erweist sich die weniger restriktive Filterarchitektur von Grok als essenziell. Die systematische Erzeugung synthetischer Beweismittelmanipulationen (z. B. fingierte Überwachungskameras oder Identitätsbetrug) erfordert Prompts, die bei anderen KI-Systemen aufgrund restriktiver Sicherheitsrichtlinien (Guardrails) systematisch abgewiesen werden. Die permissive Natur der Bild- und Videogenerierung bei xAI erlaubt somit die methodisch saubere Generierung von kritischem Videomaterial
-\cite{openai_safety_2025}
-\cite{google_gemini_2023}
-\cite{xai_grok_2025}
-
-% 11 Modelle von 6 Platformen
-
-% Dateien wurden in der ersten Jahreshälfte 2026 erstellt
-
-\url{https://drive.google.com/drive/folders/1ABea3UoJ4je-4xKNQkjdMA2b4_SBleDK?usp=sharing}
+Ein besonderer Schwerpunkt lag dagegen auf Grok, da dieses Modell nahezu jeden Prompt ohne inhaltliche Einschränkung verarbeitet hat \cite{xai_grok_2025}. Diese tolerante Filterarchitektur erweist sich für die Untersuchung von Desinformation und Deepfakes als essenziell, da entsprechende Prompts bei anderen KI-Systemen regelmäßig abgewiesen werden. Auffällig ist zudem, dass die von Grok erzeugten MP4-Container im Gegensatz zu anderen untersuchten Anbietern keine \(uuid\)-Box und damit kein erkennbares C2PA-Manifest enthalten. Dieser Verzicht auf eine kryptografische Authentizitätskennzeichnung fügt sich in das bisherige Gesamtbild von xAI ein und ist hierdurch ein relevantes Unterscheidungsmerkmal.

@@ -5,27 +5,22 @@ TODO
 %%%%%
 
 \section{Motivation und Problemstellung}
+\label{sec:motivation}
 
-TODO: Ausformulieren und Quellen nochmal prüfen\\
+Die stetig wachsende Menge digitaler Videodaten stellt forensische Untersuchungen vor erhebliche Herausforderungen \cite{europol_common_2024}. Für Szenarien mit großen Datenmengen, etwa bei der Detektion von illegalen Inhalten oder Desinformations-Kampagnen mittels KI-Videogenerierung, werden performante Methoden zur schnellen Vorfilterung benötigt. Diese soll die Dateien nicht anhand ihres visuellen Inhalts, sondern anhand ihrer technischen Erzeugungsquelle gruppieren. Verschärft wird diese Situation durch die rasante Verbreitung generativer KI-Modelle, die bereits jetzt fotorealistische Videos anhand von Text oder Deepfakes mittels Bildmaterial generieren und überwiegend im MP4-Containerformat ausgeben.
 
-\begin{itemize}
-    \item Zunahme digitaler Videodaten, Herausforderung für forensische Untersuchungen \cite{europol_common_2024}
-    \item Für Szenarien mit großen Datenmengen, etwa bei der Detektion von illegalen Inhalten oder Desinformations-Kampagnen mittels KI-Videogenerierung, werden performante Methoden zur schnell Vorfilterung benötigt. Diese soll die Dateien nicht anhand ihres visuellen Inhalts, sondern anhand ihrer technischen Erzeugungsquelle gruppieren.
-    \item Verschärft wird diese Situation durch die rasante Verbreitung generativer KI-Modelle, die bereits jetzt fotorealistische Videos anhand von Text oder Deepfakes mittels Bildmaterial generieren und überwiegend im MP4-Containerformat ausgeben.
-    \item Verfahren zur Quellenidentifikation wie Analyse des Sonsorrauschens (Photo Response Non-Uniformity kurz PRNU)\cite{lukas_digital_2006} oder Untersuchung von Kompressionsartefakten\cite{li_inference_2018} im Bitstrom etabliert als auch präzise - sind rechenintisentiv und erfordern vollständige Dekodierung des Videomaterials
-    \item Veröffentlichte Ansätze für strukturelle und metadatenbasierte Verfahren, die rechenintensive Dekodierung des Videostreams umgehen: Untersuchung binärer Abweichungen in spezifischen MP4-Boxen \cite{hasan_forensic_2021}, Überführung und Vektorisierung kompletter Metadaten-Bäume in maschinenlesbare Formate\cite{xiang_forensic_2021}, Nutzung der tief verschachtelten Container-Architektur\cite{ramos_lopez_digital_2020}, Anwendung quantitativer Ansätze mittels Bag-of-Words-Modellen und Entscheidungsbäumen zur Integritätsprüfung\cite{yang_efficient_2020}
-    \item Gloe\cite{gloe_forensic_2014} und Iuliani\cite{iuliani_video_2019} belegen, dass die Containerstruktur forensisch nutzbare Informationen trägt. Li\cite{li_learning_2024} beweist jedoch, dass diese Struktur hochgradig volatil gegenüber Standard-Verarbeitungen (Re-Muxing) ist.
-    \item Der ISO/IEC 14496-14 Standard definiert das MP4-Format als komplexe, tief verschachtelte Objektstruktur, deren semantische Bedeutung oft erst durch ihre exakte Position im Baum bzw. Pfad definiert wird. \cite{iso_14496-14_2020}
-    \item Es ist zu prüfen, ob und wie eine Abbildung der MP4-Struktur für ein Similarity Hashing geeignet ist.
-    \item \textbf{Ziel der Arbeit:} Entwicklung als auch Evaluation eines Similarity Hash für MP4-Container, der strukturelle Merkmale identifiziert und damit eine Unterscheidung von Videos aus Social-Media,  KI-generierten Videos sowie nativen Kameraaufnahmen ermöglicht.
-\end{itemize}
+Verfahren zur Quellenidentifikation wie die Analyse des Sensorrauschens (Photo Response Non-Uniformity, kurz PRNU) \cite{lukas_digital_2006} oder die Untersuchung von Kompressionsartefakten im Bitstrom \cite{li_inference_2018} sind etabliert als auch präzise, jedoch rechenintensiv und erfordern eine vollständige Dekodierung des Videomaterials. Veröffentlichte Ansätze für strukturelle und metadatenbasierte Verfahren umgehen hingegen die rechenintensive Dekodierung des Videostreams. Dazu zählen die Untersuchung binärer Abweichungen in spezifischen MP4-Boxen \cite{hasan_forensic_2021}, die Überführung und Vektorisierung kompletter Metadaten-Bäume in maschinenlesbare Formate \cite{xiang_forensic_2021}, die Nutzung der tiefverschachtelten Container-Architektur \cite{ramos_lopez_digital_2020} sowie die Anwendung quantitativer Ansätze mittels Bag-of-Words-Modellen und Entscheidungsbäumen zur Integritätsprüfung \cite{yang_efficient_2020}.
+
+Gloe \cite{gloe_forensic_2014} und Iuliani \cite{iuliani_video_2019} belegen, dass die Containerstruktur forensisch nutzbare Informationen trägt. Li \cite{li_learning_2024} beweist jedoch, dass diese Struktur hochgradig volatil gegenüber Standard-Verarbeitungen (Re-Muxing) ist. Der ISO/IEC 14496-14 Standard definiert das MP4-Format als komplexe, tiefverschachtelte Objektstruktur, deren semantische Bedeutung oft erst durch ihre exakte Position im Baum bzw. Pfad definiert wird \cite{iso_14496-14_2020}. Es ist daher zu prüfen, ob und wie eine Abbildung der MP4-Struktur für ein Similarity Hashing geeignet ist.
+
+\textbf{Ziel der Arbeit:} Entwicklung als auch Evaluation eines Similarity Hash für MP4-Container, der strukturelle Merkmale identifiziert und damit eine Unterscheidung von Videos aus Social-Media, KI-generierten Videos sowie nativen Kameraaufnahmen ermöglicht.
 
 %%%%%
 
-\section{Forschungsfragen }
+\section{Forschungsfragen}
 \label{sec:ff}
 
-TODO: Einleitenden/Zusammenfassenden Absatz schreiben\\
+Aus der in \cref{sec:motivation} dargelegten Problemstellung leitet sich die Notwendigkeit ab, ein effizientes und zugleich belastbares Verfahren zur Quellenerkennung von MP4-Dateien zu entwickeln, das ausschließlich auf der syntaktischen Struktur des MP4-Containers operiert. Da bestehende Arbeiten entweder auf rechenintensive Bitstrom-Analysen setzen oder generative KI-Modelle als Erzeugungsquelle bislang nicht berücksichtigen, ergibt sich die folgende Hauptfrage, die in vier aufeinander aufbauende Teilfragen gegliedert wird.
 
 \textbf{Hauptfrage:} Wie muss ein Similarity Hash für MP4-Container beschaffen sein, um eine Quellenerkennung zu ermöglichen?
 
@@ -35,6 +30,8 @@ TODO: Einleitenden/Zusammenfassenden Absatz schreiben\\
     \item \textbf{Teilfrage:} Wie lassen sich strukturelle Merkmale aus der MP4-Hierarchie extrahieren, die für Features geeignet sind?
     \item \textbf{Teilfrage:} Welche Ergebnisse liefert das Similarity Hashing für MP4-Dateien und sind diese ausreichend?
 \end{enumerate}
+
+Die ersten beiden Teilfragen schaffen dabei die konzeptionellen Grundlagen, indem sie zunächst den formalen Aufbau von MP4-Containern (Teilfrage 1) und anschließend die technischen Besonderheiten der relevanten Erzeugungsquellen (Teilfrage 2) herausarbeiten. Darauf aufbauend widmet sich Teilfrage 3 der methodischen Übersetzung dieser strukturellen Erkenntnisse in ein konkretes Feature-Design für das Similarity Hashing. Teilfrage 4 schließlich überführt die entwickelte Methodik in eine Evaluation und bewertet kritisch, inwieweit die erzielten Ergebnisse für eine forensisch belastbare Quellenerkennung tatsächlich ausreichend sind.
 
 TODO: Bezug der TF in den einzelnen Kapitel prüfen
 

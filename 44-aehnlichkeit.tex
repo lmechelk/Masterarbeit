@@ -1,3 +1,130 @@
 \section{Ähnlichkeitsanalyse und Klassifikation}
-
 \label{sec:aehnlichkeit}
+
+Die Ähnlichkeitsanalyse gliedert sich in zwei aufeinanderfolgende Schritte: die Aggregation der Trainingsmenge zu einem Source Digest (Schritt~6) sowie den paarweisen Ähnlichkeitsvergleich dieses Digests gegen alle Testdateien (Schritt~7).
+
+\subsection{Source Digest}
+
+Der Source Digest repräsentiert die aggregierte \(n\)-Gramm-Signatur einer Quellklasse und wird aus einer kleinen, repräsentativen Trainingsmenge gebildet. Hierzu werden die Similarity Digests aller Trainingsdateien, die einer definierten Quellklasse angehören, über eine Mengenvereinigung zusammengeführt. Alle einzigartigen \(n\)-Gramme der gefilterten Trainingszeilen werden vereinigt, alphabetisch sortiert und als einzelner kompakter String gespeichert. Dieses Vorgehen orientiert sich methodisch am Evaluationsdesign von Klier und Baier, die ebenfalls Referenz-Hashes aus einer kleinen, diversen Teilmenge bilden \cite[Kap.~3]{klier_media_2025}. Die Filterung der Trainingsmenge erfolgt dabei flexibel nach Untersuchungsziel und wird durch die in Schritt~2 der Datenpipeline strukturiert erhobenen Metadatenspalten ermöglicht (siehe \cref{sec:pipeline}).
+
+\begin{figure}[h]
+\centering
+\fbox{\parbox{0.78\linewidth}{\ttfamily\footnotesize\raggedright
+Source Digest Apple\_ORIGINAL=\\
+avc1avcC\;avcCcolr\;chanwave\;colrstts\;dinfdref\;drefstbl\;edtselst\;
+elstmdia\;elsttref\;esdsstts\;freemeta\;frmamp4a\;ftypwide\;gmhdgmin\;
+gminhdlr\;hdlrdinf\;hdlrkeys\;hdlrminf\;ilstfree\;ilsttrak\;ilstudta\;
+keysilst\;mdatmoov\;mdhdhdlr\;mdiamdhd\;mebxstts\;metahdlr\;minfgmhd\;
+minfsmhd\;minfvmhd\;moovmvhd\;mp4achan\;mp4aesds\;mvhdtrak\;sdtpstsc\;
+smhdhdlr\;stblstsd\;stcometa\;stcoudta\;stscstsz\;stsdavc1\;stsdmebx\;
+stsdmp4a\;stsssdtp\;stszstco\;sttsstsc\;sttsstss\;taptedts\;tkhdedts\;
+tkhdtapt\;traktkhd\;trefmdia\;udta©mak\;udta©mod\;udta©swr\;vmhdhdlr\;
+wavefrma\;widemdat\;©day©mak\;©day©mod\;©day©xyz\;©makfree\;©mak©swr\;
+©mod©mak\;©mod©swr\;©swr©day\;©xyz©mak\;©xyz©mod
+}}
+\caption{Source Digest Apple auf Herstellerebene ($n{=}2$, $|A|{=}68$ n-Gramme), 
+aggregiert aus allen Apple-Geräten der Trainingsmenge}
+\label{fig:digest-apple}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\fbox{\parbox{0.78\linewidth}{\ttfamily\footnotesize\raggedright
+Source Digest iPhone4\_ORIGINAL =\\
+avc1avcC\;avcCcolr\;chanwave\;colrstts\;dinfdref\;drefstbl\;edtselst\;
+elstmdia\;esdsstts\;freemeta\;frmamp4a\;ftypwide\;hdlrdinf\;hdlrkeys\;
+hdlrminf\;ilstfree\;ilsttrak\;keysilst\;mdatmoov\;mdhdhdlr\;mdiamdhd\;
+metahdlr\;minfsmhd\;minfvmhd\;moovmvhd\;mp4achan\;mp4aesds\;mvhdtrak\;
+sdtpstsc\;smhdhdlr\;stblstsd\;stcometa\;stcoudta\;stscstsz\;stsdavc1\;
+stsdmp4a\;stsssdtp\;stszstco\;sttsstsc\;sttsstss\;taptedts\;tkhdedts\;
+tkhdtapt\;traktkhd\;udta©mod\;vmhdhdlr\;wavefrma\;widemdat\;©day©mak\;
+©day©xyz\;©makfree\;©mod©swr\;©swr©day\;©xyz©mak
+}}
+\caption{Source Digest iPhone~4 auf Modellebene ($n{=}2$, $|B|{=}54$ n-Gramme), 
+aggregiert aus allen iPhone-4-Aufnahmen der Trainingsmenge}
+\label{fig:digest-iphone4}
+\end{figure}
+
+\Cref{fig:digest-apple} und \ref{fig:digest-iphone4} zeigen die resultierenden Source Digests exemplarisch für die Quellklassen Apple (Markenebene, $|A|{=}68$) und iPhone~4 (Modellebene, $|B|{=}54$) die anhand der ausgewählten Trainingsdaten aus dem Vision-Datensatz erstellt wurden. Beide Digests sind alphabetisch sortierte Mengen einzigartiger 2-Gramme, die die strukturelle Signatur der jeweiligen Quellklasse kompakt repräsentieren und als Referenz für den nachfolgenden Ähnlichkeitsvergleich dienen.
+
+%
+
+\subsection{Ähnlichkeitsberechnung}
+\label{sec:aehnlichkeitsberechnung}
+
+Im Ähnlichkeitsvergleich wird jede relevante Testdatei paarweise gegen einen einzelnen Source Digest verglichen. Als primäre Metrik wird der asymmetrisch konfigurierte Tversky-Index verwendet, mit den Gewichtungsparametern \(\alpha = 0{,}0\) und \(\beta = 1{,}0\). Diese Konfiguration bedeutet konkret, dass \(n\)-Gramme, die im Source Digest vorhanden, in der Testdatei jedoch nicht enthalten sind, nicht bestraft werden (\(\alpha = 0{,}0\)), während zusätzliche, quellenfremde \(n\)-Gramme der Testdatei strikt als Abweichung gewertet werden (\(\beta = 1{,}0\)).
+
+Die forensische Intuition hinter dieser Asymmetrie ist, dass eine Testdatei dann einer Quellklasse zugeordnet wird, wenn sie deren charakteristische Strukturmerkmale enthält. Fehlende Boxen können durch Encoder-Varianz oder Re-Muxing entstehen und sollten die Zuordnung nicht verhindern, wohingegen strukturfremde Zusatzboxen ein klares Indiz gegen die Zugehörigkeit zur Quellklasse darstellen.
+
+Der resultierende Ähnlichkeitswert liegt im Intervall \([0, 1]\) und dient als Klassifikations-Score. Da kein fester Entscheidungsschwellenwert vorausgesetzt wird, wird die Klassifikationsleistung schwellenwertunabhängig über ROC-Kurve und AUC bewertet \cite{fawcett_introduction_2006}. Ein Source Digest repräsentiert dabei genau eine Quellklasse, für jede zu untersuchende Kategorie wird ein eigener Digest gebildet und separat ausgewertet.
+
+Die asymmetrische Konfiguration des Tversky-Index lässt sich anhand eines konkreten Beispiels veranschaulichen. Ein Source Digest auf Markenebene (Apple, $|A| = 68$) enthält notwendigerweise mehr \(n\)-Gramme als ein modellspezifischer Digest (iPhone~4, $|B| = 54$), da er die Signaturen aller Apple-Geräte aggregiert. Für den Jaccard-Koeffizienten ergibt sich:
+
+\begin{equation}
+J_{Apple, iPhone4} = \dfrac{|A \cap B|}{|A \cup B|} = \dfrac{54}{54 + 14 + 0} = 0{,}794
+\label{eq:jaccard_apple}
+\end{equation}\\
+
+Für den Tversky-Index mit \(\alpha = 0{,}0\) und \(\beta = 1{,}0\) ergibt sich hingegen:
+
+\begin{equation}
+T_{Apple \to iPhone4} = \dfrac{|A \cap B|}{|A \cap B| + \alpha \cdot |A \setminus B| + \beta \cdot |B \setminus A|} = \dfrac{54}{54 + 0 \cdot 14 + 1 \cdot 0} = 1{,}000
+\label{eq:tversky_apple}
+\end{equation}\\
+
+Da der iPhone-4-Digest eine vollständige Teilmenge des Apple-Digests ist ($B \setminus A = 0$), wertet der symmetrische Jaccard-Koeffizient in \cref{eq:jaccard_apple} die 14 modellübergreifenden Zusatzgramme fälschlicherweise als Abweichung, während der Tversky-Index in \cref{eq:tversky_apple} diese korrekt ignoriert und die Zuordnung bestätigt.
+
+\begin{figure}[h]
+\centering
+\fbox{\parbox{0.78\linewidth}{\ttfamily\footnotesize\raggedright
+Source Digest D09\_NATIVE =\\[0.3em]
+\textcolor{green!50!black}{avc1avcC}\;\textcolor{red!60!black}{avcCcolr}\;\textcolor{red!60!black}{chanwave}\;\textcolor{red!60!black}{colrstts}\;\textcolor{green!50!black}{dinfdref}\;\textcolor{green!50!black}{drefstbl}\;\textcolor{green!50!black}{edtselst} \\
+\textcolor{green!50!black}{elstmdia}\;\textcolor{red!60!black}{esdsstts}\;\textcolor{red!60!black}{freemeta}\;\textcolor{red!60!black}{frmamp4a}\;\textcolor{red!60!black}{ftypwide}\;\textcolor{red!60!black}{hdlrdinf}\;\textcolor{red!60!black}{hdlrkeys} \\
+\textcolor{green!50!black}{hdlrminf}\;\textcolor{green!50!black}{ilstfree}\;\textcolor{red!60!black}{ilsttrak}\;\textcolor{red!60!black}{keysilst}\;\textcolor{red!60!black}{mdatmoov}\;\textcolor{green!50!black}{mdhdhdlr}\;\textcolor{green!50!black}{mdiamdhd} \\
+\textcolor{green!50!black}{metahdlr}\;\textcolor{green!50!black}{minfsmhd}\;\textcolor{green!50!black}{minfvmhd}\;\textcolor{green!50!black}{moovmvhd}\;\textcolor{red!60!black}{mp4achan}\;\textcolor{green!50!black}{mp4aesds}\;\textcolor{green!50!black}{mvhdtrak} \\
+\textcolor{red!60!black}{sdtpstsc}\;\textcolor{red!60!black}{smhdhdlr}\;\textcolor{green!50!black}{stblstsd}\;\textcolor{red!60!black}{stcometa}\;\textcolor{red!60!black}{stcoudta}\;\textcolor{green!50!black}{stscstsz}\;\textcolor{green!50!black}{stsdavc1} \\
+\textcolor{green!50!black}{stsdmp4a}\;\textcolor{red!60!black}{stsssdtp}\;\textcolor{green!50!black}{stszstco}\;\textcolor{green!50!black}{sttsstsc}\;\textcolor{green!50!black}{sttsstss}\;\textcolor{red!60!black}{taptedts}\;\textcolor{green!50!black}{tkhdedts} \\
+\textcolor{red!60!black}{tkhdtapt}\;\textcolor{green!50!black}{traktkhd}\;\textcolor{red!60!black}{udta\textcopyright{}mod}\;\textcolor{red!60!black}{vmhdhdlr}\;\textcolor{red!60!black}{wavefrma}\;\textcolor{red!60!black}{widemdat}\;\textcolor{red!60!black}{\textcopyright{}day\textcopyright{}xyz} \\
+\textcolor{red!60!black}{\textcopyright{}makfree}\;\textcolor{red!60!black}{\textcopyright{}mod\textcopyright{}swr}\;\textcolor{red!60!black}{\textcopyright{}swr\textcopyright{}day}\;\textcolor{red!60!black}{\textcopyright{}xyz\textcopyright{}mak}
+
+\vspace{1em}
+Source Digest AI01\_SYNTHETIC =\\[0.3em]
+\textcolor{green!50!black}{avc1avcC}\;\textcolor{blue!60!black}{avcCbtrt}\;\textcolor{blue!60!black}{btrtstts}\;\textcolor{blue!60!black}{cttsstsc}\;\textcolor{green!50!black}{dinfdref}\;\textcolor{green!50!black}{drefstbl}\;\textcolor{green!50!black}{edtselst} \\
+\textcolor{green!50!black}{elstmdia}\;\textcolor{blue!60!black}{esdsbtrt}\;\textcolor{blue!60!black}{freemdat}\;\textcolor{blue!60!black}{ftypuuid}\;\textcolor{blue!60!black}{hdlrilst}\;\textcolor{green!50!black}{hdlrminf}\;\textcolor{green!50!black}{ilstfree} \\
+\textcolor{green!50!black}{mdhdhdlr}\;\textcolor{green!50!black}{mdiamdhd}\;\textcolor{green!50!black}{metahdlr}\;\textcolor{green!50!black}{minfsmhd}\;\textcolor{green!50!black}{minfvmhd}\;\textcolor{green!50!black}{moovmvhd}\;\textcolor{green!50!black}{mp4aesds} \\
+\textcolor{green!50!black}{mvhdtrak}\;\textcolor{blue!60!black}{sbgpudta}\;\textcolor{blue!60!black}{sgpdsbgp}\;\textcolor{blue!60!black}{smhddinf}\;\textcolor{green!50!black}{stblstsd}\;\textcolor{blue!60!black}{stcosgpd}\;\textcolor{blue!60!black}{stcotrak} \\
+\textcolor{green!50!black}{stscstsz}\;\textcolor{green!50!black}{stsdavc1}\;\textcolor{green!50!black}{stsdmp4a}\;\textcolor{blue!60!black}{stssctts}\;\textcolor{green!50!black}{stszstco}\;\textcolor{green!50!black}{sttsstsc}\;\textcolor{green!50!black}{sttsstss} \\
+\textcolor{green!50!black}{tkhdedts}\;\textcolor{green!50!black}{traktkhd}\;\textcolor{blue!60!black}{udtameta}\;\textcolor{blue!60!black}{uuidmoov}\;\textcolor{blue!60!black}{vmhddinf}
+}}
+\caption{Vergleich der Source Digests ($n{=}2$) von D09 (nativ, VISION) und AI01 (synthetisch, KI), 24 gemeinsame 2-Gramme (grün), 29 exklusive 2-Gramme in D09 (rot), 16 exklusive 2-Gramme in AI01 (blau) (Eigene Darstellung)}
+\label{fig:digestvergleich_d09ai01}
+\end{figure}
+
+Die in \cref{fig:digestvergleich_d09ai01} dargestellten Source Digests von D09 (nativ) und AI01 (KI-generiert) verdeutlichen exemplarisch, wie strukturell unterschiedlich native und synthetische Containerformate auf Ebene der 2-Gramm-Signatur sind. Von den 53 2-Grammen des D09-Digests und den 40 2-Grammen des AI01-Digests stimmen lediglich 24 überein (grün markiert), während 29 2-Gramme exklusiv in D09 (rot) und 16 exklusiv in AI01 (blau) auftreten. Diese geringe Schnittmenge im Verhältnis zur Gesamtmenge beider Digests ist bereits ein starkes Indiz für die im Rahmen dieser Arbeit erwartete strukturelle Trennschärfe zwischen nativen und KI-generierten Video-Containern.
+
+Da der Tversky-Index richtungsabhängig ist, wird im Folgenden zunächst D09 als Source Digest (\(A\)) gegen AI01 als Testdatei (\(B\)) ausgewertet, anschließend die umgekehrte Konstellation mit AI01 als Source Digest (\(A'\)) und D09 als Testdatei (\(B'\)). Für den ersten Fall, D09 gegen AI01, ergibt sich mit \(\alpha = 0{,}0\) und \(\beta = 1{,}0\):
+
+\begin{equation}
+T_{D09 \to AI01} = \dfrac{|A \cap B|}{|A \cap B| + \alpha \cdot |A \setminus B| + \beta \cdot |B \setminus A|} = \dfrac{24}{24 + 0 \cdot 29 + 1 \cdot 16} = \dfrac{24}{40} = 0{,}600
+\label{eq:tversky_d09_ai01}
+\end{equation}\\
+
+Für den umgekehrten Fall, AI01 als Source Digest gegen D09 als Testdatei, vertauschen sich die Rollen der Differenzmengen, da nun \(A' \setminus B' = 16\) (exklusiv in AI01) nicht bestraft wird, während \(B' \setminus A' = 29\) (exklusiv in D09) vollständig in die Berechnung einfließt:
+
+\begin{equation}
+T_{AI01 \to D09} = \dfrac{|A' \cap B'|}{|A' \cap B'| + \alpha \cdot |A' \setminus B'| + \beta \cdot |B' \setminus A'|} = \dfrac{24}{24 + 0 \cdot 16 + 1 \cdot 29} = \dfrac{24}{53} \approx 0{,}453
+\label{eq:tversky_ai01_d09}
+\end{equation}\\
+
+Zum Vergleich wird hier erneut \(A\) als Source Digest von D09 (nativ, Referenzklasse) und \(B\) als Source Digest von AI01 (KI-generiert, Testklasse) definiert. Für den symmetrischen Jaccard-Koeffizienten ergibt sich, unabhängig von der Vergleichsrichtung:
+
+\begin{equation}
+J_{AI01, D09} = \dfrac{|A \cap B|}{|A \cup B|} = \dfrac{24}{24 + 29 + 16} = \dfrac{24}{69} \approx 0{,}348
+\label{eq:jaccard_d09ai01}
+\end{equation}\\
+
+Dieser Wert liegt niedriger als beide zuvor berechneten Tversky-Ergebnisse aus \cref{eq:tversky_d09_ai01} und \cref{eq:tversky_ai01_d09}, da der Jaccard-Koeffizient beide Differenzmengen \(A \setminus B\) und \(B \setminus A\) gleichzeitig und vollständig bestraft, während der Tversky-Index durch die Gewichtung stets nur eine der beiden Differenzmengen in die Berechnung einfließen lässt. Der Tversky-Index hingegen zeigt eine deutliche Richtungsabhängigkeit. Wird D09 als Referenzklasse herangezogen (\cref{eq:tversky_d09_ai01}), ergibt sich mit \(T = 0{,}600\) ein höherer Wert, da die 29 D09-exklusiven 2-Gramme nicht bestraft werden und nur die 16 AI01-exklusiven 2-Gramme in die Berechnung einfließen. Wird umgekehrt AI01 als Referenzklasse verwendet (\cref{eq:tversky_ai01_d09}), sinkt der Score auf \(T \approx 0{,}453\), da nun die 29 D09-exklusiven 2-Gramme voll bestraft werden, während die 16 AI01-exklusiven 2-Gramme unberücksichtigt bleiben. Da Jaccard grundsätzlich beide Differenzmengen gemeinsam im Nenner berücksichtigt (\(29 + 16 = 45\)), fällt der resultierende Wert von \(0{,}348\) systematisch niedriger aus als jede der beiden asymmetrischen Tversky-Varianten, die jeweils nur eine der beiden Differenzmengen einbeziehen. Dieser Kontrast bestätigt, dass der Tversky-Index bei strukturell grundverschiedenen Quellklassen wie D09 und AI01 sensibel auf die charakteristischen Zusatzboxen der jeweiligen Testklasse reagiert und dass die Wahl der Vergleichsrichtung, welche Menge als Source Digest und welche als Testdatei fungiert, relevant bleibt.
+
+Im Fall der Unterscheidung zwischen nativen und synthetischen Aufnahmen fällt die Bewertung mittels Jaccard-Koeffizient somit angemessen streng aus und bestärkt dessen ausgeprägte Trennschärfe für diese Fragestellung. Im vorangegangenen Beispiel der Modell-Hersteller-Zuordnung (siehe \cref{eq:jaccard_apple} und \cref{eq:tversky_apple}) würde eine Bewertung mittels Jaccard-Koeffizient hingegen vollständig versagen und eine eindeutige Zuordnung auf dieser Ebene nicht ermöglichen.
+
+Aus diesem Grund wird für die Evaluation in \cref{sec:evaluation} in dieser Arbeit ausschließlich der Tversky-Index als Ähnlichkeitsmetrik verwendet und auf den Jaccard-Koeffizienten verzichtet.

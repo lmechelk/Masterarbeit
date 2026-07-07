@@ -1,0 +1,40 @@
+\begin{table}
+    \centering
+    \begin{tabular}{>{\raggedright\arraybackslash}p{0.05\linewidth}>{\raggedright\arraybackslash}p{0.2\linewidth}>{\raggedright\arraybackslash}p{0.65\linewidth}}\toprule
+         \textbf{Typ (4CC)}&  \textbf{Bezeichnung}&\textbf{Kurzbeschreibung und Besonderheiten}\\\midrule
+         moov&  Movie Box&Haupt-Container für alle Metadaten des Videos\\\midrule
+         trak&  Track Box&Einzelne Medienspur (Video, Audio oder Daten)\\\midrule
+         mdia&  Media Box&Informationen über die Medienformate innerhalb eines Tracks\\\midrule
+         minf&  Media Information&Container für Handler-spezifische Informationen\\\midrule
+         stbl&  Sample Table&Zeitstempel, Größen und Offsets\\\midrule
+         udta&  User Data&Benutzerdefinierte Metadaten (oft Hersteller-Tags)\\\midrule
+         meta&  Metadata&Moderne Metadaten-Strukturen (z. B. C2PA oder EXIF)
+
+Zweideutige Struktur, die in der ISO-Norm und in Apple-Legacy unterschiedlich spezifiziert sind\\\midrule
+         edts&  Edit Box&Definiert Abspiel-Modifikationen (z. B. Audio-Offsets)\\\midrule
+         dinf&  Data Information&Verweist auf den Ort der eigentlichen Mediendaten\\\midrule
+ stsd& Sample Description&Container für Codec-spezifische Konfigurationsdetails
+
+Definierte sog. FullBox und besitzt erweiterte Header-Daten\\\midrule
+ avc1& H.264 Entry&Parameter des H.264 Videocodecs
+
+Definierte sog. FullBox und besitzt erweiterte Header-Daten\\\midrule
+ hev1& HEVC Entry&Parameter des H.265 (HEVC) Videocodecs
+
+Beinhaltet massive binäre Parameter, welche die Baumstruktur unterbrechen und gesondert behandelt werden müssen\\\midrule
+ mp4a& Audio Entry&Container für Audio-Codec-Einstellungen (z. B. AAC)
+
+Beinhaltet massive binäre Parameter, welche die Baumstruktur unterbrechen und gesondert behandelt werden müssen\\\midrule
+ wave& QuickTime Audio&Alte Audio-Eigenschaften (Legacy)\\\midrule
+ mvex& Movie Extends&Kennzeichnet die Nutzung von Fragmented MP4 (Streaming)\\\midrule
+ moof& Movie Fragment&Metadaten für einzelnes Video-Fragment\\\midrule
+ traf& Track Fragment&Informationen innerhalb eines Movie Fragments\\\midrule
+ mfra& Movie Fragment Random Access&Index für den schnellen Zugriff auf Fragmente\\\midrule
+ gmhd& Generic Media Header&QuickTime-Container für allgemeine Medieninfos (Legacy)\\\midrule
+ clip& Clipping Box&Bestimmt den sichtbaren Bereich des Videos (Legacy)\\\midrule
+ matt& Track Matte Box&Definiert Masken für die Videospur (Legacy)\\ \bottomrule
+    \end{tabular}
+\caption{Allowlist der forensisch relevanten Box-Typen nach ISO/IEC 14496 und QuickTime-Spezifikation für das Feature-Engineering (Eigene Darstellung basierend auf Daten der ISO/IEC 14496\cite{iso_14496-12_2022}\cite{iso_14496-14_2020}\cite{iso_14496-15_2024} und Quick-Time-Spezifikationen\cite{apple_quicktime_2001})}
+\label{tab:mp4allowlisting}
+\end{table}
+

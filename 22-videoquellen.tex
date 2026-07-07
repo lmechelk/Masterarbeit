@@ -5,4 +5,79 @@ Die Identifikation der technischen Quelle eines Videos erfordert eine Erfassung 
 
 Native Videoaufnahmen aus Smartphones oder Digitalkameras weisen durch herstellerspezifische Firmware und proprietäre Metadaten (z.\,B. \(udta\)-Boxen) eine hohe strukturelle Diversität auf. Diese Varianz in der \(moov\)-Topologie ermöglicht oftmals eine präzise Zuordnung zu Gerätemodellen \cite{shullani_vision_2017, iuliani_video_2019}. Beim Transfer über Social-Media-Plattformen geht diese native Integrität durch automatische Verarbeitungen in der Regel verloren. Herstellerspezifische Boxen werden eliminiert und durch eine stark uniformierte Baumstruktur ersetzt, die wiederum charakteristisch für die jeweilige Distributionsplattform oder den eingesetzten Software-Encoder (z.\,B. \(ffmpeg\)) ist \cite[S. 947]{yang_efficient_2020}.
 
-Generative KI-Modelle erzeugen Videos direkt cloudbasiert als MP4-Container, ohne dass physikalische Kamerahardware involviert ist \cite{yang_comprehensive_2025}. Zur Umsetzung regulatorischer Vorgaben zur Inhaltsauthentizität betten viele Generatoren wie OpenAI Sora oder Adobe Firefly kryptografische Metadaten-Manifeste nach dem C2PA-Standard ein \cite[Kap. 9]{c2pa_content_2024}. Diese umfassen vollständige Zertifikatsketten sowie digitale Signaturen, was zu strukturell massiven \(uuid\)-Boxen im Megabyte-Bereich führt. Die Platzierung dieser Validierungs-Strukturen unmittelbar am Dateianfang definiert ein distinktes syntaktisches Profil, das synthetische Container eindeutig von nativen oder netzwerk-komprimierten Videos abgrenzen kann.
+\begin{figure}[h]
+    \centering
+    \begin{forest}
+    for tree={
+        edge={-latex},
+        grow'=east,
+        parent anchor=east,
+        child anchor=west,
+        font=\scriptsize\ttfamily,
+        edge path={
+            \noexpand\path[\forestoption{edge}]
+            (!u.parent anchor) -- +(5pt,0) |- (.child anchor)\forestoption{edge label};
+        },
+        s sep=2pt,
+        l sep=10pt,
+    }
+    [AI01\_01\_\\synth.mp4, align=center
+        [ftyp]
+        [uuid, for tree={fill=purple!15, draw=purple!60}]
+        [moov
+            [mvhd]
+            [trak (video), for tree={fill=blue!15, draw=blue!60}
+                [tkhd]
+                [edts [elst]]
+                [mdia
+                    [mdhd]
+                    [hdlr]
+                    [minf
+                        [vmhd]
+                        [dinf [dref]]
+                        [stbl
+                            [stsd [avc1 [avcC] [btrt]]]
+                            [stts]
+                            [stss]
+                            [ctts]
+                            [stsc]
+                            [stsz]
+                            [stco]
+                        ]
+                    ]
+                ]
+            ]
+            [trak (audio), for tree={fill=green!15, draw=green!60}
+                [tkhd]
+                [edts [elst]]
+                [mdia
+                    [mdhd]
+                    [hdlr]
+                    [minf
+                        [smhd]
+                        [dinf [dref]]
+                        [stbl
+                            [stsd [mp4a [esds] [btrt]]]
+                            [stts]
+                            [stsc]
+                            [stsz]
+                            [stco]
+                            [sgpd]
+                            [sbgp]
+                        ]
+                    ]
+                ]
+            ]
+            [udta, for tree={fill=orange!15, draw=orange!60}
+                [meta [hdlr] [ilst]]
+            ]
+        ]
+        [free]
+        [mdat, for tree={fill=red!15, draw=red!60}]
+    ]
+    \end{forest}
+    \caption{MP4-Atom-Struktur von AI01 (Google Flow OmniFlash, SYNTHETIC, MP4, ORIGINAL), farblich gruppiert nach uuid-Manifest (violett), Video-Track (blau), Audio-Track (grün), Metadaten (orange) und Mediendaten (rot) (Eigene Darstellung)}
+    \label{fig:tree_ai01}
+\end{figure}
+
+Generative KI-Modelle erzeugen Videos direkt cloudbasiert als MP4-Container, ohne dass physikalische Kamerahardware involviert ist \cite{yang_comprehensive_2025}. Zur Umsetzung regulatorischer Vorgaben zur Inhaltsauthentizität betten viele Generatoren wie OpenAI Sora oder Adobe Firefly kryptografische Metadaten-Manifeste nach dem C2PA-Standard ein \cite[Kap. 9]{c2pa_content_2024}. Diese umfassen vollständige Zertifikatsketten sowie digitale Signaturen, was zu strukturell massiven \(uuid\)-Boxen im Megabyte-Bereich führt. Die Platzierung dieser Validierungs-Strukturen unmittelbar am Dateianfang definiert ein distinktes syntaktisches Profil, das synthetische Container eindeutig von nativen oder netzwerk-komprimierten Videos abgrenzen kann. Diese Praxis bestätigt sich exemplarisch im Strukturbaum eines mit Google Flow OmniFlash generierten Videos (siehe \cref{fig:tree_ai01}). Unmittelbar nach der Kompatibilitätsdeklaration \(ftyp\) folgt eine \(uuid\)-Box, die auf ein eingebettetes C2PA-Manifest hindeutet und damit die für generative KI-Modelle charakteristische Positionierung der Validierungs-Strukturen am Dateianfang widerspiegelt. Ergänzend zeigen sich, analog zu anderen KI-generierten Beispielen, zusätzliche \(btrt\)-Boxen (Bitrate) in Video- und Audiospur sowie die Sample-Group-Boxen \(sgpd\) und \(sbgp\) im Audio-Zweig, die im Kontext nativer Smartphone-Aufnahmen nicht auftreten.
