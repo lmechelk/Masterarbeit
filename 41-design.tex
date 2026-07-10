@@ -1,16 +1,16 @@
 \section{Untersuchungsdesign}
 \label{sec:design}
 
-Die \cref{tab:steckbrief-mp4} fasst die zentralen Designentscheidungen zusammen, und die konkrete Umsetzung folgt in der Datenpipeline in \cref{sec:pipeline}.
+% Verfahrensteckbrief me
 
 \begin{table}[h]
     \centering
     \begin{tabular}{>{\raggedright\arraybackslash}p{0.2\linewidth}>{\raggedright\arraybackslash}p{0.75\linewidth}}\toprule
          \textbf{Verfahren}& Syntaktisches Similarity Hashing\\\midrule
-         \textbf{Untersuchungsziele}& SCI (Unterscheidung nativer Kameraaufnahmen und KI-generierter Videos) und SNA (Erkennung komprimierter Social-Media-Videos)\\\midrule
+         \textbf{Untersuchungsziele}& SCI, SNA, MTI, MD\\\midrule
          \textbf{Feature}& Extrahierte 4CC-Box-Informationen unter Ausschluss der Inhaltsdaten (\(mdat\)) und volatile Metadaten (z. B. Zeitstempel wie \(creationTime\))\\\midrule
          \textbf{Symbolische Repräsentation} (T1 bis T5)& TODO: linearisiert die in JSON erfasste hierarchische Baumstruktur in eindimensionale Token-Sequenzen, ohne vertikale Pfade zu extrahieren\\\midrule
-         \textbf{Feature-Repräsentation}& n-Gramm-Sets (Similarity Digest)\\\midrule
+         \textbf{Feature-Repräsentation}& \(n\)-Gramm-Sets (Similarity Digest)\\\midrule
          \textbf{Feature-Selektion}& Allowlisting relevanter Container-Boxen und Dubletteneliminierung\\\midrule
          \textbf{Klassifikator}& Approximate Matching (Ähnlichkeitsberechnung mittels Jaccard-Index oder asymmetrischem Tversky-Index)\\\midrule
          \textbf{Datenbanken}& VISION, EVA-7K und ein eigens erstellter Datensatz zu KI-generierten Videos\\\midrule
@@ -18,17 +18,12 @@ Die \cref{tab:steckbrief-mp4} fasst die zentralen Designentscheidungen zusammen,
          \textbf{Evaluation}&Native Aufnahmen, Social Media, synthetische Inhalte und gemischte Inhalte\\\midrule
          \textbf{Metriken}&Receiver Operating Characteristic (ROC) und Area Under Curve (AUC)\\ \bottomrule 
     \end{tabular}
-    \caption{Verfahrenssteckbrief zum Similartiy Hashing für Mp4-Dateien (Eigene Darstellung)}
+    \caption{Verfahrenssteckbrief zum Similarity Hashing für MP4-Dateien (eigene Darstellung)}
     \label{tab:steckbrief-mp4}
 \end{table}
 
-Das entwickelte Verfahren ordnet sich in die quantitative Container-Forensik ein, wie sie in \cref{sec:relatedwork} systematisiert wird. Im Unterschied zu überwachten Klassifikatoren wie Entscheidungsbäumen \cite[Kap.~5]{yang_efficient_2020} oder Linear Discriminant Analysis \cite[S.~1045]{xiang_forensic_2021} setzt das vorliegende Design bewusst auf Approximate Matching. Ein Source Digest repräsentiert die aggregierte n-Gramm-Signatur einer Quellenklasse und unbekannte Dateien werden anhand ihres Ähnlichkeitswerts zum Digest eingeordnet. Dieser Ansatz erfordert kein vollständiges Trainingsset aller Zielklassen und bleibt damit auch für forensische Open-Set-Szenarien anwendbar, in denen neue Quellklassen zur Laufzeit hinzukommen können \cite[Kap.~1]{klier_media_2025}.
+Das entwickelte Verfahren ordnet sich in die quantitative Container-Forensik ein (siehe \cref{sec:relatedwork}) und die  \cref{tab:steckbrief-mp4} fasst die zentralen Designentscheidungen zusammen. Im Unterschied zu überwachten Klassifikatoren wie Entscheidungsbäumen \cite[Kap.~5]{yang_efficient_2020} oder Linear Discriminant Analysis \cite[S.~1045]{xiang_forensic_2021} setzt das vorliegende Design bewusst auf Similarity Hashing. Ein Source Digest repräsentiert die aggregierte \(n\)-Gramm-Signatur einer Quellenklasse und unbekannte Dateien werden anhand ihres Ähnlichkeitswerts zum Digest verglichen und können je nach Schwellwert dieser Klasse zugeordnet werden. Dieser Ansatz erfordert kein vollständiges Trainingsset aller Zielklassen und bleibt damit auch für forensische Open-Set-Szenarien anwendbar, in denen neue Quellklassen zur Laufzeit hinzukommen können \cite[Kap.~1]{klier_media_2025}.
 
-Die Wahl gegen eine k-Fold-Kreuzvalidierung oder Leave-one-out-Evaluation begründet sich durch die forensische Aufgabenstellung. Ziel ist nicht die Generalisierung eines trainierten Modells, sondern die Prüfung, ob ein einziger repräsentativer Source Digest einer Klasse ausreicht, um unbekannte Dateien zuverlässig zuzuordnen. Die Trainingsmenge beschränkt sich daher bewusst auf eine kleine, diverse Teilmenge, während alle verbleibenden Dateien als Testmenge dienen. Dieses Vorgehen orientiert sich methodisch am Evaluationsdesign von Klier und Baier \cite[Kap.~3]{klier_media_2025} und erlaubt eine direkte Vergleichbarkeit der Ergebnisse.
+Die Entscheidung gegen etablierte rotierende Verfahren wie die k-Fold-Kreuzvalidierung (bei der der Datensatz in $k$ gleich große Teilmengen zum iterativen Trainieren und Testen aufgeteilt wird) oder die Leave-one-out-Evaluation (bei der exakt eine Instanz oder Geräteklasse als Testmenge ausgesondert und auf dem gesamten restlichen Datenbestand trainiert wird) begründet sich durch die forensische Aufgabenstellung. Ziel ist nicht die Generalisierung eines trainierten Modells, sondern die Prüfung, ob ein einziger repräsentativer Source Digest einer Klasse ausreicht, um unbekannte Dateien zuverlässig zuzuordnen. Die Trainingsmenge beschränkt sich daher bewusst auf eine kleine, diverse Teilmenge, während alle verbleibenden Dateien als Testmenge dienen. Dieses Vorgehen orientiert sich methodisch am Evaluationsdesign von Klier und Baier \cite[Kap.~3]{klier_media_2025} und erlaubt eine direkte Vergleichbarkeit der Ergebnisse.
 
-Das Untersuchungsdesign adressiert zwei der vier forensischen Aufgabenbereiche nach Yang et al.\ \cite[Kap.~5.4]{yang_comprehensive_2025}, nämlich die Quellkamera-Identifikation (SCI) zur Unterscheidung nativer Kameraaufnahmen und KI-generierter Videos sowie die Erkennung plattformspezifischer Signaturen durch Social-Media-Verarbeitung (SNA). 
-
-
-
-% Verfahrensteckbrief me
-
+Das Untersuchungsdesign adressiert alle vier primären forensischen Aufgabenbereiche der Container-Analyse nach Yang u. a. (2025) \cite[Kap.~5.4]{yang_comprehensive_2025}. Neben der Quellkamera-Identifikation (SCI) zur Zuordnung als auch Unterscheidung nativer Kameraaufnahmen und KI-generierter Videos, der Erkennung plattformspezifischer Signaturen durch Social-Media-Verarbeitung (SNA) werden im Rahmen der Evaluation bearbeiteter Videos explizit auch die Identifikation der Manipulationssoftware (MTI) und die generelle Manipulationserkennung (MD) untersucht.

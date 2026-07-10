@@ -1,4 +1,5 @@
 \section{Similarity Hashing}
+\label{sec:sh}
 
 Um große Mengen an Videodateien performant auf ihre Erzeugungsquelle hin zu untersuchen, bedarf es mathematischer Verfahren, die strukturelle Merkmale in kompakte, vergleichbare Repräsentationen überführen. Das Konzept des Similarity Hashing (häufig synonym als Approximate Matching bezeichnet) bietet hierfür den methodischen Rahmen \cite[Kap. 2]{breitinger_approximate_2014}.
 
@@ -6,49 +7,11 @@ Um große Mengen an Videodateien performant auf ihre Erzeugungsquelle hin zu unt
 
 \subsection{Abgrenzung zu kryptografischen Hashfunktionen}
 
-Kryptografische Hashfunktionen (wie SHA-256) sind deterministisch und kollisionsresistent konzipiert. Sie unterliegen dem sogenannten Lawineneffekt, bei dem bereits die Änderung eines einzigen Bits in der Eingabedatei zu einem völlig unkorrelierten Hashwert führt. Sie eignen sich daher ausschließlich zur strikten Integritätsprüfung exakter Duplikate.
+Kryptografische Hashfunktionen sind deterministisch und kollisionsresistent konzipiert. Sie unterliegen dem sogenannten Lawineneffekt, bei dem bereits die Änderung eines einzigen Bits in der Eingabedatei zu einem völlig unkorrelierten Hashwert führt \cite[Kap. 9]{scott_a_vanstone_alfred_j_menezes_handbook_2018}. Sie eignen sich daher zur strikten Integritätsprüfung exakter Duplikate \cite[Kap. 2]{breitinger_approximate_2014}.
 
-In der forensischen Quellenerkennung weisen Containerstrukturen derselben Kamera oder desselben Software-Encoders zwar hochgradig ähnliche, aber aufgrund dynamischer Metadaten (wie Zeitstempel oder GPS-Koordinaten) selten identische Bitfolgen auf. Similarity Hashing löst dieses Problem, indem es Eingaben, die sich strukturell oder inhaltlich ähneln, auf Hashwerte abbildet, die ebenfalls eine mathematisch messbare Ähnlichkeit aufweisen \cite[Kap. 2.1]{breitinger_approximate_2014}. \cref{fig:digest-beispiel} veranschaulicht diesen Transformationsprozess anhand eines vereinfachten Beispiels. Aus der Token-Sequenz \(moov, mvhd, trak\) ergeben sich die überlappenden Bigramme \(moovmvhd\) und \(mvhdtrak\), deren Menge den resultierenden Similarity Digest bildet.
+In der forensischen Quellenerkennung weisen Containerstrukturen derselben Kamera oder desselben Software-Encoders zwar hochgradig ähnliche, aber aufgrund dynamischer Metadaten (wie Zeitstempel oder GPS-Koordinaten) selten identische Bitfolgen auf. Similarity Hashing löst dieses Problem, indem es Eingaben, die sich strukturell oder inhaltlich ähneln, auf Hashwerte abbildet, die ebenfalls eine mathematisch messbare Ähnlichkeit aufweisen \cite[Kap. 2.1]{breitinger_approximate_2014}, \cite[Kap. 1]{roussev_data_2010}. Dabei wird die extrahierte Merkmalsmenge einer Datei zunächst in eine geordnete oder ungeordnete symbolische Repräsentation überführt, aus der anschließend überlappende Teilsequenzen fester Länge gebildet werden und das Resultat dieses Hashing-Prozesses wird als Similarity Digest bezeichnet \cite[Kap. 2.2]{breitinger_approximate_2014}. Dieser Digest fungiert als kompakter Fingerabdruck der ursprünglichen Datei, in dem alle extrahierten Strukturmerkmale (Features) aggregiert sind. Durch die Berechnung einer Distanzmetrik zwischen zwei solchen Similarity Digests lässt sich der Grad der strukturellen Verwandtschaft quantifizieren \cite[Kap. 3.4]{roussev_data_2010}.
 
-\begin{figure}[h]
-    \centering
-    \begin{tikzpicture}[
-        node distance=1.2cm and 1.8cm,
-        box/.style={draw, rounded corners, minimum height=0.8cm, font=\scriptsize\ttfamily, align=center},
-        stage/.style={font=\scriptsize\bfseries, text=black!60},
-        arr/.style={-latex, thick, black!50}
-    ]
-
-    \node[stage] (s1) at (0,3) {1. Strukturbaum};
-    \begin{scope}[local bounding box=treebox]
-        \node[box, fill=blue!15, draw=blue!60] (moov) at (0,1.6) {moov};
-        \node[box, fill=blue!15, draw=blue!60] (mvhd) at (-0.9,0.4) {mvhd};
-        \node[box, fill=blue!15, draw=blue!60] (trak) at (0.9,0.4) {trak};
-        \draw[arr] (moov) -- (mvhd);
-        \draw[arr] (moov) -- (trak);
-    \end{scope}
-
-    \node[stage] (s2) at (4,3) {2. Token-Sequenz};
-    \node[box, fill=green!15, draw=green!60] (seq) at (4,1) {moov, mvhd, trak};
-
-    \node[stage] (s3) at (8,3) {3. Bigramme};
-    \node[box, fill=orange!15, draw=orange!60, text width=2.6cm] (bigrams) at (8,1) {moovmvhd \\ mvhdtrak};
-
-    \node[stage] (s4) at (12,3) {4. Similarity Digest};
-    \node[box, fill=red!15, draw=red!60, text width=2.8cm] (digest) at (12,1) {\{moovmvhd, mvhdtrak\}};
-
-    \draw[arr] (treebox.east) -- (seq.west);
-    \draw[arr] (seq.east) -- (bigrams.west);
-    \draw[arr] (bigrams.east) -- (digest.west);
-
-    \end{tikzpicture}
-    \caption{Transformation eines MP4-Strukturbaums (blau) über eine linearisierte Token-Sequenz (grün) und überlappende Bigramme (orange) in den finalen Similarity Digest als Mengendarstellung (rot) (Eigene Darstellung)}
-    \label{fig:digest-beispiel}
-\end{figure}
-
-TODO: Diese Grafik in Methodik verschieben und stattdessen eine generische Grafik erstellen
-
-Das Resultat dieses Hashing-Prozesses wird als Similarity Digest bezeichnet \cite{roussev_data_2010}. Dieser Digest fungiert als kompakter Fingerabdruck der ursprünglichen Datei, in dem alle extrahierten Strukturmerkmale (Features) aggregiert sind. Durch die Berechnung einer Distanzmetrik (beispielsweise des Jaccard-Koeffizienten) zwischen zwei solchen Similarity Digests lässt sich der Grad der strukturellen Verwandtschaft quantifizieren.
+In dieser Arbeit wird der Begriff Source Digest an vielen Stellen synonym zum Similarity Digest verwendet, obwohl er sich streng genommen auf die Vereinigung mehrerer Similarity Digests bezieht \cite[Kap. 3.3]{klier_media_2025}.
 
 %%%
 
@@ -57,18 +20,18 @@ Das Resultat dieses Hashing-Prozesses wird als Similarity Digest bezeichnet \cit
 Die Identifikation von Ähnlichkeiten erfordert eine klare Definition der betrachteten Datenebene. Breitinger u. a. unterteilen Approximate-Matching-Verfahren in drei Abstraktionsebenen \cite[Kap. 2.2]{breitinger_approximate_2014}:
 
 \begin{enumerate}
-    \item \textbf{Byte-Ebene:} Analyse der rohen, binären Bitsequenzen. (Anfällig für geringfügige Variationen und Komprimierung).
-    \item \textbf{Syntaktische Ebene:} Analyse der internen Datenstruktur, Grammatik oder Format-Topologie (z.\,B. Datei-Header, Container-Atome).
-    \item \textbf{Semantische Ebene:} Analyse des für Menschen wahrnehmbaren Inhalts (z.\,B. visuelle Features eines Bildes oder Videos).
+    \item \textbf{Byte-Ebene:} Analyse der rohen, binären Bitsequenzen (Anfällig für geringfügige Variationen und Komprimierung)
+    \item \textbf{Syntaktische Ebene:} Analyse der internen Datenstruktur, Grammatik oder Format-Topologie (z.\,B. Datei-Header, Container-Atome)
+    \item \textbf{Semantische Ebene:} Analyse des für Menschen wahrnehmbaren Inhalts (z.\,B. visuelle Features eines Bildes oder Videos)
 \end{enumerate}
 
 Die Quellenerkennung mittels MP4-Container-Analyse operiert ausschließlich auf der syntaktischen Ebene. Sie ignoriert den visuellen Inhalt (Semantik) sowie den Payload der \textit{mdat}-Box (Byte-Ebene) und konzentriert sich auf strukturelle Merkmale wie die Anordnung oder das Vorhandensein der ISO-Boxen.
 
-Ein Feature entspricht dabei etwa dem Vorhandensein der Box \(udta\) an der Pfadposition \(moov/udta\) oder der unmittelbaren Nachbarschaft zweier Boxtypen wie \(mvhdtrak\), unabhängig davon, welche konkreten Werte (z. B. Zeitstempel oder Bitraten) diese Boxen enthalten. \cref{fig:feature-vergleich} veranschaulicht dies exemplarisch anhand des Vergleichs einer nativen Aufnahme mit einer Social-Media-Verarbeitung, bei der die herstellerspezifische \(udta\)-Box entfernt wurde.
+Ein Feature entspricht dabei etwa dem Vorhandensein der Box \(udta\) an der Pfadposition \(moov/udta\) oder der unmittelbaren Nachbarschaft zweier Boxtypen wie \(mvhdtrak\). \cref{fig:feature-vergleich} veranschaulicht dies exemplarisch anhand des Vergleichs einer nativen Aufnahme mit einer Social-Media-Verarbeitung, bei der die herstellerspezifische \(udta\)-Box entfernt wurde.
 
 \begin{figure}[h]
     \centering
-    \begin{minipage}{0.48\linewidth}
+    \begin{minipage}[b]{0.48\linewidth}
         \centering
         \begin{forest}
         for tree={
@@ -78,14 +41,15 @@ Ein Feature entspricht dabei etwa dem Vorhandensein der Box \(udta\) an der Pfad
         }
         [moov
             [mvhd]
-            [trak, for tree={fill=blue!15, draw=blue!60}]
+            [trak]
             [udta, for tree={fill=orange!15, draw=orange!60}]
+            [mdia]
         ]
         \end{forest}
         \caption*{(a) Native Aufnahme}
     \end{minipage}
     \hfill
-    \begin{minipage}{0.48\linewidth}
+    \begin{minipage}[b]{0.48\linewidth}
         \centering
         \begin{forest}
         for tree={
@@ -95,7 +59,8 @@ Ein Feature entspricht dabei etwa dem Vorhandensein der Box \(udta\) an der Pfad
         }
         [moov
             [mvhd]
-            [trak, for tree={fill=blue!15, draw=blue!60}]
+            [trak]
+            [mdia]
         ]
         \end{forest}
         \caption*{(b) Social-Media-Verarbeitung}
@@ -104,9 +69,7 @@ Ein Feature entspricht dabei etwa dem Vorhandensein der Box \(udta\) an der Pfad
     \label{fig:feature-vergleich}
 \end{figure}
 
-Der kritische Erfolgsfaktor eines jeden Similarity-Hash-Verfahrens liegt im Feature-Design, also der Frage, welche Merkmale bzw. Features extrahiert und in den Hash überführt werden \cite[Kap. 1]{roussev_data_2010}. Für die tief verschachtelte Baumstruktur eines MP4-Containers bedeutet dies, dass das gewählte Feature-Design die mehrdimensionale Topologie (wie Eltern-Kind-Relationen, proprietäre Erweiterungen) berücksichtigen sollte, um eine belastbare Quellenzuordnung zu ermöglichen.\\
-
-TODO: Begriffe klar abgrenzen und korrekte Verwendung prüfen (Feature = isolierte Informationseinheit, Symbolische Repräsentation (\textit{Symbolic Reprensentation}\cite{yang_comprehensive_2025}) =  Taxonomie T1 bis T5 wie Feature aus Datenstruktur syntaktisch abgeleitet wird, Feature-Repräsentation = Mermalsdarstellung oder Feature-Modellierung,  Feature Selektion = Mermalsauswahl/Symbolauswahl)
+Der Erfolgsfaktor eines jeden Similarity-Hash-Verfahrens liegt im Feature-Design, also der Frage, welche Merkmale bzw. Features extrahiert und in den Hash überführt werden \cite[Kap. 1]{roussev_data_2010}. Für die tief verschachtelte Baumstruktur eines MP4-Containers bedeutet dies, dass das gewählte Feature-Design die mehrdimensionale Topologie (wie Eltern-Kind-Relationen, proprietäre Erweiterungen) als Merkmal zur Quellenzuordnung nutzen kann.
 
 %%%
 
@@ -125,5 +88,3 @@ T(A, B) = \frac{|A \cap B|}{|A \cap B| + \alpha \cdot |A \setminus B| + \beta \c
 \end{equation}\\
 
 Für \(\alpha = \beta = 1\) reduziert sich der Tversky-Index auf den Jaccard-Koeffizienten. Die asymmetrische Konfiguration ist für die forensische Quellenklassifikation vorteilhaft, da zusätzliche, quellenfremde Boxen einer Testdatei als Abweichung gewertet, fehlende Boxen hingegen nicht bestraft werden.
-
-Die Klassifikationsleistung wird schwellenwertunabhängig über die Receiver Operating Characteristic (ROC) bewertet, welche die True Positive Rate der False Positive Rate über alle möglichen Entscheidungsschwellen gegenüberstellt \cite{fawcett_introduction_2006}. Als aggregierte Kenngröße dient die Fläche unter der ROC-Kurve (AUC), wobei \(\text{AUC} = 1{,}0\) perfekte Trennung und \(\text{AUC} = 0{,}5\) zufälliges Klassifikationsverhalten beschreibt.

@@ -14,11 +14,11 @@ Um die Erkennungsleistung des entwickelten Verfahrens zu quantifizieren, wird f�
     \begin{threeparttable}
         \begin{tabular}{lll}\toprule
              \textbf{Kategorie der Evaluation}&  \textbf{AUC} (Tversky)& \textbf{Datenbank(en)}\\\midrule
-     Gerät& 0.977&VISION\tnote{a}\\
-             Modell&  0.974& VISION\tnote{a}\\
-             Hersteller&  0.986& VISION\tnote{a}\\
-     Aufnahmeart& 0.504&VISION\tnote{a}\\
-     Social-Media-Platform& 0.972&VISION, EVA-7K\tnote{b}\\
+     Gerät& 0.977&VISION\tnote{*}\\
+             Modell&  0.974& VISION\tnote{*}\\
+             Hersteller&  0.986& VISION\tnote{*}\\
+     Aufnahmeart& 0.504&VISION\tnote{*}\\
+     Social-Media-Platform& 0.972&VISION, EVA-7K\\
      KI-Generator& 0.898&AI\\
      Deepfakes und synthetische Inhalte& 0.546&AI\\ 
      Bearbeitungssoftware& 0.552&EVA-7K\\ 
@@ -27,8 +27,7 @@ Um die Erkennungsleistung des entwickelten Verfahrens zu quantifizieren, wird f�
      Social Media Aufnahmen& 0.628&VISION, EVA-7K, AI\\ \bottomrule
         \end{tabular}
             \begin{tablenotes}\scriptsize
-            \item[a] Nur native Aufnahmen
-            \item[b] Nur Aufnahmen, die durch Social-Media-Upload verändert wurden
+            \item[*] Nur native Aufnahmen
         \end{tablenotes}
         \caption{Erkennungsleistung der Container-Auswertung (AUC) über alle Untersuchungsziele (Eigene Darstellung basierend auf Daten von Shullani u. a.\cite{shullani_vision_2017} und Yang u. a.\cite{yang_efficient_2020})}
         \label{tab:auc}
@@ -226,6 +225,31 @@ Ein vergleichbares Phänomen zeigt sich im Apple-Ökosystem. iPhone5 (siehe \cre
     \label{tab:similarity_iphone5}
 \end{table}
 
+\begin{table}[h]
+\centering
+\begin{tabular}{ll}
+\toprule
+\textbf{Marke/Modell} & \textbf{\(udta\)-Box}\\
+\midrule
+Apple iPad2, iPhone4s & \(\text{\textcopyright{}mod}\), \(\text{\textcopyright{}swr}\), \(\text{\textcopyright{}day}\), \(\text{\textcopyright{}mak}\) \\
+Apple iPadmini & \(\text{\textcopyright{}mak}\), \(\text{\textcopyright{}swr}\), \(\text{\textcopyright{}day}\), \(\text{\textcopyright{}xyz}\), \(\text{\textcopyright{}mod}\) \\
+Apple iPhone4, iPhone6 & \(\text{\textcopyright{}mod}\), \(\text{\textcopyright{}swr}\), \(\text{\textcopyright{}day}\), \(\text{\textcopyright{}xyz}\), \(\text{\textcopyright{}mak}\) \\
+Apple iPhone5 & \(\text{\textcopyright{}mak}\), \(\text{\textcopyright{}swr}\), \(\text{\textcopyright{}day}\), \(\text{\textcopyright{}mod}\) \\
+Apple iPhone5c & \(\text{\textcopyright{}mod}\), \(\text{\textcopyright{}swr}\), \(\text{\textcopyright{}day}\), \(\text{\textcopyright{}mak}\), \(\text{\textcopyright{}xyz}\) \\
+Huawei AscendG6, Xiaomi RedmiNote3 & \(\text{\textcopyright{}xyz}\) \\
+LG D290 & \(auth\) \\
+Microsoft Lumia640LTE & \(meta\), \(Xtra\), \(\text{\textcopyright{}xyz}\) \\
+Samsung GalaxyS3Mini, GalaxyTrendPlus & \(smrd\), \(smta\) \\
+Samsung GalaxyS4Mini, GalaxyS5, GalaxyTab3 & \(SDLN\), \(smrd\), \(smta\) \\
+Samsung GalaxyTabA & \(SDLN\), \(smrd\), \(\text{\textcopyright{}xyz}\), \(smta\) \\
+\bottomrule
+\end{tabular}
+\caption{Inhalt der \(udta\)-Box nach Gerätemodell (Eigene Darstellung)}
+\label{tab:udta_modell}
+\end{table}
+
+Von den insgesamt 28 in Tabelle~\ref{tab:udta_modell} erfassten Gerätemodellen weisen 14 Modelle bei allen zugehörigen Geräten eine \(udta\)-Box auf, während bei 11 Modellen keines der zugehörigen Geräte eine solche Box enthält. Bei den übrigen drei Modellen (Apple iPhone5, iPhone5c und iPhone6) ist das Vorhandensein der \(udta\)-Box uneinheitlich. Einzelne Geräte desselben Modells enthalten die Box, andere hingegen nicht, obwohl es sich um dasselbe Modell handelt. Dies deutet darauf hin, dass das Vorhandensein der \(udta\)-Box nicht ausschließlich vom Gerätemodell, sondern vermutlich auch von Software- bzw. Firmware-Versionen oder dem verwendeten Aufnahmeprogramm abhängt. Tabelle~\ref{tab:udta_modell} fasst für alle Modelle mit mindestens einem Vorkommen die jeweiligen \(udta\)-Unterboxen zusammen und zeigt dabei deutliche herstellerspezifische Muster, etwa die Verwendung von QuickTime-Metadaten-Tags (\(\text{\textcopyright{}mod}\), \(\text{\textcopyright{}swr}\), \(\text{\textcopyright{}day}\), \(\text{\textcopyright{}mak}\)) bei Apple-Geräten im Gegensatz zu den proprietären Atomen \(smrd\) und \(smta\) bei Samsung-Geräten.
+
 %%%
 
 \subsubsection{Geräte}
@@ -406,6 +430,23 @@ Die Auswertung zeigt jedoch auch signifikante strukturelle Inkonsistenzen innerh
 
 Die beiden Versionsstände KlingAIVideo2.6 und KlingAIVideo3.0, die einen wechselseitigen Ähnlichkeitswert von 1,0 erzielen, weisen auf 2-Gramm-Ebene identische Source Digests auf. Gegenüber allen übrigen KI-Modellen bleibt die Kling-Familie hingegen mit Werten zwischen 0,72 und 0,93 klar abgrenzbar, Eine Unterscheidung einzelner Versionsstände eines Herstellers ist demnach mit dem vorliegenden Verfahren nicht in jedem Fall möglich, während die Zuordnung zum jeweiligen Hersteller möglich bleibt.
 
+\begin{table}[H]
+\centering
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.6\linewidth}>{\raggedright\arraybackslash}p{0.25\linewidth}}
+\toprule
+\textbf{Marke/Modell} & \textbf{\(Udta\)-Box} \\
+\midrule
+Google (OmniFlash, Veo3.1), Grok (Imagine 0.9, 1.5), Microsoft (Sora 2), PikaLabs (Pika 1.5 bis 2.5)& \(meta\)(\(hdlr\), \(ilst\)) \\
+\midrule
+KlingAI (Video2.6, 3.0)& \(meta\)(\(hdlr\), \(keys\), \(ilst\)) \\
+\bottomrule
+\end{tabular}
+\caption{Inhalt der \(udta\)-Box bei KI-generierten Videos nach Marke (Eigene Darstellung)}
+\label{tab:udta_ki_modell}
+\end{table}
+
+Im Gegensatz zu den in Tabelle~\ref{tab:udta_modell} dargestellten realen Aufnahmegeräten, bei denen die \(udta\)-Box je nach Hersteller unterschiedliche Metadaten enthält, weisen alle elf untersuchten KI-Videogeneratoren durchgängig eine \(udta\)-Box auf und kapseln ihre Metadaten ausschließlich über eine verschachtelte \(meta\)-Box mit \(ilst\) (siehe Tabelle~\ref{tab:udta_ki_modell}). Neun der elf Modelle (von Google, Grok, Microsoft und Pika Labs) teilen sich exakt dieselbe minimalistische Struktur \(meta\)(\(hdlr\), \(ilst\)), während lediglich KlingAI mit einer zusätzlichen \(keys\)-Box abweicht. 
+
 Ergänzend zu den strukturellen Gemeinsamkeiten der übrigen Anbieter ist das Fehlen der \(uuid\)-Box bei Grok zu nennen. Da diese Box branchenweit als Träger des C2PA-Manifests fungiert und maßgeblich zur beschriebenen KI-Signatur beiträgt, ist zu erwarten, dass diese KI-Videos schlechter beim Vergleich gegen native Videos abschneiden.
 
 %%%
@@ -419,7 +460,11 @@ Ergänzend zu den strukturellen Gemeinsamkeiten der übrigen Anbieter ist das Fe
     \label{fig:auc_dfsynth}
 \end{figure}
 
-Die Differenzierung zwischen bild- als auch videobasierten Deepfakes und vollständig synthetisierten Text-to-Video-Inhalten (siehe \cref{fig:auc_dfsynth}) verzeichnet einen sehr niedrigen AUC-Wert von lediglich 0.546. Um eine methodisch belastbare und symmetrische Vergleichsbasis zu gewährleisten, wurde diese Auswertung zwingend auf jene KI-Datensätze limitiert, in denen das jeweilige Modell sowohl Deepfakes als auch synthetische Repräsentationen zur Verfügung stellte (spezifisch die Modelle AI01, AI02, AI04, AI07 und AI11). Der gemessene AUC-Wert, welcher sich de facto einer stochastischen Gleichverteilung annähert, belegt, dass eine rein syntaktische Separation dieser beiden Erzeugungsarten auf Container-Ebene durch das 2-Gramm-Hashing nicht realisierbar ist. Daraus ist abzuleiten, dass die zugrundeliegenden KI-Plattformen unabhängig vom initialen Input identische, standardisierte Prozesse für die finale MP4-Generierung anwenden. Aus dieser Limitation resultiert für zukünftige Forschungsarbeiten (Future Work) die Notwendigkeit, zu evaluieren, ob jenseits der einfachen Container-Topologie alternative forensische Artefakte existieren, die eine verlässliche Unterscheidung zwischen synthetischen Inhalten und Deepfakes ermöglichen.
+Die Differenzierung zwischen bild- als auch videobasierten Deepfakes und vollständig synthetisierten Text-to-Video-Inhalten (siehe \cref{fig:auc_dfsynth}) verzeichnet einen sehr niedrigen AUC-Wert von lediglich 0.546. Um eine methodische Vergleichsbasis zu gewährleisten, wurde diese Auswertung auf jene KI-Datensätze limitiert, in denen das jeweilige Modell sowohl Deepfakes als auch synthetische Repräsentationen zur Verfügung stellte (spezifisch die Modelle AI01, AI02, AI04, AI07 und AI11). Der gemessene AUC-Wert, welcher sich de facto einer stochastischen Gleichverteilung annähert, belegt, dass eine rein syntaktische Separation dieser beiden Erzeugungsarten auf Container-Ebene durch das 2-Gramm-Hashing nicht realisierbar ist.
+
+Ein Blick auf die zugrunde liegenden Ähnlichkeitswerte bestätigt diesen Befund, da 38 der 42 paarweisen Vergleiche zwischen Testdatei und Referenz-Digest einen Wert von exakt oder nahezu 1{,}0 erzielen, unabhängig von der tatsächlichen Klassenzugehörigkeit. Für die Modelle AI01 und AI07 lässt sich dabei überhaupt keine Trennung feststellen, da synthetische und Deepfake-Videos beider Anbieter durchgängig identische Werte gegenüber beiden Digests aufweisen. Diese Beobachtung deckt sich mit der bereits in \cref{sec:bearbeitete-videos} dargelegten Schwäche des asymmetrischen Tversky-Index, dessen fehlende Bestrafung nicht vorhandener Boxen bei einer großen strukturellen Schnittmenge zweier Klassen zu einer wechselseitigen Fehlbewertung führt. Eine Ausnahme bildet die Datei AI11\_08\_synth.mp4, deren Ähnlichkeit gegenüber beiden Digests mit steigender n-Gramm-Länge sinkt, was jedoch eher auf eine abweichende Encoder-Konfiguration dieser Einzeldatei als auf einen generellen Informationsgewinn durch längere n-Gramme hindeutet.
+
+Daraus ist abzuleiten, dass die zugrundeliegenden KI-Plattformen unabhängig vom initialen Input identische, standardisierte Prozesse für die finale MP4-Generierung anwenden. Aus dieser Limitation resultiert für zukünftige Forschungsarbeiten ein möglicher Ansatzpunkt, in einer weiteren Untersuchung zu prüfen, ob jenseits der einfachen Container-Topologie alternative forensische Artefakte existieren, die eine Unterscheidung zwischen synthetischen Inhalten und Deepfakes ermöglichen könnten.
 
 %%%
 
@@ -562,11 +607,13 @@ Im deutlichen Kontrast dazu belegt die finale übergeordnete Auswertung (siehe \
 
 \section{Kritische Würdigung und methodische Limitationen}
 
-Hinsichtlich der Effizienz und Skalierbarkeit sind die Ergebnisse des Verfahrens als zielführend zu bewerten. Gegenüber qualitativen und baumbasierten Strukturanalysen, die beim Abgleich mit Referenzdaten oftmals eine rechenintensive lineare Komplexität aufweisen, bietet das vorliegende Modell entscheidende architektonische Vorteile. Die Komprimierung der extrahierten Strukturmerkmale in einen kompakten Similarity Digest mit durchschnittlich 36 einzigartigen 2-Grammen und rund 288 Byte je Video ermöglicht performante Vergleiche großer Datenmengen und liegt damit in derselben Größenordnung wie das JPEG-Verfahren von Klier und Baier \cite[Kap. 4]{kliermedia2025}, das für vergleichbare Digest-Größen AUC-Werte über 0,90 auf Geräte-, Modell- und Markenebene erzielt. Die Ergebnisse für die Herstellererkennung (AUC 0,986) und für die Identifikation KI-generierter Aufnahmen (AUC 1,000) sind hoch und belegen die Eignung des Verfahrens für eine schnelle Erstbewertung großer Datenmengen. Auch native Aufnahmen lassen sich mit einem AUC von 0,933 noch zuverlässig von anderen Erzeugungsquellen abgrenzen. Deutlich schwächer fällt hingegen die Erkennung von Social-Media-Aufnahmen mit einem AUC von lediglich 0,628 aus, was die Eignung des Verfahrens für eine grobe Vorfilterung nicht grundsätzlich infrage stellt, jedoch auf eine eingeschränkte Trennschärfe bei bereits durch Plattform-Uploads verarbeiteten Inhalten hinweist.
+TODO: nochmal auf udta-boxen eingehen\\
 
-Trotz dieser Skalierbarkeit offenbaren sich bei der funktionalen Trennschärfe mehrere signifikante methodische Limitationen, wodurch die Ergebnisse für spezifische, feingranulare Untersuchungsziele als unzureichend eingestuft werden müssen. Die gravierendste Schwachstelle zeigt sich bei der Identifikation der Bearbeitungssoftware (MTI) sowie der generellen Manipulationserkennung, welche lediglich einen globalen AUC-Wert von 0,552 erreicht. Diese Unzulänglichkeit ist unmittelbar auf die mathematischen Eigenschaften des verwendeten asymmetrischen Tversky-Index zurückzuführen. Da dieser Index das Fehlen spezifischer Container-Boxen in der Testdatei explizit nicht bestraft, wird eine softwareseitige Reduktion der Metadatenstruktur nicht als Abweichungsmerkmal erkannt, wodurch bearbeitete Videos fälschlicherweise eine nahezu maximale Ähnlichkeit zur nativen Referenzquelle aufweisen. Konkurrierende quantitative Verfahren, die auf Entscheidungsbäumen basieren und absolute Worthäufigkeiten auswerten, erzielen für dieselbe Aufgabenstellung deutlich überlegene Werte, etwa eine Balanced Accuracy von 97,6 Prozent \cite[S. 951]{yangefficient2020} beziehungsweise durchschnittliche F1-Scores von rund 0,99 \cite[S. 1045]{xiangforensic2021}, und sind für die Manipulationserkennung folglich klar zu präferieren.
+Die vorliegende Arbeit leistet einen essenziellen Beitrag zur Schließung einer aktuellen Forschungslücke, indem sie die Methodik des Similarity Hashing erstmals auf das hierarchische MP4-Containerformat überträgt und explizit generative KI-Modelle in die Evaluation einbezieht. Hinsichtlich der Effizienz und Skalierbarkeit sind die Ergebnisse des Verfahrens als zielführend zu bewerten. Gegenüber qualitativen und baumbasierten Strukturanalysen, die beim Abgleich mit Referenzdaten oftmals eine rechenintensive lineare Komplexität aufweisen, bietet das vorliegende Modell entscheidende architektonische Vorteile. Die Komprimierung der extrahierten Strukturmerkmale in einen kompakten Similarity Digest mit durchschnittlich 36 einzigartigen 2-Grammen und rund 288 Byte je Video ermöglicht performante Vergleiche großer Datenmengen und liegt damit in derselben Größenordnung wie das JPEG-Verfahren von Klier und Baier \cite[Kap. 4]{kliermedia2025}, das für vergleichbare Digest-Größen AUC-Werte über 0,90 auf Geräte-, Modell- und Markenebene erzielt. Die Ergebnisse für die Herstellererkennung (AUC 0,986) und für die Identifikation KI-generierter Aufnahmen (AUC 1,000) sind hoch und belegen die Eignung des Verfahrens für eine schnelle Erstbewertung großer Datenmengen. Auch native Aufnahmen lassen sich mit einem AUC von 0,933 noch zuverlässig von anderen Erzeugungsquellen abgrenzen. Deutlich schwächer fällt hingegen die Erkennung von Social-Media-Aufnahmen mit einem AUC von lediglich 0,628 aus, was die Eignung des Verfahrens für eine grobe Vorfilterung nicht grundsätzlich infrage stellt, jedoch auf eine eingeschränkte Trennschärfe bei bereits durch Plattform-Uploads verarbeiteten Inhalten hinweist.
 
-Eine zweite wesentliche Limitation zeigt sich auf der Geräte- und Modellebene innerhalb der nativen Aufnahmen. Obwohl der Gesamt-AUC von 0,977 zunächst überzeugend wirkt, belegt die detaillierte Fehleranalyse, dass neun Gerätegruppen bei n=2 vollständig identische Source-Digests aufweisen. Bemerkenswert ist dabei, dass diese strukturelle Ununterscheidbarkeit nicht auf Geräte derselben Modellreihe beschränkt bleibt, sondern auch herstellerübergreifend bei Budget-Android-Geräten mit vermutlich identischen Chipsatz-Referenzdesigns auftritt, etwa zwischen Asus Zenfone 2 Laser, Huawei Honor 5 und Huawei P8. Da die reine Container-Grammatik in diesen Fällen ausschließlich das zugrunde liegende Android-Media-Framework beziehungsweise die Firmware-Basis widerspiegelt und nicht die tatsächliche Herkunftsmarke, wird der hohe Gesamt-AUC-Wert im Wesentlichen von den übrigen, strukturell gut unterscheidbaren Geräten getragen. Diese Beobachtung relativiert die Aussagekraft eines einzelnen aggregierten AUC-Wertes für die Geräte- und Modellebene erheblich und deckt sich mit den Befunden von Yang et al., die eine herstellerübergreifende Angleichung der Container-Topologie durch gemeinsam genutzte Implementierungen als grundsätzliche Grenze der isolierten syntaktischen Analyse benennen \cite[Kap. 5.4.6]{yangcomprehensive2025}.
+Gleichzeitig wirft diese Methodik bewusst nur ein methodisches Schlaglicht auf ein weitaus größeres forensisches Feld. Durch die strikte Reduktion auf die Topologie der Box-Typen unter Ausschluss volatiler Feldwerte und des visuellen Bitstroms stößt das Verfahren bei feingranularen Differenzierungen an harte Grenzen. Die gravierendste Schwachstelle zeigt sich bei der Identifikation der Bearbeitungssoftware (MTI) sowie der generellen Manipulationserkennung, welche lediglich einen globalen AUC-Wert von 0,552 erreicht. Diese Unzulänglichkeit ist unmittelbar auf die mathematischen Eigenschaften des verwendeten asymmetrischen Tversky-Index zurückzuführen. Da dieser Index das Fehlen spezifischer Container-Boxen in der Testdatei explizit nicht bestraft, wird eine softwareseitige Reduktion der Metadatenstruktur nicht als Abweichungsmerkmal erkannt, wodurch bearbeitete Videos fälschlicherweise eine nahezu maximale Ähnlichkeit zur nativen Referenzquelle aufweisen. Konkurrierende quantitative Verfahren, die auf Entscheidungsbäumen basieren und absolute Worthäufigkeiten auswerten, erzielen für dieselbe Aufgabenstellung deutlich überlegene Werte, etwa eine Balanced Accuracy von 97,6 Prozent \cite[S. 951]{yang_efficient_2020} beziehungsweise durchschnittliche F1-Scores von rund 0,99 \cite[S. 1045]{xiang_forensic_2021}, und sind für die Manipulationserkennung folglich klar zu präferieren.
+
+Eine zweite wesentliche Limitation zeigt sich auf der Geräte- und Modellebene innerhalb der nativen Aufnahmen. Obwohl der Gesamt-AUC von 0,977 zunächst überzeugend wirkt, belegt die detaillierte Fehleranalyse, dass neun Gerätegruppen bei n=2 vollständig identische Source-Digests aufweisen. Bemerkenswert ist dabei, dass diese strukturelle Ununterscheidbarkeit nicht auf Geräte derselben Modellreihe beschränkt bleibt, sondern auch herstellerübergreifend bei Budget-Android-Geräten mit vermutlich identischen Chipsatz-Referenzdesigns auftritt, etwa zwischen Asus Zenfone 2 Laser, Huawei Honor 5 und Huawei P8. Da die reine Container-Grammatik in diesen Fällen ausschließlich das zugrunde liegende Android-Media-Framework beziehungsweise die Firmware-Basis widerspiegelt und nicht die tatsächliche Herkunftsmarke, wird der hohe Gesamt-AUC-Wert im Wesentlichen von den übrigen, strukturell gut unterscheidbaren Geräten getragen. Diese Beobachtung relativiert die Aussagekraft eines einzelnen aggregierten AUC-Wertes für die Geräte- und Modellebene erheblich und deckt sich mit den Befunden von Yang et al., die eine herstellerübergreifende Angleichung der Container-Topologie durch gemeinsam genutzte Implementierungen als grundsätzliche Grenze der isolierten syntaktischen Analyse benennen \cite[Kap. 5.4.6]{yang_comprehensive_2025}.
 
 Eine weitere Einschränkung betrifft die Klassifikation KI-generierter Inhalte. Während die Zuordnung zu einzelnen KI-Generatoren mit einem AUC von 0,898 belastbar gelingt, kann keine Unterscheidung zwischen bildbasierten Deepfakes und vollständig text-generierten Videos getroffen werden. Dies deutetet darauf hin, dass die zugrunde liegenden KI-Plattformen unabhängig vom initialen Input und unabhängig vom konkreten Versionsstand identische, standardisierte Muxing-Prozesse für die finale MP4-Erzeugung anwenden, wodurch auf rein syntaktischer Container-Ebene keine klassifizierbaren Unterschiede entstehen. Da für diese neuartige Untersuchungskategorie keine etablierten Referenzwerte aus der Literatur existieren, stellen die berichteten Metriken zwar eine neuartige Bemessungsgrundlage dar, ihre Aussagekraft wird jedoch durch den geringen Umfang des eigenen Datensatzes von 61 Videos eingeschränkt.
 

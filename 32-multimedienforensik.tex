@@ -1,32 +1,57 @@
 \section{Similarity Hashing in der Multimedien-Forensik}
 \label{sec:similarity_hashing_multimedia}
 
-Einen grundlegenden Beitrag in diesem Bereich lieferten Klier und Baier mit dem Framework des Media Source Similarity Hashing (MSSH), welches als das erste rein syntaktische Approximate-Matching-Verfahren zur Quellenerkennung eingeführt wurde \cite[Kap. 1]{klier_media_2025}. MSSH extrahiert die Sequenz der Format-Marker von JPEG-Dateien, überführt diese mittels n-Gramm-Sequenzierung in ein Token-Set und komprimiert das Ergebnis zu einem effizient vergleichbaren Similarity Digest (siehe \cref{fig:vorgeh-mssh}) \cite[Kap. 3]{klier_media_2025}.
+Einen grundlegenden Beitrag in diesem Bereich lieferten Klier und Baier (2025) mit dem Framework des Media Source Similarity Hashing (MSSH), welches als das erste rein syntaktische Approximate-Matching-Verfahren zur Quellenerkennung eingeführt wurde \cite[Kap. 1]{klier_media_2025}. MSSH extrahiert die Sequenz der Format-Marker von JPEG-Dateien, überführt diese mittels n-Gramm-Sequenzierung in ein Token-Set und komprimiert das Ergebnis zu einem effizient vergleichbaren Similarity Digest (siehe \cref{fig:vorgeh-mssh}) \cite[Kap. 3]{klier_media_2025}.
 
-\begin{table}
+\begin{figure}[h]
     \centering
-    \begin{tabular}{>{\raggedright\arraybackslash}p{0.2\linewidth}>{\raggedright\arraybackslash}p{0.75\linewidth}}\toprule
-         \textbf{Studie}& Klier und Baier (2025)\cite{klier_media_2025}\\\midrule
-         \textbf{Verfahren}& MSSH (Media Source Similarity Hashing)\\\midrule
-         \textbf{Untersuchungsziele}& SCI (Source Camera Identification auf Geräte-, Modell- und Markenebene, z. B. zur Unterscheidung von Downloads und Eigenproduktionen in CSAM-Ermittlungen) und SNA (Erkennung der Verarbeitung durch 5 Social-Media-Plattformen)\\\midrule
-         \textbf{Feature}& Strukturelle Marker und deren Reihenfolge (z. B. das 2-Gramm D8E1 aus den aneinandergereihten JPEG-Markern SOI und APP1)\\\midrule
-         \textbf{Symbolische Repräsentation} (T1 bis T5)& TODO\\\midrule
-         \textbf{Feature-Repräsentation}& n-Gramm-Sets (Similarity Digest)\\\midrule
-         \textbf{Feature-Selektion}& Dubletteneliminierung (reduziert die Sequenzen auf eine rein binäre Mengen-Repräsentation, Worthäufigkeiten werden ignoriert)\\\midrule
-         \textbf{Klassifikator}& Approximate Matching (Ähnlichkeitsberechnung mittels Jaccard-Index oder asymmetrischem Tversky-Index)\\\midrule
-         \textbf{Datenbanken}& 7 Bilddatensätze (u. A. VISION)\\\midrule
-         \textbf{Test- und Trainingsdaten}& Bildung von Referenz-Hashes (Source Similarity Digests) aus einer kleinen, diversen Teilmenge (z. B. ein Bild pro Aufnahmemodus), Abgleich mit allen restlichen Testdateien\\\midrule
-         \textbf{Evaluation}&Klassifikation auf Geräte-, Modell- und Markenebene sowie Erkennung der Verarbeitung durch 5 Social-Media-Plattformen\\\midrule
-         \textbf{Metriken}&Receiver Operating Characteristic (ROC) und Area Under Curve (AUC)\\ \bottomrule
-    \end{tabular}
-    \caption{Verfahrenssteckbrief zum Media Source Similarity Hashing (Eigene Darstellung nach Klier und Baier\cite{klier_media_2025} }
-    \label{tab:steckbrief-klier}
-\end{table}
+    \begin{tikzpicture}[
+        node distance=1.1cm,
+        box/.style={
+            rectangle, rounded corners=8pt, draw=black, thick,
+            minimum width=6.2cm, minimum height=1.1cm,
+            align=center, font=\normalsize
+        },
+        digestchar/.style={
+            font=\ttfamily\tiny, inner sep=0pt, outer sep=0pt,
+            minimum height=0.6cm, anchor=west
+        },
+        arr/.style={-{Latex[length=2.8mm]}, thick},
+        dashedarr/.style={dashed, -{Latex[length=2.2mm]}, thick, black!50},
+        codeline/.style={font=\ttfamily\tiny, align=left}
+    ]
 
-\begin{figure}
-    \centering
-    \includegraphics[width=0.9\linewidth]{grafiken/vorgehen-mssh.drawio.png}
-    \caption{TODO: vorgehen-mssh.drawio.png}
+        \node[box] (input) {1. Eingabedatei (JPEG)};
+        \node[box, below=of input] (extract) {2. Marker-Extraktion};
+        \node[box, below=of extract] (ngram) {3. \(n\)-Gramm-Tokenisierung (\(n\)=2)};
+        \node[box, below=of ngram] (digest) {4. Similarity Digest};
+
+        \draw[arr] (input) -- (extract);
+        \draw[arr] (extract) -- (ngram);
+        \draw[arr] (ngram) -- (digest);
+
+        \node[codeline, right=1.6cm of extract, anchor=west] (extractcode)
+            {[FFD8, FFE1, FFE0, ...]};
+
+        \node[codeline, right=1.6cm of ngram, anchor=west] (ngramcode)
+            {F = \{D8E1, E1E0, E0DB, DBDB, DBC0, C0C4, C4C4,\\
+             C4DD, DDDA, DAD9, D900, 01000101, 01010102,\\
+             0102010F, 010F0110, 01100112, 0112011A, 011A011B,\\
+             011B0128, 01280131, 01310132, 01320213, 02138769,\\
+             87698825, 8825A40B, A40B0180\}};
+
+        \node[digestchar, right=1.6cm of digest, anchor=north west, text width=8cm] (digestcode)
+            {C0C4C4C4C4DDD8E1D900DAD9DBC0DBDBDDDAE0DB E1E0\\
+             01000101010101020102010F010F011001100112\\
+             0112011A011A011B011B01280128013001300101\\
+             320132021302138769876988258825A40BA40B 0180};
+
+        \draw[dashedarr] (extract.east) -- (extractcode.west);
+        \draw[dashedarr] (ngram.east) -- (ngramcode.west);
+        \draw[dashedarr] (digest.east) -- (digestcode.west);
+
+    \end{tikzpicture}
+    \caption{Ablauf der Merkmalsextraktion von der JPEG-Datei bis zum Similarity Digest (Eigene Darstellung nach Klier und Baier\cite[Kap. 3]{klier_media_2025})}
     \label{fig:vorgeh-mssh}
 \end{figure}
 
@@ -34,10 +59,30 @@ Das Konzept des $n$-Gramms stammt ursprünglich aus der Computerlinguistik und b
 
 Die exakte Reihenfolge und das Auftauchen struktureller Elemente besitzen für die forensische Differenzierung von Quellen eine hohe Prägnanz. Bei der Übertragung dieses Prinzips auf Videodaten ergeben sich neue Herausforderungen. Wie in Abschnitt \ref{kap:aufbau_mp4} dargelegt, basiert die Architektur von MP4-Dateien nicht auf einer linearen Abfolge von Markern, sondern auf einer tief verschachtelten, objektorientierten Baumstruktur \cite[Kap. 4]{iso_14496-12_2022}.
 
-Die grundlegende Methodik des MSSH weist mehrere Besonderheiten auf, die für die Übertragbarkeit auf MP4-Container relevant sind. Ein zentraler Vorzug liegt in der Einfachheit des Verfahrens, da Klier und Baier bewusst auf komplexe, überwachte Klassifikatoren verzichten und stattdessen einen charmant simplen Mengenabgleich mittels Similarity Digest wählen. Dadurch lässt sich für jede erdenkliche forensische Fragestellung ein eigener Source Digest bilden, unabhängig davon, ob eine Zuordnung auf Geräte, Modell oder Herstellerebene, eine Unterscheidung der Aufnahmeart oder eine Erkennung der Verarbeitungsart durch soziale Netzwerke im Vordergrund steht. Diese Flexibilität ergibt sich daraus, dass ein Source Digest lediglich aus der Mengenvereinigung mehrerer diverser Aufnahmen derselben Quelle gebildet wird, wodurch je nach gewünschter Granularität unterschiedliche Quellklassen definiert werden können, ohne das methodische Vorgehen selbst anzupassen. \cite[Kap. 3.1]{klier_media_2025}
+Die grundlegende Methodik des MSSH weist mehrere Besonderheiten auf, die für die Übertragbarkeit auf MP4-Container relevant sind. Ein zentraler Vorzug liegt in der Einfachheit des Verfahrens, da Klier und Baier bewusst auf komplexe, überwachte Klassifikatoren verzichten und stattdessen einen charmant simplen Mengenabgleich mittels Similarity Digest wählen. Dadurch lässt sich für jede erdenkliche forensische Fragestellung ein eigener Source Digest bilden, unabhängig davon, ob eine Zuordnung auf Geräte-, Modell- oder Herstellerebene, eine Unterscheidung der Aufnahmeart oder eine Erkennung der Verarbeitungsart durch soziale Netzwerke im Vordergrund steht. Diese Flexibilität ergibt sich daraus, dass ein Source Digest lediglich aus der Mengenvereinigung mehrerer diverser Aufnahmen derselben Quelle gebildet wird, wodurch je nach gewünschter Granularität unterschiedliche Quellklassen definiert werden können, ohne das methodische Vorgehen selbst anzupassen. \cite[Kap. 3.1]{klier_media_2025}
 
-Im Gegensatz zu überwachten Verfahren wie Entscheidungsbäumen oder Linear Discriminant Analysis entfällt zudem ein aufwändiges vorheriges Trainieren auf einem vollständigen Klassensatz, da lediglich eine kleine, diverse Teilmenge zur Digest Bildung benötigt wird, wie auch der Verfahrenssteckbrief in \cref{tab:steckbrief-klier} in der Zeile zu Test und Trainingsdaten zusammenfasst. Der anschließende Abgleich einer unbekannten Datei mit einem solchen Referenz-Digest erfolgt über einen einfachen Mengenvergleich mittels Jaccard- oder Tversky-Index, wobei Letzterer gezielt tolerant gegenüber Merkmalen ist, die nur im Source Digest, aber nicht in der Prüfdatei vorkommen, und umgekehrt strenger reagiert. \cite[Kap. 3.5]{klier_media_2025} 
+Im Gegensatz zu überwachten Verfahren, wie den von Yang u. a. eingesetzten Entscheidungsbäumen \cite[Kap. III]{yang_efficient_2020} oder der durch Xiang u. a. verwendeten Linear Discriminant Analysis \cite[Kap. 3.5]{xiang_forensic_2021}, entfällt zudem ein aufwändiges vorheriges Trainieren auf einem vollständigen Klassensatz, da lediglich eine kleine, diverse Teilmenge zur Digest Bildung benötigt wird. Der zusammenfassende Verfahrenssteckbrief in \cref{tab:steckbrief-klier} zeigt dies ebenfalls in der Zeile zu Test- und Trainingsdaten. Der anschließende Abgleich einer unbekannten Datei mit einer solchen Referenz, dem Source-Digest, erfolgt über einen einfachen Mengenvergleich mittels Jaccard- oder Tversky-Index. Letzterer ist gezielt tolerant gegenüber Merkmalen, die nur im Source Digest, aber nicht in der Testdatei vorkommen, und umgekehrt strenger reagiert. \cite[Kap. 3.5]{klier_media_2025} 
 
-In der Evaluation über sieben JPEG-Datensätze erreicht MSSH trotz dieser methodischen Schlichtheit AUC-Werte von über 0,90 auf Geräte-, Modell- und Markenebene sowie von über 0,85 bei Social-Media-Verarbeitung und erzielt damit eine mit ressourcenintensiven, PRNU-basierten Verfahren zur Source Camera Identification vergleichbare oder überlegene Erkennungsleistung, bei deutlich geringerem Berechnungsaufwand \cite[Kap. 4.4]{klier_media_2025}. Klier und Baier benennen die Übertragung dieses schlanken Konzepts auf komplexere Container-Formate wie MP4 explizit als vielversprechende Erweiterung, sofern die Strukturextraktion formatspezifisch angepasst wird \cite[Kap. 5]{klier_media_2025}.
+In der Evaluation über sieben JPEG-Datensätze erreicht MSSH trotz dieser methodischen Schlichtheit AUC-Werte von 0,90 auf Geräte-, Modell- und Markenebene sowie über 0,85 bei Social-Media-Verarbeitung und erzielt damit eine mit ressourcenintensiven, PRNU-basierten Verfahren zur Source Camera Identification vergleichbare oder überlegene Erkennungsleistung, bei deutlich geringerem Berechnungsaufwand \cite[Kap. 4.4]{klier_media_2025}. Klier und Baier benennen die Übertragung dieses schlanken Konzepts auf komplexere Container-Formate wie MP4 explizit als vielversprechende Erweiterung, sofern die Strukturextraktion formatspezifisch angepasst wird \cite[Kap. 5]{klier_media_2025}.
 
 Für das in dieser Arbeit zu entwickelnde Feature-Design (TF1) folgt daraus, dass die lineare Sequenz und die relative Reihenfolge der Boxen als wichtiges Indiz beibehalten und beim Extraktionsprozess sowie der linearen Darstellung der Struktur beachtet werden sollten.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{>{\raggedright\arraybackslash}p{0.2\linewidth}>{\raggedright\arraybackslash}p{0.75\linewidth}}\toprule
+         \textbf{Studie}& Klier und Baier (2025)\cite{klier_media_2025}\\\midrule
+         \textbf{Verfahren}& MSSH (Media Source Similarity Hashing)\\\midrule
+         \textbf{Untersuchungsziele}& SCI (Source Camera Identification auf Geräte-, Modell- und Markenebene, z. B. zur Unterscheidung von Downloads und Eigenproduktionen in CSAM-Ermittlungen) und SNA (Erkennung der Verarbeitung durch 5 Social-Media-Plattformen)\\\midrule
+         \textbf{Feature}& Strukturelle Marker und deren Reihenfolge (z. B. das 2-Gramm D8E1 aus den aneinandergereihten JPEG-Markern SOI und APP1)\\\midrule
+         \textbf{Symbolische Repräsentation} (T1 bis T5)& TODO\\\midrule
+         \textbf{Feature-Repräsentation}& \(n\)-Gramm-Sets (Similarity Digest)\\\midrule
+         \textbf{Feature-Selektion}& Dubletteneliminierung (reduziert die Sequenzen auf eine rein binäre Mengen-Repräsentation, Worthäufigkeiten werden ignoriert)\\\midrule
+         \textbf{Klassifikator}& Approximate Matching (Ähnlichkeitsberechnung mittels Jaccard-Index oder asymmetrischem Tversky-Index)\\\midrule
+         \textbf{Datenbanken}& 7 Bilddatensätze, darunter VISION\\\midrule
+         \textbf{Test- und Trainingsdaten}& Bildung von Referenz-Hashes (Source Similarity Digests) aus einer kleinen, diversen Teilmenge (z. B. ein Bild pro Aufnahmemodus), Abgleich mit allen restlichen Testdateien\\\midrule
+         \textbf{Evaluation}&Klassifikation auf Geräte-, Modell- und Markenebene sowie Erkennung der Verarbeitung durch 5 Social-Media-Plattformen\\\midrule
+         \textbf{Metriken}&Receiver Operating Characteristic (ROC) und Area Under Curve (AUC)\\ \bottomrule
+    \end{tabular}
+    \caption{Verfahrenssteckbrief zum Media Source Similarity Hashing (Eigene Darstellung nach Klier und Baier\cite{klier_media_2025} }
+    \label{tab:steckbrief-klier}
+\end{table}

@@ -1,9 +1,9 @@
 \section{Videoquellen und Spurenbildung}
 \label{sec:videoquellen}
 
-Die Identifikation der technischen Quelle eines Videos erfordert eine Erfassung der Verarbeitungsschritte. Im forensischen Kontext hinterlässt jede Verarbeitungsstufe spezifische Spuren in der Containerstruktur, die als struktureller Fingerabdruck dienen kann \cite[S. s68]{gloe_forensic_2014}. In der Praxis lassen sich MP4-Dateien primär in native Aufnahmen, Social-Media-Verarbeitungen und synthetische Inhalte klassifizieren.
+Die Identifikation der technischen Quelle eines Videos erfordert eine Erfassung der Verarbeitungsschritte. Im forensischen Kontext hinterlässt jede Verarbeitungsstufe spezifische Spuren in der Containerstruktur, die als struktureller Fingerabdruck dienen kann \cite[S. s68]{gloe_forensic_2014}. In der Praxis lassen sich MP4-Dateien primär in native Aufnahmen, synthetische Inhalte und bearbeitete Videos klassifizieren. Unter bearbeitete Videos zählen auch Aufnahmen, die durch den Upload auf Social-Media-Platformen verändert wurden.
 
-Native Videoaufnahmen aus Smartphones oder Digitalkameras weisen durch herstellerspezifische Firmware und proprietäre Metadaten (z.\,B. \(udta\)-Boxen) eine hohe strukturelle Diversität auf. Diese Varianz in der \(moov\)-Topologie ermöglicht oftmals eine präzise Zuordnung zu Gerätemodellen \cite{shullani_vision_2017, iuliani_video_2019}. Beim Transfer über Social-Media-Plattformen geht diese native Integrität durch automatische Verarbeitungen in der Regel verloren. Herstellerspezifische Boxen werden eliminiert und durch eine stark uniformierte Baumstruktur ersetzt, die wiederum charakteristisch für die jeweilige Distributionsplattform oder den eingesetzten Software-Encoder (z.\,B. \(ffmpeg\)) ist \cite[S. 947]{yang_efficient_2020}.
+Native Videoaufnahmen aus Smartphones oder Digitalkameras weisen durch herstellerspezifische Firmware und proprietäre Metadaten (z.\,B. \(udta\)-Boxen) eine hohe strukturelle Diversität auf. Diese Varianz in der \(moov\)-Topologie ermöglicht oftmals eine präzise Zuordnung zu Gerätemodellen \cite{shullani_vision_2017, iuliani_video_2019}. Beim Transfer über Social-Media-Plattformen geht diese native Integrität durch automatische Verarbeitungen in der Regel verloren. Herstellerspezifische Boxen werden eliminiert und durch eine stark uniformierte Baumstruktur ersetzt, die wiederum charakteristisch für die jeweilige Distributionsplattform oder den eingesetzten Software-Encoder (z.\,B. ffmpeg) ist \cite[S. 947]{yang_efficient_2020}.
 
 \begin{figure}[h]
     \centering
@@ -76,7 +76,7 @@ Native Videoaufnahmen aus Smartphones oder Digitalkameras weisen durch herstelle
         [mdat, for tree={fill=red!15, draw=red!60}]
     ]
     \end{forest}
-    \caption{MP4-Atom-Struktur von AI01 (Google Flow OmniFlash, SYNTHETIC, MP4, ORIGINAL), farblich gruppiert nach uuid-Manifest (violett), Video-Track (blau), Audio-Track (grün), Metadaten (orange) und Mediendaten (rot) (Eigene Darstellung)}
+    \caption{MP4-Box-Struktur von AI01 (Google Flow OmniFlash, SYNTHETIC, MP4, ORIGINAL), farblich gruppiert nach uuid-Manifest (violett), Video-Track (blau), Audio-Track (grün), Metadaten (orange) und Mediendaten (rot) (Eigene Darstellung)}
     \label{fig:tree_ai01}
 \end{figure}
 

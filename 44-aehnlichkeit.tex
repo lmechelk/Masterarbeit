@@ -3,9 +3,47 @@
 
 Die Ähnlichkeitsanalyse gliedert sich in zwei aufeinanderfolgende Schritte: die Aggregation der Trainingsmenge zu einem Source Digest (Schritt~6) sowie den paarweisen Ähnlichkeitsvergleich dieses Digests gegen alle Testdateien (Schritt~7).
 
-\subsection{Source Digest}
+\subsection{Similarity und Source Digest}
 
-Der Source Digest repräsentiert die aggregierte \(n\)-Gramm-Signatur einer Quellklasse und wird aus einer kleinen, repräsentativen Trainingsmenge gebildet. Hierzu werden die Similarity Digests aller Trainingsdateien, die einer definierten Quellklasse angehören, über eine Mengenvereinigung zusammengeführt. Alle einzigartigen \(n\)-Gramme der gefilterten Trainingszeilen werden vereinigt, alphabetisch sortiert und als einzelner kompakter String gespeichert. Dieses Vorgehen orientiert sich methodisch am Evaluationsdesign von Klier und Baier, die ebenfalls Referenz-Hashes aus einer kleinen, diversen Teilmenge bilden \cite[Kap.~3]{klier_media_2025}. Die Filterung der Trainingsmenge erfolgt dabei flexibel nach Untersuchungsziel und wird durch die in Schritt~2 der Datenpipeline strukturiert erhobenen Metadatenspalten ermöglicht (siehe \cref{sec:pipeline}).
+Der Similarity Digest repräsentiert die kompakte \(n\)-Gramm-Signatur einer einzelnen Datei. Der Source Digest aggregiert hingegen die Similarity Digests einer kleinen, repräsentativen Trainingsmenge und dient als Referenz für eine gesamte Quellklasse. Hierzu werden die Similarity Digests aller Trainingsdateien, die einer definierten Quellklasse angehören, über eine Mengenvereinigung zusammengeführt. Alle einzigartigen \(n\)-Gramme der gefilterten Trainingszeilen werden vereinigt, alphabetisch sortiert und als einzelner kompakter String gespeichert (siehe \cref{digest-beispiel}).
+
+\begin{figure}[h]
+    \centering
+    \begin{tikzpicture}[
+        node distance=1.2cm and 1.8cm,
+        box/.style={draw, rounded corners, minimum height=0.8cm, font=\scriptsize\ttfamily, align=center},
+        stage/.style={font=\scriptsize\bfseries, text=black!60},
+        arr/.style={-latex, thick, black!50}
+    ]
+
+    \node[stage] (s1) at (0,3) {Strukturbaum};
+    \begin{scope}[local bounding box=treebox]
+        \node[box, fill=blue!15, draw=blue!60] (moov) at (0,1.6) {moov};
+        \node[box, fill=blue!15, draw=blue!60] (mvhd) at (-0.9,0.4) {mvhd};
+        \node[box, fill=blue!15, draw=blue!60] (trak) at (0.9,0.4) {trak};
+        \draw[arr] (moov) -- (mvhd);
+        \draw[arr] (moov) -- (trak);
+    \end{scope}
+
+    \node[stage] (s2) at (4,3) {Serialisierung};
+    \node[box, fill=green!15, draw=green!60] (seq) at (4,1) {moov, mvhd, trak};
+
+    \node[stage] (s3) at (8,3) {Bigramme};
+    \node[box, fill=orange!15, draw=orange!60, text width=2.6cm] (bigrams) at (8,1) {\{moovmvhd, mvhdtrak\}};
+
+    \node[stage] (s4) at (12,3) {Similarity Digest};
+    \node[box, fill=red!15, draw=red!60, text width=2.8cm] (digest) at (12,1) {moovmvhdmvhdtrak};
+
+    \draw[arr] (treebox.east) -- (seq.west);
+    \draw[arr] (seq.east) -- (bigrams.west);
+    \draw[arr] (bigrams.east) -- (digest.west);
+
+    \end{tikzpicture}
+    \caption{Transformation eines MP4-Strukturbaums in den finalen Similarity Digest (Eigene Darstellung)}
+    \label{fig:digest-beispiel}
+\end{figure}
+
+Dieses Vorgehen orientiert sich methodisch am Evaluationsdesign von Klier und Baier, die ebenfalls Referenz-Hashes aus einer kleinen, diversen Teilmenge bilden \cite[Kap.~3]{klier_media_2025}. Die Filterung der Trainingsmenge erfolgt dabei flexibel nach Untersuchungsziel und wird durch die in Schritt~2 der Datenpipeline strukturiert erhobenen Metadatenspalten ermöglicht (siehe \cref{sec:pipeline}).
 
 \begin{figure}[h]
 \centering

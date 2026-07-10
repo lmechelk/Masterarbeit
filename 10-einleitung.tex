@@ -1,42 +1,61 @@
 \chapter{Einleitung}
 
-TODO
+\begin{quote}
+    \enquote{Memory can change the shape of a room, it can change the color of a car. And memories can be distorted. They're just an interpretation, they're not a record, and they're irrelevant if you have the facts.}
+    \\[0.3em]
+    \hfill --- Leonard Shelby, aus dem Film \textit{Memento} (2000) von Regisseur Christopher Nolan
+\end{quote}\vspace{7cm}
 
 %%%%%
 
-\section{Motivation und Problemstellung}
 \label{sec:motivation}
+Mit diesen Worten beschreibt die Figur Leonard Shelby im Film \textit{Memento} \cite{nolan_memento_2000} das Verhältnis zwischen subjektiver Erinnerung und objektiver Aufzeichnung. Was für die menschliche Erinnerung gilt, lässt sich in ähnlicher Weise auf den sichtbaren Inhalt digitaler Videodateien übertragen. Dieser Inhalt ist interpretierbar, durch Bearbeitung veränderbar und durch generative Modelle künstlicher Intelligenz (KI) zunehmend vollständig synthetisch erzeugbar. Eine Aussage über die tatsächliche Herkunft eines Videos lässt sich daher nicht allein auf Basis des sichtbaren Inhalts treffen, sondern rückt eine darunterliegende, technische Aufzeichnungsebene in den Blick, die von Manipulation womöglich weniger stark betroffen ist.\\
 
-Die stetig wachsende Menge digitaler Videodaten stellt forensische Untersuchungen vor erhebliche Herausforderungen \cite{europol_common_2024}. Für Szenarien mit großen Datenmengen, etwa bei der Detektion von illegalen Inhalten oder Desinformations-Kampagnen mittels KI-Videogenerierung, werden performante Methoden zur schnellen Vorfilterung benötigt. Diese soll die Dateien nicht anhand ihres visuellen Inhalts, sondern anhand ihrer technischen Erzeugungsquelle gruppieren. Verschärft wird diese Situation durch die rasante Verbreitung generativer KI-Modelle, die bereits jetzt fotorealistische Videos anhand von Text oder Deepfakes mittels Bildmaterial generieren und überwiegend im MP4-Containerformat ausgeben.
+Die stetig wachsende Menge digitaler Videodaten stellt forensische Untersuchungen zusätzlich vor erhebliche Herausforderungen \cite{europol_common_2024}. Für Szenarien mit großen Datenmengen, etwa bei der Detektion illegaler Inhalte oder Desinformationskampagnen, werden performante Methoden zur schnellen Vorfilterung benötigt. Diese sollen Dateien nicht anhand ihres visuellen Inhalts, sondern anhand ihrer technischen Erzeugungsquelle gruppieren. Verschärft wird diese Situation durch die rasante Verbreitung generativer KI-Modelle, die bereits jetzt fotorealistische Videos anhand von Text oder Bildmaterial generieren und überwiegend im MP4-Containerformat ausgeben. Darunter fallen auch Deepfakes, die anhand von Vorlagematerial täuschend echte Fälschungen erzeugen.
 
-Verfahren zur Quellenidentifikation wie die Analyse des Sensorrauschens (Photo Response Non-Uniformity, kurz PRNU) \cite{lukas_digital_2006} oder die Untersuchung von Kompressionsartefakten im Bitstrom \cite{li_inference_2018} sind etabliert als auch präzise, jedoch rechenintensiv und erfordern eine vollständige Dekodierung des Videomaterials. Veröffentlichte Ansätze für strukturelle und metadatenbasierte Verfahren umgehen hingegen die rechenintensive Dekodierung des Videostreams. Dazu zählen die Untersuchung binärer Abweichungen in spezifischen MP4-Boxen \cite{hasan_forensic_2021}, die Überführung und Vektorisierung kompletter Metadaten-Bäume in maschinenlesbare Formate \cite{xiang_forensic_2021}, die Nutzung der tiefverschachtelten Container-Architektur \cite{ramos_lopez_digital_2020} sowie die Anwendung quantitativer Ansätze mittels Bag-of-Words-Modellen und Entscheidungsbäumen zur Integritätsprüfung \cite{yang_efficient_2020}.
+Verfahren zur Quellenidentifikation wie die Analyse des Sensorrauschens (Photo Response Non-Uniformity, kurz PRNU) \cite{lukas_digital_2006} oder die Untersuchung von Kompressionsartefakten im Bitstrom \cite{li_inference_2018} sind sowohl etabliert und präzise, erfordern jedoch sowohl eine rechenintensive als auch vollständige Dekodierung des Videomaterials. Bekannte Ansätze für strukturelle und metadatenbasierte Verfahren umgehen hingegen die rechenintensive Dekodierung des Videostreams. Dazu zählen die Untersuchung binärer Abweichungen in spezifischen MP4-Boxen \cite{hasan_forensic_2021}, die Überführung und Vektorisierung kompletter Metadaten-Bäume in maschinenlesbare Formate \cite{xiang_forensic_2021}, die Nutzung der tiefverschachtelten Container-Architektur \cite{ramos_lopez_digital_2020} sowie die Anwendung quantitativer Ansätze mittels Bag-of-Words-Modellen und Entscheidungsbäumen zur Integritätsprüfung \cite{yang_efficient_2020}.
 
-Gloe \cite{gloe_forensic_2014} und Iuliani \cite{iuliani_video_2019} belegen, dass die Containerstruktur forensisch nutzbare Informationen trägt. Li \cite{li_learning_2024} beweist jedoch, dass diese Struktur hochgradig volatil gegenüber Standard-Verarbeitungen (Re-Muxing) ist. Der ISO/IEC 14496-14 Standard definiert das MP4-Format als komplexe, tiefverschachtelte Objektstruktur, deren semantische Bedeutung oft erst durch ihre exakte Position im Baum bzw. Pfad definiert wird \cite{iso_14496-14_2020}. Es ist daher zu prüfen, ob und wie eine Abbildung der MP4-Struktur für ein Similarity Hashing geeignet ist.
+Gloe \cite{gloe_forensic_2014} und Iuliani \cite{iuliani_video_2019} belegen, dass die Containerstruktur forensisch nutzbare Informationen trägt. Li \cite{li_learning_2024} zeigt jedoch, dass diese Struktur hochgradig volatil gegenüber Standardverarbeitungen und der Container-Restrukturierung (Re-Muxing) ist. Der ISO/IEC 14496-14 Standard definiert das MP4-Format als komplexe, tiefverschachtelte Objektstruktur, deren semantische Bedeutung oft erst durch die exakte Position im Baum beziehungsweise Pfad definiert wird \cite[Kap. 8]{iso_14496-14_2020}. \\
 
-\textbf{Ziel der Arbeit:} Entwicklung als auch Evaluation eines Similarity Hash für MP4-Container, der strukturelle Merkmale identifiziert und damit eine Unterscheidung von Videos aus Social-Media, KI-generierten Videos sowie nativen Kameraaufnahmen ermöglicht.
+Einen methodischen Ausgangspunkt für eine solche Übertragung liefern Klier und Baier \cite{klier_media_2025}, die mit dem Media Source Similarity Hashing (MSSH) ein Verfahren des Similarity Hashing vorstellen. Similarity Hashing bildet dabei, anders als eine kryptografische Hashfunktion, ähnliche Eingabedateien auf ähnliche Hashwerte ab und ermöglicht so eine Erkennung struktureller Verwandtschaft statt eines reinen Duplikatabgleichs. Zu diesem Zweck extrahieren Klier und Baier strukturelle Marker aus JPEG-Dateien, welche als charakteristische Kennungen der einzelnen Dateisegmente fungieren. Aus der Abfolge dieser Marker bilden sie überlappende n-Gramme, also Teilsequenzen fester Länge von jeweils n aufeinanderfolgenden Markern, die gemeinsam den Similarity Digest einer einzelnen Datei ergeben. Werden mehrere solcher Similarity Digests aus Dateien derselben Quellklasse, etwa desselben Kameramodells, mengentheoretisch vereinigt, entsteht ein aggregierter Source Digest, der als Referenzsignatur für den späteren Ähnlichkeitsvergleich dient. Mit diesem Ansatz erzielen sie auf Geräte-, Modell- und Markenebene eine Erkennungsleistung, die mit deutlich rechenintensiveren Verfahren vergleichbar ist, und benennen die Übertragung ihres Konzepts auf komplexere, tiefverschachtelte Containerformate wie MP4 explizit als vielversprechende, aber bislang offene Erweiterung.
+
+Es ist daher zu prüfen, ob und wie eine Abbildung der MP4-Struktur für ein Similarity Hashing geeignet ist. Ebenso wie eine Aufzeichnung im Sinne des einleitenden Zitats unabhängig von der subjektiven Erinnerung Bestand hat, soll die syntaktische Struktur eines MP4-Containers unabhängig vom visuellen Inhalt eine belastbare Aussage über dessen technische Herkunft ermöglichen.\\
+
+\textbf{Ziel der Arbeit:} Entwicklung und Evaluation eines Similarity Hash für MP4-Container, der strukturelle Merkmale identifiziert und damit eine Unterscheidung von Videos aus Social Media, KI-generierten Videos sowie nativen Kameraaufnahmen ermöglicht.
 
 %%%%%
 
 \section{Forschungsfragen}
 \label{sec:ff}
 
-Aus der in \cref{sec:motivation} dargelegten Problemstellung leitet sich die Notwendigkeit ab, ein effizientes und zugleich belastbares Verfahren zur Quellenerkennung von MP4-Dateien zu entwickeln, das ausschließlich auf der syntaktischen Struktur des MP4-Containers operiert. Da bestehende Arbeiten entweder auf rechenintensive Bitstrom-Analysen setzen oder generative KI-Modelle als Erzeugungsquelle bislang nicht berücksichtigen, ergibt sich die folgende Hauptfrage, die in vier aufeinander aufbauende Teilfragen gegliedert wird.
+Aus der vorangehend dargelegten Problemstellung leitet sich die Notwendigkeit ab, ein effizientes und zugleich belastbares Verfahren zur Quellenerkennung von MP4-Dateien zu entwickeln, das ausschließlich auf der syntaktischen Struktur des MP4-Containers operiert und dabei auf Similarity Hashing zurückgreift. Daraus ergibt sich die folgende Hauptfrage, die in vier aufeinander aufbauende Teilfragen gegliedert wird.\\
 
-\textbf{Hauptfrage:} Wie muss ein Similarity Hash für MP4-Container beschaffen sein, um eine Quellenerkennung zu ermöglichen?
 
-\begin{enumerate}
-    \item \textbf{Teilfrage:} Wie sind MP4-Container aufgebaut und was sind die Kernmerkmale der Struktur?
-    \item \textbf{Teilfrage:} Welche technischen Quellen im Bereich Smartphones, Social-Media und KI-Generatoren existieren und wie unterscheiden sich deren Container-Merkmale?
-    \item \textbf{Teilfrage:} Wie lassen sich strukturelle Merkmale aus der MP4-Hierarchie extrahieren, die für Features geeignet sind?
-    \item \textbf{Teilfrage:} Welche Ergebnisse liefert das Similarity Hashing für MP4-Dateien und sind diese ausreichend?
-\end{enumerate}
+\textbf{Hauptfrage:} Wie muss ein Similarity Hash für MP4-Container beschaffen sein, um eine Quellenerkennung zu ermöglichen?\\
 
-Die ersten beiden Teilfragen schaffen dabei die konzeptionellen Grundlagen, indem sie zunächst den formalen Aufbau von MP4-Containern (Teilfrage 1) und anschließend die technischen Besonderheiten der relevanten Erzeugungsquellen (Teilfrage 2) herausarbeiten. Darauf aufbauend widmet sich Teilfrage 3 der methodischen Übersetzung dieser strukturellen Erkenntnisse in ein konkretes Feature-Design für das Similarity Hashing. Teilfrage 4 schließlich überführt die entwickelte Methodik in eine Evaluation und bewertet kritisch, inwieweit die erzielten Ergebnisse für eine forensisch belastbare Quellenerkennung tatsächlich ausreichend sind.
+\textbf{1. Teilfrage:} Wie sind MP4-Container aufgebaut und was sind die Kernmerkmale der Struktur?\\
 
-TODO: Bezug der TF in den einzelnen Kapitel prüfen
+\textbf{2. Teilfrage:} Welche technischen Quellen im Bereich Smartphones, Social Media und KI-Generatoren existieren und wie unterscheiden sich deren Container-Merkmale?\\
+
+\textbf{3. Teilfrage:} Wie lassen sich strukturelle Merkmale aus der MP4-Hierarchie extrahieren, die für Features geeignet sind?\\
+
+\textbf{4. Teilfrage:} Welche Ergebnisse liefert das Similarity Hashing für MP4-Dateien und sind diese ausreichend?\\
+
+
+Die ersten beiden Teilfragen schaffen dabei die konzeptionellen Grundlagen, indem sie zunächst den formalen Aufbau von MP4-Containern (Teilfrage 1) und anschließend die technischen Besonderheiten der relevanten Erzeugungsquellen (Teilfrage 2) herausarbeiten. Darauf aufbauend widmet sich Teilfrage 3 der methodischen Übersetzung dieser strukturellen Erkenntnisse in ein konkretes Feature-Design für das Similarity Hashing. Teilfrage 4 überführt die entwickelte Methodik abschließend in eine Evaluation und bewertet kritisch, inwieweit die erzielten Ergebnisse für eine forensisch belastbare Quellenerkennung tatsächlich ausreichend sind.
 
 %%%%%
 
 \section{Aufbau der Arbeit}
 
-TODO
+Nach der Darlegung der Motivation und der Ableitung der Forschungsfragen gliedert sich die vorliegende Arbeit in sechs Kapitel, die inhaltlich aufeinander aufbauen und schrittweise die vier Teilfragen beantworten.\\
+
+In \textbf{Kapitel 2} werden die theoretischen Grundlagen und beantwortet und bezieht sich damit vorrangig auf die erste Teilfrage. Es wird der formale Aufbau von MP4-Containern nach ISO/IEC 14496-12 und ISO/IEC 14496-14 erläutert, die relevanten Videoquellen aus den Bereichen native Aufnahmen, Social-Media-Verarbeitung und generative KI-Modelle eingeordnet und in das Konzept des Similarity Hashing sowie die zugrunde liegenden Distanzmetriken eingeführt.\\
+
+\textbf{Kapitel 3} widmet sich verwandten Arbeiten und adressiert die zweite Teilfrage. Es wird die aktuelle Forschungslage vorgestellt und bestehende Verfahren der container-basierten Video-Forensik und des Similarity Hashing in der Multimedien-Forensik werden eingeordnet. Ergänzend werden die etablierten forensischen Video-Datensätze vorgestellt.\\
+
+\textbf{Kapitel 4} beschreibt die im Rahmen dieser Arbeit entwickelte Methodik und beantwortet die dritte Teilfrage. Im Zentrum stehen das Feature-Engineering für MP4-Container, also Extraktion, Selektion und Repräsentation struktureller Merkmale, das Verfahren zur Ähnlichkeitsanalyse sowie die eingesetzte Datenpipeline. Das Kapitel schließt mit der Vorstellung des eigens erstellten Datensatzes aus KI-generierten Videos, der die etablierten Referenzdatensätze um synthetisches Material ergänzt.\\
+
+\textbf{Kapitel 5} präsentiert die Evaluation und Diskussion der entwickelten Methodik und es wird damit die vierte Teilfrage beantwortet. Die Erkennungsleistung wird kategorienweise für native Aufnahmen, Social-Media-Videos, bearbeitete Videos, synthetische Videos sowie gemischte Videos ausgewertet, bevor die Ergebnisse kritisch gewürdigt und methodische Limitationen aufgezeigt werden.\\
+
+In \textbf{Kapitel 6} werden die zentralen Ergebnisse zusammengefasst, die Haupt- und Teilfragen zentral beantwortet und einen Ausblick auf offene Fragestellungen sowie mögliche zukünftige Arbeiten gegeben.

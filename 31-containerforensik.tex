@@ -46,21 +46,17 @@ Die etablierte Videoforensik stützt sich primär auf die Analyse des audiovisue
 
     \end{tikzpicture}%
     }
-    \caption{Forensische Aufgabenbereiche der Container-Analyse (Eigene Darstellung in Anlehnung an Yang u. a. \cite{yang_comprehensive_2025})}
+    \caption{Forensische Aufgabenbereiche der Container-Analyse (Eigene Darstellung in Anlehnung an Yang u. a. (2025) \cite{yang_comprehensive_2025})}
     \label{fig:yang}
 \end{figure}
 
-Yang u.\,a. (2025) ordnen die primären forensischen Aufgabenbereiche (Untersuchungsziele) der Container-Analyse in vier Kategorien (siehe \cref{fig:yang}) ein \cite{yang_comprehensive_2025}. Der erste Bereich umfasst die Identifikation der Quellkamera (\textit{Source Camera Identification}, SCI), um eine Datei einer spezifischen Hardwarekomponente oder Marke zuzuordnen \cite[Kap. 5.4.6]{yang_comprehensive_2025}. Die Identifikation der Manipulationssoftware (\textit{Manipulation Tool Identification}, MTI) fokussiert sich auf den Nachweis spezifischer Bearbeitungsprogramme \cite[Kap. 5.4.5]{yang_comprehensive_2025}. Die Erkennung plattformspezifischer Signaturen durch den Upload auf soziale Netzwerke wird durch die Zuordnung zu sozialen Netzwerken (\textit{Social Network Attribution}, SNA) adressiert \cite[Kap. 5.4.4]{yang_comprehensive_2025}. Schließlich bildet die Manipulationserkennung (\textit{Video Manipulation Detection}, MD) den Bereich ab, der strukturelle Anomalien aufdeckt, die durch die syntaktische Neukapselung des Containers bei der Bearbeitung entstehen \cite[Kap. 5.4.7]{yang_comprehensive_2025}.\\
+Yang u.\,a. (2025) ordnen die primären forensischen Aufgabenbereiche (Untersuchungsziele) der Container-Analyse in vier Kategorien (siehe \cref{fig:yang}) ein \cite{yang_comprehensive_2025}. Der erste Bereich umfasst die Identifikation der Quellkamera (\textit{Source Camera Identification}, SCI), um eine Datei einer spezifischen Hardwarekomponente oder Marke zuzuordnen \cite[Kap. 5.4.6]{yang_comprehensive_2025}. Die Identifikation der Manipulationssoftware (Manipulation Tool Identification, kurz MTI) fokussiert sich auf den Nachweis spezifischer Bearbeitungsprogramme \cite[Kap. 5.4.5]{yang_comprehensive_2025}. Die Erkennung plattformspezifischer Signaturen durch den Upload auf soziale Netzwerke wird durch die Zuordnung zu sozialen Netzwerken (Social Network Attribution, kurz SNA) adressiert \cite[Kap. 5.4.4]{yang_comprehensive_2025}. Schließlich bildet die Manipulationserkennung (Video Manipulation Detection, kurz MD) den Bereich ab, der strukturelle Anomalien aufdeckt, die durch die syntaktische Neukapselung des Containers bei der Bearbeitung entstehen \cite[Kap. 5.4.7]{yang_comprehensive_2025}.\\
 
 %%%
 
 \subsection{Grundlagen der isolierten Container-Auswertung und Taxonomie}
 
-TODO: Ggf. nochmal auf 2 Kapitel aufteilen\\
-
-Die wissenschaftliche Fundierung dieser Methodik wurde maßgeblich durch die richtungsweisende Arbeit von Gloe u.\,a. (2014) gelegt \cite{gloe_forensic_2014}. Das zentrale Ergebnis ihrer Untersuchung wies nach, dass Dateiformat-Standards den herstellenden Unternehmen sowie entwickelnden Personen erhebliche Freiheitsgrade bei der konkreten softwareseitigen Implementierung einräumen \cite[S. S68]{gloe_forensic_2014}. Konkret zeigten Gloe u.\,a., dass Spezifikationen wie das ISOBMFF zwar grundlegende syntaktische Regeln definieren, die exakte Reihenfolge optionaler Boxen, die Strukturierung von Metadaten-Blöcken sowie das Einfügen proprietärer Erweiterungen jedoch optional belassen \cite[S. S68]{gloe_forensic_2014}. Im Ergebnis dokumentierte die Arbeit, dass diese systemspezifischen Designentscheidungen zu signifikanten und messbaren syntaktischen Abweichungen zwischen verschiedenen Kamera- und Software-Systemen führen \cite[S. S69]{gloe_forensic_2014}.
-
-Hinsichtlich der konkret genutzten Formate und Codecs belegt die Studie von Gloe u.\,a. (2014) diese herstellerspezifische Spurbildung anhand eines eigens für diese Untersuchung aufgebauten Datensatzes sowie deutlicher technischer Unterschiede zwischen den Geräteklassen \cite{gloe_forensic_2014}. Die Ergebnisse zeigen, dass Mobiltelefone primär MP4-ähnliche Container nutzen und komplexe Kompressionsalgorithmen wie MP4V oder die H.26x-Familie verwenden. Wie in Tabelle \ref{tab:gloe} exemplarisch dargestellt, führt diese herstellerspezifische Implementierung bereits bei der Auswahl und Platzierung optionaler Struktur-Boxen zu charakteristischen Signaturen. So nutzen einige Smartphones die optionalen Boxen \(free\) oder \(meta\) und andere positionieren die \(mdat\)-Box erst ans Ende der Baumstruktur. Diese Abweichungen in der Standardkonfiguration der Dateisysteme bekräftigen die Annahme, dass die rein syntaktische Zusammensetzung des Dateiformats konkrete Rückschlüsse auf die Geräteklasse der Erzeugerquelle zulässt.
+Die wissenschaftliche Fundierung dieser Methodik wurde maßgeblich durch die richtungsweisende Arbeit von Gloe u.\,a. (2014) gelegt. Das zentrale Ergebnis ihrer Untersuchung wies nach, dass Dateiformat-Standards den herstellenden Unternehmen sowie entwickelnden Personen erhebliche Freiheitsgrade bei der konkreten softwareseitigen Implementierung einräumen. Konkret zeigten Gloe u.\,a., dass Spezifikationen wie das ISOBMFF zwar grundlegende syntaktische Regeln definieren, die exakte Reihenfolge optionaler Boxen, die Strukturierung von Metadaten-Blöcken sowie das Einfügen proprietärer Erweiterungen jedoch optional belassen. Im Ergebnis dokumentierte die Arbeit, dass diese systemspezifischen Designentscheidungen zu signifikanten und messbaren syntaktischen Abweichungen zwischen verschiedenen Kamera- und Software-Systemen führen. Hinsichtlich der konkret genutzten Formate und Codecs belegt die Studie diese herstellerspezifische Spurbildung anhand eines eigens für diese Untersuchung aufgebauten Datensatzes sowie deutlicher technischer Unterschiede zwischen den Geräteklassen. Die Ergebnisse zeigen, dass Mobiltelefone primär MP4-ähnliche Container nutzen und komplexe Kompressionsalgorithmen wie MP4V oder die H.26x-Familie verwenden. Wie in Tabelle \ref{tab:gloe} exemplarisch dargestellt, führt diese herstellerspezifische Implementierung bereits bei der Auswahl und Platzierung optionaler Struktur-Boxen zu charakteristischen Signaturen. So nutzen einige Smartphones die optionalen Boxen \(free\) oder \(meta\) und andere positionieren die \(mdat\)-Box erst ans Ende der Baumstruktur. Diese Abweichungen in der Standardkonfiguration der Dateisysteme bekräftigen die Annahme, dass die rein syntaktische Zusammensetzung des Dateiformats konkrete Rückschlüsse auf die Geräteklasse der Erzeugerquelle zulässt.\cite[S. S68-69]{gloe_forensic_2014}
 
 \begin{table}[htbp]
     \centering
@@ -112,13 +108,77 @@ Die Differenzierung dieser Repräsentationsmodelle verdeutlicht das methodische 
 
 Innerhalb der quantitativen Container-Forensik dient die Feature-Repräsentation dem Ziel, die aus der hierarchischen MP4-Struktur extrahierten Symbole in maschinenlesbare Vektoren zu übersetzen. Ein etabliertes Modell hierfür ist der \textit{Bag-of-Words}-Ansatz. Dieser behandelt die zuvor abgeleiteten Container-Symbole konzeptionell analog zu Vokabeln in der Textverarbeitung, indem er ausschließlich deren absolute Häufigkeit innerhalb der Datei zählt und in einem Feature-Vektor abbildet. Sofern die zugrunde liegende symbolische Repräsentation (wie bei den Modellen T1 bis T4) Pfadinformationen einschließt, bleibt die hierarchische Einbettung der Boxen im Vektor erhalten.
 
+Einen repräsentativen Ansatz für diese Methodik präsentierten Yang u.\,a. (2020). Sie entwickelten eine vektorielle Repräsentation der Containerstruktur, die sich an Bag-of-Words anlehnt, und nutzten Entscheidungsbäume, um die Integrität von Videodateien zu überprüfen sowie die verwendete Manipulationssoftware zu identifizieren \cite{yang_efficient_2020}. Xiang u.\,a. (2021) erweiterten dieses Konzept später zum \textit{Type-aware}-Ansatz, um neben der bloßen Zählung diskreter Boxen auch kontinuierliche Werte effizienter in den Vektoren zu verarbeiten \cite{xiang_forensic_2021}.
+
+\Cref{fig:tree_simpel} veranschaulicht den Unterschied beider Ansätze anhand einer vereinfachten Containerstruktur mit zwei \(trak\)-Boxen, von denen nur eine über eine \(mdia\)-Box mit dem Feldwert \(duration300\) verfügt. Wie \Cref{tab:xiangyang} zeigt, behandeln Yang u.\,a. beide \(trak\)-Boxen identisch und erhöhen lediglich den Zählwert des Symbols \(moovtrak\) auf 2, ohne zwischen den beiden Tracks zu unterscheiden \cite[Kap. 3]{yang_efficient_2020}. Xiang u.\,a. weisen hingegen jedem Track eine eigene Nummer zu, sodass aus den beiden \(trak\)-Boxen die eindeutig unterscheidbaren Symbole \(moovtrak1\) und \(moovtrak2\) entstehen, wodurch untergeordnete Boxen und Feldwerte den einzelnen Tracks zugeordnet bleiben \cite[Kap. 3.3]{xiang_forensic_2021}. Zusätzlich unterscheidet sich die Behandlung des Feldwerts \(duration\), da Yang u.\,a. hierfür ein separates Value-Symbol \(moovtrakmdiaduration300\) mit dem Zählwert 1 bilden, während Xiang u.\,a. den numerischen Wert 300,0 direkt an der Stelle des Field-Symbols \(moovtrak1mdiaduration\) einsetzen und damit eine Dimension einsparen \cite[Kap. 3.3]{xiang_forensic_2021}.
+
+\begin{figure}[h]
+    \centering
+    \begin{forest}
+    for tree={
+        edge={-latex},
+        grow'=east,
+        parent anchor=east,
+        child anchor=west,
+        font=\scriptsize\ttfamily,
+        edge path={
+            \noexpand\path[\forestoption{edge}]
+            (!u.parent anchor) -- +(5pt,0) |- (.child anchor)\forestoption{edge label};
+        },
+        s sep=2pt,
+        l sep=10pt,
+    }
+    [ISO file, align=center
+        [ftyp]
+        [mdat]
+        [moov
+            [trak
+                [mdia
+                    [duration:300, for tree={draw=none, fill=gray!15}]
+                ]
+            ]
+            [trak]
+        ]
+        [udta]
+    ]
+    \end{forest}
+    \caption{Einfache Containerstruktur einer MP4-Datei mit einem Feld/Wert (Eigene Darstellung)}
+    \label{fig:tree_simpel}
+\end{figure}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{@{}lll@{}}
+    \toprule
+    \textbf{Symbol} & Bag-of-Words-Wert& Type-aware-Wert\\
+    \midrule
+    \(ftyp\) & 1 & 1 \\
+    \(mdat\) & 1 & 1 \\
+    \(udta\) & 1 & 1 \\
+    \(moov\) & 1 & 1 \\
+    \(moovtrak\) & 2 & entfällt \\
+    \(moovtrak1\) & entfällt & 1 \\
+    \(moovtrak2\) & entfällt & 1 \\
+    \(moovtrakmdia\) & 1 & entfällt \\
+    \(moovtrak1mdia\) & entfällt & 1 \\
+    \(moovtrakmdiaduration\) & 1 & entfällt \\
+    \(moovtrak1mdiaduration\) & entfällt & 300,0 \\
+    \(moovtrakmdiaduration300\) & 1 & entfällt \\
+    \bottomrule
+    \end{tabular}
+    \caption{Gegenüberstellung der Feature-Repräsentation nach Yang et al. \cite[Kap. 3]{yang_efficient_2020} und Xiang et al. \cite[Kap. 3.3]{xiang_forensic_2021} anhand des Strukturbaums aus Abb. \ref{fig:tree_simpel} (Eigene Darstellung)}
+    \label{tab:xiangyang}
+\end{table}
+
+Die forensische Stärke von Bag-of-Words-Modellen und der generellen quantitativen Pipeline liegt in ihrer enormen Effizienz. Ein methodischer Nachteil bezüglich des topologischen Kontextes entsteht lediglich dann, wenn als Vorstufe eine ungeordnete symbolische Repräsentation wie T5 gewählt wird. Bei T5 wird die Information über die exakte Pfadtiefe und die Eltern-Kind-Beziehung der Boxen vollständig verworfen und ausschließlich die Häufigkeit finaler Feldwerte gezählt, was die Unterscheidung stark ähnlicher Containerstrukturen signifikant erschwert \cite{yang_comprehensive_2025}.
+
 % Verfahrenssteckbrief yang2020, xiang2021
 
 \begin{table}[H]
     \centering
     \begin{tabular}{>{\raggedright\arraybackslash}p{0.15\linewidth}>{\raggedright\arraybackslash}p{0.4\linewidth}>{\raggedright\arraybackslash}p{0.4\linewidth}}\toprule
- \textbf{Studie}& Yang u. a. (2020)&	
-Xiang u. a. (2021)\\\midrule
+ \textbf{Studie}& Yang u. a. (2020)\cite{yang_efficient_2020}&	
+Xiang u. a. (2021)\cite{xiang_forensic_2021}\\\midrule
          \textbf{Verfahren}&  Quantitative Integritätsprüfung und Software-Identifikation durch Container-Charakterisierung&Forensische Analyse von MP4-Metadaten durch vektorielle Repräsentation und Dimensionsreduktion\\\midrule
          \textbf{Unter-suchungs-ziele}&  MD (Manipulationserkennung), MTI (Software-Identifikation), SNA (Social-Media-Erkennung) und rudimentär SCI (Erkennung des Betriebssystems)&SCI (Brand Attribution), MTI (Software-Identifikation), SNA (Social-Media-Erkennung) und MD (Manipulationserkennung)\\\midrule
          \textbf{Feature}&  Field (Pfade) und Value (Pfade inklusive Werte) aus der Baumstruktur&Boxen sowie Felder, die als track-spezifische Features extrahiert werden\\\midrule
@@ -136,39 +196,25 @@ Likelihood-Ratio-Framework &Korrelationsmatrix und spektrales Clustering \\\midr
     \label{tab:steckbrief-quan}
 \end{table}
 
-Einen repräsentativen Ansatz für diese Methodik präsentierten Yang u.\,a. (2020). Sie entwickelten eine vektorielle Repräsentation der Containerstruktur, die sich an Bag-of-Words anlehnt, und nutzten Entscheidungsbäume, um die Integrität von Videodateien zu überprüfen sowie die verwendete Manipulationssoftware zu identifizieren \cite{yang_efficient_2020}. Xiang u.\,a. (2021) erweiterten dieses Konzept später zum \textit{Type-aware}-Ansatz, um neben der bloßen Zählung diskreter Boxen auch kontinuierliche Werte effizienter in den Vektoren zu verarbeiten \cite{xiang_forensic_2021}.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\linewidth]{grafiken/xiang.png}
-    \caption{TODO: xiang}
-    \label{fig:placeholder}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\linewidth]{grafiken/yang2020.png}
-    \caption{TODO: yang2020}
-    \label{fig:placeholder}
-\end{figure}
-
-TODO: Zusammenfassende Grafik von xiang und yang2020\\
-
-Die forensische Stärke von Bag-of-Words-Modellen und der generellen quantitativen Pipeline liegt in ihrer enormen Effizienz. Ein methodischer Nachteil bezüglich des topologischen Kontextes entsteht lediglich dann, wenn als Vorstufe eine ungeordnete symbolische Repräsentation wie T5 gewählt wird. Bei T5 wird die Information über die exakte Pfadtiefe und die Eltern-Kind-Beziehung der Boxen vollständig verworfen und ausschließlich die Häufigkeit finaler Feldwerte gezählt, was die Unterscheidung stark ähnlicher Containerstrukturen signifikant erschwert \cite{yang_comprehensive_2025}.\\
-
 %%%
 
 \subsection{Qualitative und pfadbasierte Strukturanalyse}
 
 Um den Verlust topologischer Informationen zu vermeiden, nutzt ein weiterer methodischer Strang den MP4-Container als strukturierten Baum und wertet die exakten Pfade und Eltern-Kind-Beziehungen der Boxen aus.
 
+Ein grundlegendes Framework für diesen Ansatz legten Iuliani u.\,a. (2019) vor, die ein auf \textit{Likelihood-Ratios} basierendes quantitatives Modell zur unüberwachten Quellengeräte-Erkennung (SCI) entwickelten \cite{iuliani_video_2019}. Ihr Algorithmus analysiert die baumartige Metadaten-Architektur und berechnet die Wahrscheinlichkeit, mit der eine gegebene Container-Grammatik von einer spezifischen Smartphone-Marke erzeugt wurde. Dabei kennzeichnen sie jede Box mit ihrem 4-Zeichen-Code sowie einem Index, der die relative Position unter den Geschwisterboxen angibt, sodass für den Strukturbaum aus \cref{fig:tree_simpel} der vollständige Pfad zum Feldwert als \textbf{\(moov\text{-}3trak\text{-}1mdia\text{-}1duration{=}300\)} notiert würde, wobei sich der Index von \(moov\text{-}3\) aus dessen Position als drittes Kind der Wurzel und der Index von \(trak\text{-}1\) aus der Position der ersten der beiden \(trak\)-Boxen ergibt \cite[Kap. III]{iuliani_video_2019}. Dieser strukturbasierte Ansatz ermöglicht eine trennscharfe Zuordnung, da er die proprietären Designentscheidungen der Hersteller in ihrer syntaktischen Tiefe erfasst.
+
+Eine alternative Auswertung dieser topologischen Daten demonstrierten Ramos-López u.\,a. (2020) \cite{ramos_lopez_digital_2020}. Sie nutzen extrahierte Pfad- und Reihenfolge-Features der Boxen, um digitale Videos mittels unüberwachter Clustering-Algorithmen (wie dem hierarchischen Clustering) auch ohne vorheriges Training spezifischen Quellgeräten zuzuordnen. Anders als Iuliani u.\,a. definieren sie dafür vier parallele Merkmalsvarianten, sodass für dieselbe Information \(duration300\) aus \cref{fig:tree_simpel} sowohl eine reine Pfad-Feld-Variante \(moovtrakmdiaduration\) ohne Wert und ohne Reihenfolge als auch eine vollständige, geordnete Variante mit Reihenfolge und Wert gebildet wird \cite[Kap. III.A]{ramos_lopez_digital_2020}. Gerade bei der zweiten, leeren \(trak\)-Box aus \cref{fig:tree_simpel} zeigt sich der Unterschied dieser Varianten deutlich, da nur die reihenfolgeerhaltenden Merkmale zwischen den beiden Tracks unterscheiden können, während die ungeordneten Varianten beide Tracks auf denselben Pfad abbilden würden.
+
+Die Limitierung streng geordneter Strukturauswertungen (vergleichbar mit den Repräsentationen T1 und T2 nach der Taxonomie von Yang u.\,a. \cite{yang_comprehensive_2025}) liegt in ihrer Inflexibilität. Der strikte Abgleich sequenzieller Pfade kann in der Praxis daran scheitern, dass einfaches Verschieben durch Entfernen oder Einfügen von Boxen somit auch die Indizes verschieben. Dies verursacht eine starke Veränderung der abgebildeten Container-Reihenfolge und erschwert somit den Vergleich mit bekannten Strukturen.
+
 % Verfahrenssteckbrief iuliani und ramos
 
 \begin{table}[H]
     \centering
     \begin{tabular}{>{\raggedright\arraybackslash}p{0.15\linewidth}>{\raggedright\arraybackslash}p{0.4\linewidth}>{\raggedright\arraybackslash}p{0.4\linewidth}}\toprule
- \textbf{Studie}& Iuliani u. a. (2019)&	
-Ramos López u. a. (2020)\\\midrule
+ \textbf{Studie}& Iuliani u. a. (2019)\cite{iuliani_video_2019}&	
+Ramos López u. a. (2020)\cite{ramos_lopez_digital_2020}\\\midrule
          \textbf{Verfahren}&  Unüberwachte Container-Analyse mittels Dissimilarity-Metrik und Likelihood-Ratios&Unüberwachte Videoquellen-Identifikation mittels hierarchischer und dichtebasierter Clustering-Algorithmen\\\midrule
          \textbf{Unter-suchungs-ziele}&  MD, SCI&SCI, SNA\\\midrule
          \textbf{Feature}&  Field und Values inklusive absoluter Pfade (z. B. moov-2/udta-2/count)&Field und Value der Boxen in vier Variationen (mit und ohne Pfad: PathField, PathFieldValue, PathOrderField, PathOrderFieldValue)\\\midrule
@@ -186,21 +232,20 @@ Manueller Ausschluss volatiler Metadaten&Manueller Ausschluss volatiler Metadate
     \label{tab:steckbrief-qual}
 \end{table}
 
-Ein grundlegendes Framework für diesen Ansatz legten Iuliani u.\,a. (2019) vor, die ein auf \textit{Likelihood-Ratios} basierendes quantitatives Modell zur unüberwachten Quellengeräte-Erkennung (SCI) entwickelten \cite{iuliani_video_2019}. Ihr Algorithmus analysiert die baumartige Metadaten-Architektur und berechnet die Wahrscheinlichkeit, mit der eine gegebene Container-Grammatik von einer spezifischen Smartphone-Marke erzeugt wurde. Dieser strukturbasierte Ansatz ermöglicht eine trennscharfe Zuordnung, da er die proprietären Designentscheidungen der Hersteller in ihrer syntaktischen Tiefe erfasst. Eine alternative Auswertung dieser topologischen Daten demonstrierten Ramos-López u.\,a. (2020) \cite{ramos_lopez_digital_2020}. Sie nutzen extrahierte Pfad- und Reihenfolge-Features der Boxen, um digitale Videos mittels unüberwachter Clustering-Algorithmen (wie dem hierarchischen Clustering) auch ohne vorheriges Training spezifischen Quellgeräten zuzuordnen.\\
-
-TODO: Anschauliche Grafik erstellen aus Iuliani Fig 1 (komplette Bäume 2er Mp4s) und Ramos Table 3 (die 4 Features) \\
-
-Die Limitierung streng geordneter Strukturauswertungen (vergleichbar mit den Repräsentationen T1 und T2 nach der Taxonomie von Yang u.\,a. \cite{yang_comprehensive_2025}) liegt in ihrer Inflexibilität. Der strikte Abgleich sequenzieller Pfade scheitert häufig in der Praxis, da bereits triviale, von der Software initiierte Einfügungen oder Verschiebungen optionaler Boxen (wie \textit{free} oder \textit{udta}) die nachfolgenden Indizes verschieben. Dies verursacht eine signifikante Veränderung der abgebildeten Container-Reihenfolge, was den direkten forensischen Strukturvergleich erschwert.
-
 %%%
 
 \subsection{Limitationen bestehender Verfahren}
+
 Trotz der nachgewiesenen forensischen Nutzbarkeit der Container-Struktur weisen die bisherigen Ansätze mehrere Limitationen auf, die für die vorliegende Arbeit von Bedeutung sind.
 
-Eine erste Einschränkung betrifft die Robustheit der extrahierten Merkmale. Li u. a. weisen nach, dass die syntaktische Struktur eines MP4-Containers gegenüber Standard-Verarbeitungsschritten wie einer Rekonstruktion ohne vorherige Transkodierung (Re-Muxing) hochgradig volatil ist \cite[Kap. I]{li_learning_2024}. Da bereits ein einfaches Neuverpacken der Datei ohne inhaltliche Veränderung des Bitstroms zu einer veränderten Boxreihenfolge oder zum Entfernen einzelner Boxen führen kann, ist die Zuverlässigkeit rein strukturbasierter Verfahren unmittelbar von der Verarbeitungshistorie der untersuchten Datei abhängig. Dies steht im Spannungsfeld zu den Ergebnissen von Gloe u. a. und Yang u. a., welche die Container-Struktur primär als stabilen, herstellerspezifischen Fingerabdruck einordnen \cite{gloe_forensic_2014}, \cite{yang_comprehensive_2025}.
+Eine erste Einschränkung betrifft die Robustheit der extrahierten Merkmale. Li u. a. (2024) weisen nach, dass die syntaktische Struktur eines MP4-Containers gegenüber Standard-Verarbeitungsschritten wie einer Rekonstruktion ohne vorherige Transkodierung (Re-Muxing) hochgradig volatil ist. Da bereits ein einfaches Neuverpacken der Datei ohne inhaltliche Veränderung des Bitstroms zu einer veränderten Boxreihenfolge oder zum Entfernen einzelner Boxen führen kann, ist die Zuverlässigkeit rein strukturbasierter Verfahren unmittelbar von der Verarbeitungshistorie der untersuchten Datei abhängig. \cite[Kap. I]{li_learning_2024}. 
 
-Eine zweite Limitation ergibt sich aus der eingeschränkten Vergleichbarkeit bestehender Studien. Die untersuchten Arbeiten unterscheiden sich signifikant in Umfang und Herkunft ihrer Datensätze sowie den betrachteten Software-Systemen, was eine einheitliche methodische Evaluation erschwert \cite[Tab. 6]{yang_comprehensive_2025}. So fokussieren sich beispielsweise Datensätze wie VISION primär auf native Smartphone-Aufnahmen und Social-Media-Derivate \cite[Kap. 1]{shullani_vision_2017}, während Datensätze wie EVA-7K explizit für die Erkennung klassischer Manipulationssoftware konzipiert wurden \cite[Kap. 1]{yang_efficient_2020}.
+Dies steht im Spannungsfeld zu den Ergebnissen von Gloe u. a. (2014) und Yang u. a. (2025), welche die Container-Struktur primär als stabilen, herstellerspezifischen Fingerabdruck einordnen. \cite{gloe_forensic_2014}\cite{yang_comprehensive_2025}.
+
+Beide Aussagen stehen jedoch nicht im endgültigen Widerspruch zueinander, sondern beziehen sich auf unterschiedliche Phasen im Lebenszyklus einer Videodatei sowie auf verschiedene forensische Zielsetzungen. Während die strukturelle Volatilität beim Re-Muxing den ursprünglichen Fingerabdruck der Quellkamera vernichtet \cite[Kap. I]{li_learning_2024}\cite[Kap. III.A]{iuliani_video_2019}, generiert der deterministische Bearbeitungsprozess eine neue, stabile Containerstruktur, die als eigenständige Signatur fungiert \cite[S. S71--S72, S74]{gloe_forensic_2014}.
+
+Eine zweite Limitation ergibt sich jedoch aus der eingeschränkten Vergleichbarkeit bestehender Studien. Die untersuchten Arbeiten unterscheiden sich signifikant in Umfang und Herkunft ihrer Datensätze sowie den betrachteten Software-Systemen, was eine einheitliche methodische Evaluation erschwert \cite[Tab. 6]{yang_comprehensive_2025}. So fokussieren sich beispielsweise Datensätze wie VISION primär auf native Smartphone-Aufnahmen und Social-Media-Derivate \cite[Kap. 1]{shullani_vision_2017}, während Datensätze wie EVA-7K explizit für die Erkennung klassischer Manipulationssoftware konzipiert wurden \cite[Kap. 1]{yang_efficient_2020}.
 
 Drittens fokussieren sich die bisherigen Arbeiten nahezu ausschließlich auf native Kameraaufnahmen, Social-Media-Verarbeitungen oder klassische Manipulationswerkzeuge. Die rasant wachsende Klasse KI-generierter Videos, die zunehmend ebenfalls im MP4-Containerformat ausgegeben wird, bleibt in der bestehenden Literatur und den zugehörigen Datensätzen weitgehend unberücksichtigt \cite[Kap. 1]{shullani_vision_2017}, \cite[Kap. 1]{yang_efficient_2020}. Es ist daher offen, ob sich die etablierten Feature-Design-Ansätze auf diese neue Erzeugungsquelle übertragen lassen oder ob generative Modelle eine grundlegend abweichende syntaktische Signatur aufweisen, die eigene methodische Anpassungen erfordert.
 
-Aus diesen drei Limitationen leitet sich der in dieser Arbeit verfolgte Forschungsbedarf ab, ein Feature-Design zu entwickeln und zu evaluieren, das explizit auch generative KI-Modelle als Erzeugungsquelle einbezieht und auf seine Robustheit hin untersucht wird.
+Aus diesen Limitationen leitet sich der in dieser Arbeit verfolgte Forschungsbedarf ab, ein Feature-Design zu entwickeln und zu evaluieren, das explizit auch generative KI-Modelle als Erzeugungsquelle einbezieht und auf seine Robustheit hin untersucht wird.
