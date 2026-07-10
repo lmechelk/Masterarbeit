@@ -1,49 +1,59 @@
 \section{Ähnlichkeitsanalyse und Klassifikation}
 \label{sec:aehnlichkeit}
 
-Die Ähnlichkeitsanalyse gliedert sich in zwei aufeinanderfolgende Schritte: die Aggregation der Trainingsmenge zu einem Source Digest (Schritt~6) sowie den paarweisen Ähnlichkeitsvergleich dieses Digests gegen alle Testdateien (Schritt~7).
+Der im vorangegangenen Abschnitt beschriebene Similarity Digest bildet für jede einzelne MP4-Datei eine kompakte, quellenunabhängige Signatur aus einzigartigen \(n\)-Grammen. Für die forensische Klassifikation reicht der Vergleich einzelner Digests jedoch nicht aus, da eine einzelne Trainingsdatei die Variabilität innerhalb einer Quellklasse nur unzureichend abbildet. Aus diesem Grund werden in Abschnitt \ref{sec:sourcedigest} zunächst die Similarity Digests mehrerer Trainingsdateien einer definierten Quellklasse über eine Mengenvereinigung zu einem aggregierten Source Digest zusammengeführt, der als Referenzsignatur für den anschließenden Vergleich dient.
+
+Auf dieser Grundlage beschreibt Abschnitt \ref{sec:aehnlichkeitsberechnung} die eigentliche Ähnlichkeitsberechnung. Dabei wird jede relevante Testdatei anhand ihres Similarity Digests paarweise gegen den jeweilige Referenz, dem Source Digest, bewertet.
+
+%%%
 
 \subsection{Similarity und Source Digest}
 
-Der Similarity Digest repräsentiert die kompakte \(n\)-Gramm-Signatur einer einzelnen Datei. Der Source Digest aggregiert hingegen die Similarity Digests einer kleinen, repräsentativen Trainingsmenge und dient als Referenz für eine gesamte Quellklasse. Hierzu werden die Similarity Digests aller Trainingsdateien, die einer definierten Quellklasse angehören, über eine Mengenvereinigung zusammengeführt. Alle einzigartigen \(n\)-Gramme der gefilterten Trainingszeilen werden vereinigt, alphabetisch sortiert und als einzelner kompakter String gespeichert (siehe \cref{digest-beispiel}).
+Der Similarity Digest repräsentiert die kompakte \(n\)-Gramm-Signatur einer einzelnen Datei. Der Source Digest aggregiert hingegen die Similarity Digests einer kleinen, repräsentativen Trainingsmenge und dient als Referenz für eine gesamte Quellklasse. Hierzu werden die Similarity Digests aller Trainingsdateien, die einer definierten Quellklasse angehören, über eine Mengenvereinigung zusammengeführt. Alle einzigartigen \(n\)-Gramme der gefilterten Trainingszeilen werden vereinigt, alphabetisch sortiert und als einzelner kompakter String gespeichert (siehe \cref{fig:digest-beispiel}).\\
 
 \begin{figure}[h]
     \centering
     \begin{tikzpicture}[
-        node distance=1.2cm and 1.8cm,
-        box/.style={draw, rounded corners, minimum height=0.8cm, font=\scriptsize\ttfamily, align=center},
-        stage/.style={font=\scriptsize\bfseries, text=black!60},
+        node distance=1cm and 1.4cm,
+        box/.style={draw, rounded corners, minimum height=0.7cm, font=\scriptsize\ttfamily, align=center},
+        stage/.style={font=\scriptsize, text=black},
         arr/.style={-latex, thick, black!50}
     ]
 
-    \node[stage] (s1) at (0,3) {Strukturbaum};
+    \node[stage] (s1) at (0,2.6) {Strukturbaum};
     \begin{scope}[local bounding box=treebox]
-        \node[box, fill=blue!15, draw=blue!60] (moov) at (0,1.6) {moov};
-        \node[box, fill=blue!15, draw=blue!60] (mvhd) at (-0.9,0.4) {mvhd};
-        \node[box, fill=blue!15, draw=blue!60] (trak) at (0.9,0.4) {trak};
-        \draw[arr] (moov) -- (mvhd);
+        \node[box, fill=blue!15, draw=blue!60] (moov) at (0,1.4) {moov};
+        \node[box, fill=blue!15, draw=blue!60] (meta) at (-0.7,0.3) {meta};
+        \node[box, fill=blue!15, draw=blue!60] (trak) at (0.7,0.3) {trak};
+        \draw[arr] (moov) -- (meta);
         \draw[arr] (moov) -- (trak);
     \end{scope}
 
-    \node[stage] (s2) at (4,3) {Serialisierung};
-    \node[box, fill=green!15, draw=green!60] (seq) at (4,1) {moov, mvhd, trak};
+    \node[stage] (s2) at (3.2,2.6) {Serialisierung};
+    \node[box, fill=green!15, draw=green!60, text width=2cm] (seq) at (3.2,0.9) {moov, meta, trak};
 
-    \node[stage] (s3) at (8,3) {Bigramme};
-    \node[box, fill=orange!15, draw=orange!60, text width=2.6cm] (bigrams) at (8,1) {\{moovmvhd, mvhdtrak\}};
+    \node[stage] (s3) at (6.4,2.6) {Bigramme};
+    \node[box, fill=orange!15, draw=orange!60, text width=2.1cm] (bigrams) at (6.4,0.9) {\{moovmeta, metatrak\}};
 
-    \node[stage] (s4) at (12,3) {Similarity Digest};
-    \node[box, fill=red!15, draw=red!60, text width=2.8cm] (digest) at (12,1) {moovmvhdmvhdtrak};
+    \node[stage] (s4) at (9.6,2.6) {Similarity Digest};
+    \node[box, fill=red!15, draw=red!60, text width=2.2cm] (digest) at (9.6,1.4) {metatrak\\movemeta};
+    \node[box, fill=red!5, draw=red!40, text width=2.2cm] (digest2) at (9.6,0.2) {metatrak\\traktrak};
+
+    \node[stage] (s5) at (12.8,2.6) {Source Digest};
+    \node[box, fill=purple!15, draw=purple!60, text width=2.3cm] (sourcedigest) at (12.8,0.9) {metatrak\\movemeta\\traktrak};
 
     \draw[arr] (treebox.east) -- (seq.west);
     \draw[arr] (seq.east) -- (bigrams.west);
     \draw[arr] (bigrams.east) -- (digest.west);
+    \draw[arr] (digest.east) -- (sourcedigest.west);
+    \draw[arr] (digest2.east) -- (sourcedigest.west);
 
     \end{tikzpicture}
-    \caption{Transformation eines MP4-Strukturbaums in den finalen Similarity Digest (Eigene Darstellung)}
+    \caption{Transformation der MP4-Box-Struktur zum Source Digest (eigene Darstellung)}
     \label{fig:digest-beispiel}
 \end{figure}
 
-Dieses Vorgehen orientiert sich methodisch am Evaluationsdesign von Klier und Baier, die ebenfalls Referenz-Hashes aus einer kleinen, diversen Teilmenge bilden \cite[Kap.~3]{klier_media_2025}. Die Filterung der Trainingsmenge erfolgt dabei flexibel nach Untersuchungsziel und wird durch die in Schritt~2 der Datenpipeline strukturiert erhobenen Metadatenspalten ermöglicht (siehe \cref{sec:pipeline}).
+Dieses Vorgehen orientiert sich methodisch am Evaluationsdesign von Klier und Baier (2025), die ebenfalls Referenz-Hashes aus einer kleinen, diversen Teilmenge bilden \cite[Kap.~3]{klier_media_2025}. Die Filterung der Trainingsmenge erfolgt dabei flexibel nach Untersuchungsziel und wird durch die in Schritt~2 der Datenpipeline strukturiert erhobenen Metadatenspalten ermöglicht (siehe \cref{sec:pipeline}).
 
 \begin{figure}[h]
 \centering
