@@ -100,20 +100,19 @@ aggregiert aus allen iPhone-4-Aufnahmen der Trainingsmenge}
 \subsection{Ähnlichkeitsberechnung}
 \label{sec:aehnlichkeitsberechnung}
 
-Im Ähnlichkeitsvergleich wird jede relevante Testdatei paarweise gegen einen einzelnen Source Digest verglichen. Als primäre Metrik wird der asymmetrisch konfigurierte Tversky-Index verwendet, mit den Gewichtungsparametern \(\alpha = 0{,}0\) und \(\beta = 1{,}0\). Diese Konfiguration bedeutet konkret, dass \(n\)-Gramme, die im Source Digest vorhanden, in der Testdatei jedoch nicht enthalten sind, nicht bestraft werden (\(\alpha = 0{,}0\)), während zusätzliche, quellenfremde \(n\)-Gramme der Testdatei strikt als Abweichung gewertet werden (\(\beta = 1{,}0\)).
+Im Ähnlichkeitsvergleich wird jede relevante Testdatei paarweise gegen einen einzelnen Source Digest verglichen. Als primäre Metrik wird dabei nicht der in Abschnitt \ref{sec:distanzmetriken} eingeführte, symmetrisch konfigurierte Jaccard-Koeffizient herangezogen, da dieser exklusive Elemente beider Digests gleich gewichtet und damit für die vorliegende Klassifikationsaufgabe nicht geeignet ist. Stattdessen wird der ebenfalls dort vorgestellte Tversky-Index verwendet, dessen Gewichtungsparameter \(\alpha\) und \(\beta\) eine gezielte Steuerung erlauben, wie stark exklusive Elemente des Source Digests beziehungsweise der Similarity Digest der Testdatei in die Bewertung einfließen. Konkret kommt eine asymmetrische Konfiguration mit \(\alpha = 0{,}0\) und \(\beta = 1{,}0\) zum Einsatz, sodass \(n\)-Gramme, die im Source Digest vorhanden, in der Testdatei jedoch nicht enthalten sind, nicht bestraft werden, während zusätzliche, quellenfremde \(n\)-Gramme der Testdatei strikt als Abweichung gewertet werden.
 
-Die forensische Intuition hinter dieser Asymmetrie ist, dass eine Testdatei dann einer Quellklasse zugeordnet wird, wenn sie deren charakteristische Strukturmerkmale enthält. Fehlende Boxen können durch Encoder-Varianz oder Re-Muxing entstehen und sollten die Zuordnung nicht verhindern, wohingegen strukturfremde Zusatzboxen ein klares Indiz gegen die Zugehörigkeit zur Quellklasse darstellen.
+Die forensische Intuition hinter dieser Asymmetrie ist, dass eine Testdatei dann einer Quellklasse zugeordnet wird, wenn sie deren charakteristische Strukturmerkmale enthält. Fehlende Boxen können durch Encoder-Varianz oder Re-Muxing entstehen und sollten die Zuordnung nicht verhindern, wohingegen strukturfremde Zusatzboxen ein klares Indiz gegen die Zugehörigkeit zur Quellklasse darstellen. Der resultierende Ähnlichkeitswert liegt im Intervall \([0, 1]\) und dient als Klassifikations-Score. Da kein fester Entscheidungsschwellenwert vorausgesetzt wird, wird die Klassifikationsleistung schwellenwertunabhängig über ROC-Kurve und AUC bewertet \cite{fawcett_introduction_2006}. Ein Source Digest repräsentiert dabei genau eine Quellklasse, für jede zu untersuchende Kategorie wird ein eigener Digest gebildet und separat ausgewertet.
 
-Der resultierende Ähnlichkeitswert liegt im Intervall \([0, 1]\) und dient als Klassifikations-Score. Da kein fester Entscheidungsschwellenwert vorausgesetzt wird, wird die Klassifikationsleistung schwellenwertunabhängig über ROC-Kurve und AUC bewertet \cite{fawcett_introduction_2006}. Ein Source Digest repräsentiert dabei genau eine Quellklasse, für jede zu untersuchende Kategorie wird ein eigener Digest gebildet und separat ausgewertet.
-
-Die asymmetrische Konfiguration des Tversky-Index lässt sich anhand eines konkreten Beispiels veranschaulichen. Ein Source Digest auf Markenebene (Apple, $|A| = 68$) enthält notwendigerweise mehr \(n\)-Gramme als ein modellspezifischer Digest (iPhone~4, $|B| = 54$), da er die Signaturen aller Apple-Geräte aggregiert. Für den Jaccard-Koeffizienten ergibt sich:
+Die asymmetrische Konfiguration des Tversky-Index und die Vorteile gegenüber dem Jaccard-Index lässt sich anhand eines konkreten Beispiels (siehe zuvor vorgestellte Source Digests in \Cref{fig:digest-apple} und \ref{fig:digest-iphone4}) veranschaulichen. Ein Source Digest auf Markenebene (Apple, $|A| = 68$) enthält notwendigerweise mehr \(n\)-Gramme als ein modellspezifischer Digest (iPhone~4, $|B| = 54$), da er die Signaturen aller Apple-Geräte aggregiert. Für den Jaccard-Koeffizienten ergibt sich ein Ähnlichkeitswert von 0{,}794
+\label{eq:jaccard_apple}:
 
 \begin{equation}
 J_{Apple, iPhone4} = \dfrac{|A \cap B|}{|A \cup B|} = \dfrac{54}{54 + 14 + 0} = 0{,}794
 \label{eq:jaccard_apple}
 \end{equation}\\
 
-Für den Tversky-Index mit \(\alpha = 0{,}0\) und \(\beta = 1{,}0\) ergibt sich hingegen:
+Für den Tversky-Index mit \(\alpha = 0{,}0\) und \(\beta = 1{,}0\) ergibt sich hingegen ein Wert von 1{,}000:
 
 \begin{equation}
 T_{Apple \to iPhone4} = \dfrac{|A \cap B|}{|A \cap B| + \alpha \cdot |A \setminus B| + \beta \cdot |B \setminus A|} = \dfrac{54}{54 + 0 \cdot 14 + 1 \cdot 0} = 1{,}000
@@ -150,14 +149,14 @@ Source Digest AI01\_SYNTHETIC =\\[0.3em]
 
 Die in \cref{fig:digestvergleich_d09ai01} dargestellten Source Digests von D09 (nativ) und AI01 (KI-generiert) verdeutlichen exemplarisch, wie strukturell unterschiedlich native und synthetische Containerformate auf Ebene der 2-Gramm-Signatur sind. Von den 53 2-Grammen des D09-Digests und den 40 2-Grammen des AI01-Digests stimmen lediglich 24 überein (grün markiert), während 29 2-Gramme exklusiv in D09 (rot) und 16 exklusiv in AI01 (blau) auftreten. Diese geringe Schnittmenge im Verhältnis zur Gesamtmenge beider Digests ist bereits ein starkes Indiz für die im Rahmen dieser Arbeit erwartete strukturelle Trennschärfe zwischen nativen und KI-generierten Video-Containern.
 
-Da der Tversky-Index richtungsabhängig ist, wird im Folgenden zunächst D09 als Source Digest (\(A\)) gegen AI01 als Testdatei (\(B\)) ausgewertet, anschließend die umgekehrte Konstellation mit AI01 als Source Digest (\(A'\)) und D09 als Testdatei (\(B'\)). Für den ersten Fall, D09 gegen AI01, ergibt sich mit \(\alpha = 0{,}0\) und \(\beta = 1{,}0\):
+Da der Tversky-Index richtungsabhängig ist, wird im Folgenden zunächst D09 (\(A\)) gegen AI01 als Testdatei (\(B\)) ausgewertet, anschließend die umgekehrte Konstellation mit AI01 (\(A'\)) und D09 als Testdatei (\(B'\)). Für den ersten Fall, D09 gegen AI01, ergibt sich mit \(\alpha = 0{,}0\) und \(\beta = 1{,}0\):
 
 \begin{equation}
 T_{D09 \to AI01} = \dfrac{|A \cap B|}{|A \cap B| + \alpha \cdot |A \setminus B| + \beta \cdot |B \setminus A|} = \dfrac{24}{24 + 0 \cdot 29 + 1 \cdot 16} = \dfrac{24}{40} = 0{,}600
 \label{eq:tversky_d09_ai01}
 \end{equation}\\
 
-Für den umgekehrten Fall, AI01 als Source Digest gegen D09 als Testdatei, vertauschen sich die Rollen der Differenzmengen, da nun \(A' \setminus B' = 16\) (exklusiv in AI01) nicht bestraft wird, während \(B' \setminus A' = 29\) (exklusiv in D09) vollständig in die Berechnung einfließt:
+Für den umgekehrten Fall, AI01 gegen D09 als Testdatei, vertauschen sich die Rollen der Differenzmengen, da nun \(A' \setminus B' = 16\) (exklusiv in AI01) nicht bestraft wird, während \(B' \setminus A' = 29\) (exklusiv in D09) vollständig in die Berechnung einfließt:
 
 \begin{equation}
 T_{AI01 \to D09} = \dfrac{|A' \cap B'|}{|A' \cap B'| + \alpha \cdot |A' \setminus B'| + \beta \cdot |B' \setminus A'|} = \dfrac{24}{24 + 0 \cdot 16 + 1 \cdot 29} = \dfrac{24}{53} \approx 0{,}453
