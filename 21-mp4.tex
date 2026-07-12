@@ -33,7 +33,7 @@ Die elementaren Strukturen dieser Topologie werden im ISO-Standard formal als \t
 
 \subsection{Funktionale Trennung von Metadaten und Bitstrom}
 
-Ein Kernmerkmal des ISOBMFF ist die funktionale und inhaltliche Trennung zwischen den strukturellen Metadaten und dem eigentlichen audiovisuellen Bitstrom. Diese Trennung ermöglicht es, die Topologie (siehe \cref{fig:tree_iso}) der Datei zu analysieren, ohne den rechenintensiven Videostream dekodieren zu müssen \cite[S. s69]{gloe_forensic_2014}.\\
+Ein Kernmerkmal des ISOBMFF ist die funktionale und inhaltliche Trennung zwischen den strukturellen Metadaten und dem eigentlichen audiovisuellen Bitstrom. Diese Trennung ermöglicht es, die Topologie (siehe \cref{fig:tree_iso}) der Datei zu analysieren, ohne den rechenintensiven Videostream dekodieren zu müssen \cite[S. S69]{gloe_forensic_2014}.\\
 
 \begin{figure}[h]
     \centering
@@ -75,9 +75,9 @@ Ein Kernmerkmal des ISOBMFF ist die funktionale und inhaltliche Trennung zwische
                     [language, for tree={draw=none, fill=gray!15}]
                 ]
             ]
-        ]
-        [udta
-            [cprt, for tree={draw=none, fill=gray!15}]
+            [udta
+                [cprt, for tree={draw=none, fill=gray!15}]
+            ]
         ]
     ]
     \end{forest}
@@ -92,9 +92,9 @@ Die Metadaten, die alle Verknüpfungen, Timing-Informationen und Codec-Konfigura
 
 \subsection{Herstellerspezifische Syntaktik und proprietäre Erweiterungen}
 
-Obwohl der ISO-Standard die grundlegende Topologie diktiert, gewährt er Software-Encodern, Kameraherstellern und zunehmend auch KI-Video-Generatoren erhebliche Freiheitsgrade bei der Anordnung und Nutzung optionaler Boxen \cite[S. s71]{gloe_forensic_2014}. 
+Obwohl der ISO-Standard die grundlegende Topologie diktiert, gewährt er Software-Encodern, Kameraherstellern und zunehmend auch KI-Video-Generatoren erhebliche Freiheitsgrade bei der Anordnung und Nutzung optionaler Boxen \cite[S. S71]{gloe_forensic_2014}. 
 
-Von besonderer forensischer Relevanz sind hierbei herstellerspezifische Erweiterungen (wie z.\,B. \(udta\) für User Data) sowie die explizit als Blanko-Container spezifizierte \(uuid\)-Box \cite[Kap. 8.2]{iso_14496-12_2022}. Die \(uuid\)-Box wird in der Praxis häufig genutzt, um proprietäre Metadaten oder kryptografische Signaturen (beispielsweise nach C2PA-Standard) zu implementieren. Die Existenz, die Dateigröße und die exakte Position dieser optionalen Boxen im MP4-Baum variieren stark zwischen verschiedenen Erzeugerquellen. Eben diese syntaktischen Abweichungen und herstellerspezifischen Nutzungsmuster bilden das fundamentale Feature-Set, welches im Rahmen dieser Arbeit für das Similarity Hashing extrahiert und quantifiziert werden soll \cite[S. s75]{gloe_forensic_2014}.
+Von besonderer forensischer Relevanz sind hierbei herstellerspezifische Erweiterungen (wie z.\,B. \(udta\) für User Data) sowie die explizit als Blanko-Container spezifizierte \(uuid\)-Box \cite[Kap. 8.2]{iso_14496-12_2022}. Die \(uuid\)-Box wird in der Praxis häufig genutzt, um proprietäre Metadaten oder kryptografische Signaturen (beispielsweise nach C2PA-Standard) zu implementieren. Die Existenz, die Dateigröße und die exakte Position dieser optionalen Boxen im MP4-Baum variieren stark zwischen verschiedenen Erzeugerquellen. Eben diese syntaktischen Abweichungen und herstellerspezifischen Nutzungsmuster bilden das fundamentale Feature-Set, welches im Rahmen dieser Arbeit für das Similarity Hashing extrahiert und quantifiziert werden soll \cite[S. S75]{gloe_forensic_2014}.
 
 %%%
 
@@ -102,7 +102,7 @@ Von besonderer forensischer Relevanz sind hierbei herstellerspezifische Erweiter
 
 Zur Veranschaulichung der in den vorigen Abschnitten dargelegten Strukturprinzipien wird nachfolgend der Aufbau der Boxen einer standardkonformen MP4-Datei exemplarisch an einer nativen Aufnahme aus dem VISION-Datensatz \cite{shullani_vision_2017} visualisiert. Dieses Beispiel illustriert sowohl die lineare Abfolge der Boxen auf der obersten Ebene als auch die tiefe Verschachtelung innerhalb des Metadaten-Containers \cite[Kap. 8]{iso_14496-12_2022}.
 
-In einer typischen sequenziellen Anordnung (siehe \cref{fig:tree_d09}) steht die Kompatibilitätsdeklaration (\(ftyp\)) an erster Stelle, um dem Parser das primäre Dateiprofil zu signalisieren. Ihr folgt die Metadaten-Struktur (\(moov\)), bevor die eigentlichen Mediainhalte (\(mdat\), in \cref{fig:tree_d09} rot hervorgehoben) den Hauptteil der Datei einnehmen \cite[S. s69]{gloe_forensic_2014}.
+In einer typischen sequenziellen Anordnung (siehe \cref{fig:tree_d09}) steht die Kompatibilitätsdeklaration (\(ftyp\)) an erster Stelle, um dem Parser das primäre Dateiprofil zu signalisieren. Ihr folgt die Metadaten-Struktur (\(moov\)), bevor die eigentlichen Mediainhalte (\(mdat\), in \cref{fig:tree_d09} rot hervorgehoben) den Hauptteil der Datei einnehmen \cite[S. S69]{gloe_forensic_2014}.
 
 \begin{figure}[h]
     \centering
@@ -170,22 +170,22 @@ In einer typischen sequenziellen Anordnung (siehe \cref{fig:tree_d09}) steht die
                     ]
                 ]
             ]
+            [udta, for tree={fill=orange!15, draw=orange!60}
+                [\textcopyright{}mod]
+                [\textcopyright{}swr]
+                [\textcopyright{}day]
+                [\textcopyright{}xyz]
+                [\textcopyright{}mak]
+            ]
+            [free]
+            [meta [hdlr] [keys] [ilst] [free]]
         ]
-        [udta, for tree={fill=orange!15, draw=orange!60}
-            [\textcopyright{}mod]
-            [\textcopyright{}swr]
-            [\textcopyright{}day]
-            [\textcopyright{}xyz]
-            [\textcopyright{}mak]
-        ]
-        [free]
-        [meta [hdlr] [keys] [ilst] [free]]
     ]
     \end{forest}
     \caption{MOV-Box-Struktur von D09 (Apple iPhone4) aus der VISION-Datenbank \cite{shullani_vision_2017} mit Video-Track (blau), Audio-Track (grün), herstellerspezifischen Metadaten (orange) und Mediendaten (rot) (eigene Darstellung)}
     \label{fig:tree_d09}
 \end{figure}
 
-Anhand dieser Hierarchie wird ersichtlich, dass untergeordnete Blätter (Leafs) wie die \(stbl\)-Box erst durch ihren eindeutigen, absoluten Pfad (\(moov/trak/mdia/minf/stbl\)) im Gesamtkontext determinierbar sind. Weicht eine Software von dieser Standardtopologie ab, verschiebt sich die syntaktische Anordnung. Beispielsweise können die Metadaten am Dateiende (Fast-Start-Optimierung für Streaming) oder optionale \(uuid\)-Blöcke eingefügt werden. Das dargestellte Beispiel enthält keine \(uuid\)-Box, da diese optionale Erweiterung insbesondere bei proprietären Metadaten oder kryptografischen Signaturen nach dem C2PA-Standard zum Einsatz kommt und bei nativen Smartphone-Aufnahmen, wie der vorliegenden, nicht regelhaft auftritt.
+Anhand dieser Hierarchie wird ersichtlich, dass untergeordnete Leafs wie die \(stbl\)-Box erst durch ihren eindeutigen, absoluten Pfad (\(moov/trak/mdia/minf/stbl\)) im Gesamtkontext determinierbar sind. Weicht eine Software von dieser Standardtopologie ab, verschiebt sich die syntaktische Anordnung. Beispielsweise können die Metadaten am Dateiende (Fast-Start-Optimierung für Streaming) oder optionale \(uuid\)-Blöcke eingefügt werden. Das dargestellte Beispiel enthält keine \(uuid\)-Box, da diese optionale Erweiterung insbesondere bei proprietären Metadaten oder kryptografischen Signaturen nach dem C2PA-Standard zum Einsatz kommt und bei nativen Smartphone-Aufnahmen, wie der vorliegenden, nicht regelhaft auftritt.
 
 Über den reinen Boxtyp hinaus enthalten viele Boxen zusätzliche binäre Feldwerte, etwa den Timescale-Wert der \(mvhd\)-Box (\(moov/mvhd/@timescale\)) oder Zeitstempel wie \(creationTime\). Derartige Feldwerte könnten grundsätzlich als zusätzliches Merkmal ausgewertet werden, sind jedoch nicht Bestandteil des in dieser Arbeit verfolgten Ansatzes, der sich bewusst auf den Boxtyp (4CC-Bezeichner) und dessen relative Position im Baum beschränkt.

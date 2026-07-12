@@ -1,6 +1,6 @@
 \section{Container-basierte Video-Forensik}
 
-Die etablierte Videoforensik stützt sich primär auf die Analyse des audiovisuellen Bitstroms, was durch die Notwendigkeit der vollständigen Dekodierung rechenintensiv ist und durch verlustbehaftete Kompressionsprozesse erschwert wird \cite[Kap. 1]{yang_comprehensive_2025}. Als effiziente Alternative hat sich die isolierte Auswertung von Datei-Containern etabliert, welche die medienspezifischen Streams umgeht und ausschließlich die syntaktischen Metadatenstrukturen untersucht \cite[Kap. 3]{yang_comprehensive_2025}. Die anhaltende Relevanz dieses Forschungsfeldes belegen die aktuellen Untersuchungen von Yang u.,a. (2025) \cite{yang_comprehensive_2025}.
+Die etablierte Videoforensik stützt sich primär auf die Analyse des audiovisuellen Bitstroms, was durch die Notwendigkeit der vollständigen Dekodierung rechenintensiv ist und durch verlustbehaftete Kompressionsprozesse erschwert wird \cite[Kap. 1]{yang_comprehensive_2025}. Als effiziente Alternative hat sich die isolierte Auswertung von Datei-Containern etabliert, welche die medienspezifischen Streams umgeht und ausschließlich die syntaktischen Metadatenstrukturen untersucht \cite[Kap. 3]{yang_comprehensive_2025}. Die anhaltende Relevanz dieses Forschungsfeldes belegen die aktuellen Untersuchungen von Yang u. a. (2025) \cite{yang_comprehensive_2025}.
 
 \begin{figure}[h]
     \centering
@@ -91,7 +91,7 @@ Zur Strukturierung dieses Forschungsfeldes schlagen Yang u.\,a. (2025) eine Taxo
 - Anfällig bei identischen Boxen\\\midrule
          T5&  Ungeordnet&  Nur finales Feld sowie Wert und verwirft Struktur-Pfad komplett& - Vollständiger Verlust der Struktur-Infos\\ \bottomrule
     \end{tabular}
-    \caption{Repräsentationsmodelle für Video-Container (eigene Darstellung nach Yang u.\,a. \cite[Tab. 2]{yang_comprehensive_2025}}
+    \caption{Repräsentationsmodelle für Video-Container (eigene Darstellung nach Yang u.\,a. \cite[Tab. 2]{yang_comprehensive_2025})}
     \label{tab:yang}
 \end{table}
 
@@ -106,7 +106,7 @@ Die Differenzierung dieser Repräsentationsmodelle verdeutlicht das methodische 
 \subsection{Quantitative Feature-Repräsentation}
 \label{sec:quant}
 
-Innerhalb der quantitativen Container-Forensik dient die Feature-Repräsentation dem Ziel, die aus der hierarchischen MP4-Struktur extrahierten Symbole in maschinenlesbare Vektoren zu übersetzen. Ein etabliertes Modell hierfür ist der \textit{Bag-of-Words}-Ansatz. Dieser behandelt die zuvor abgeleiteten Container-Symbole konzeptionell analog zu Vokabeln in der Textverarbeitung, indem er ausschließlich deren absolute Häufigkeit innerhalb der Datei zählt und in einem Feature-Vektor abbildet. Sofern die zugrunde liegende symbolische Repräsentation (wie bei den Modellen T1 bis T4) Pfadinformationen einschließt, bleibt die hierarchische Einbettung der Boxen im Vektor erhalten.
+Innerhalb der quantitativen Container-Forensik (siehe \ref{tab:steckbrief-quan}) dient die Feature-Repräsentation dem Ziel, die aus der hierarchischen MP4-Struktur extrahierten Symbole in maschinenlesbare Vektoren zu übersetzen. Ein etabliertes Modell hierfür ist der \textit{Bag-of-Words}-Ansatz. Dieser behandelt die zuvor abgeleiteten Container-Symbole konzeptionell analog zu Vokabeln in der Textverarbeitung, indem er ausschließlich deren absolute Häufigkeit innerhalb der Datei zählt und in einem Feature-Vektor abbildet. Sofern die zugrunde liegende symbolische Repräsentation (wie bei den Modellen T1 bis T4) Pfadinformationen einschließt, bleibt die hierarchische Einbettung der Boxen im Vektor erhalten.
 
 Einen repräsentativen Ansatz für diese Methodik präsentierten Yang u.\,a. (2020). Sie entwickelten eine vektorielle Repräsentation der Containerstruktur, die sich an Bag-of-Words anlehnt, und nutzten Entscheidungsbäume, um die Integrität von Videodateien zu überprüfen sowie die verwendete Manipulationssoftware zu identifizieren \cite{yang_efficient_2020}. Xiang u.\,a. (2021) erweiterten dieses Konzept später zum \textit{Type-aware}-Ansatz, um neben der bloßen Zählung diskreter Boxen auch kontinuierliche Werte effizienter in den Vektoren zu verarbeiten \cite{xiang_forensic_2021}.
 
@@ -139,7 +139,6 @@ Einen repräsentativen Ansatz für diese Methodik präsentierten Yang u.\,a. (20
             ]
             [trak]
         ]
-        [udta]
     ]
     \end{forest}
     \caption{Einfache Containerstruktur einer MP4-Datei mit einem Feld/Wert (eigene Darstellung)}
@@ -150,7 +149,7 @@ Einen repräsentativen Ansatz für diese Methodik präsentierten Yang u.\,a. (20
     \centering
     \begin{tabular}{@{}lll@{}}
     \toprule
-    \textbf{Symbol} & Bag-of-Words-Wert& Type-aware-Wert\\
+    \textbf{Symbol} & \textbf{Bag-of-Words-Wert}& \textbf{Type-aware-Wert}\\
     \midrule
     \(ftyp\) & 1 & 1 \\
     \(mdat\) & 1 & 1 \\
@@ -166,7 +165,7 @@ Einen repräsentativen Ansatz für diese Methodik präsentierten Yang u.\,a. (20
     \(moovtrakmdiaduration300\) & 1 & entfällt \\
     \bottomrule
     \end{tabular}
-    \caption{Gegenüberstellung der Feature-Repräsentation nach Yang et al. (2020) \cite[Kap. 3]{yang_efficient_2020} und Xiang et al. (2021) \cite[Kap. 3.3]{xiang_forensic_2021} (eigene Darstellung)}
+    \caption{Gegenüberstellung der Feature-Repräsentation nach Yang u. a. (2020) \cite[Kap. 3]{yang_efficient_2020} und Xiang u. a. (2021) \cite[Kap. 3.3]{xiang_forensic_2021} (eigene Darstellung)}
     \label{tab:xiangyang}
 \end{table}
 
@@ -187,7 +186,7 @@ Xiang u. a. (2021) \cite{xiang_forensic_2021}\\\midrule
          \textbf{Feature-Selektion}&  	
 Likelihood-Ratio-Framework &Korrelationsmatrix und spektrales Clustering \\\midrule
          \textbf{Klassifikator}&  Entscheidungsbäume &Linear Discriminant Analysis (LDA) mit Nearest Neighbor Classifier (NNC) für Multi-Klassen; Entscheidungsbäume für binäre Klassen\\\midrule
-         \textbf{Datenbanken}&  VISIO, EVA-7K&VISION, EVA-7K\\\midrule
+         \textbf{Datenbanken}&  VISION, EVA-7K&VISION, EVA-7K\\\midrule
          \textbf{Test- und Trainingsdaten}&  Leave-one-device-out Kreuzvalidierung (34 Folds)&50/50 Split mit stratifiziertem Sampling sowie Leave-one-out Kreuzvalidierung für lokale Videos\\\midrule
          \textbf{Evaluation}& Unterscheidung von nativen und manipulierten Videos, 4 Social-Media-Plattformen&Brand Attribution, Software-Identifikation, 4 Social-Media-Plattformen und Integritätsprüfung\\\midrule
          \textbf{Metriken}& Balanced Accuracy, True Positive Rate (TPR), True Negative Rate (TNR)&TPR, TNR\\ \bottomrule
@@ -200,13 +199,13 @@ Likelihood-Ratio-Framework &Korrelationsmatrix und spektrales Clustering \\\midr
 
 \subsection{Qualitative und pfadbasierte Strukturanalyse}
 
-Um den Verlust topologischer Informationen zu vermeiden, nutzt ein weiterer methodischer Strang den MP4-Container als strukturierten Baum und wertet die exakten Pfade und Eltern-Kind-Beziehungen der Boxen aus.
+Um den Verlust topologischer Informationen zu vermeiden, nutzt ein weiterer methodischer Strang den MP4-Container als strukturierten Baum und wertet die exakten Pfade und Eltern-Kind-Beziehungen der Boxen aus (siehe \cref{tab:steckbrief-qual}). 
 
 Ein grundlegendes Framework für diesen Ansatz legten Iuliani u.\,a. (2019) vor, die ein auf \textit{Likelihood-Ratios} basierendes quantitatives Modell zur unüberwachten Quellengeräte-Erkennung (SCI) entwickelten \cite{iuliani_video_2019}. Ihr Algorithmus analysiert die baumartige Metadaten-Architektur und berechnet die Wahrscheinlichkeit, mit der eine gegebene Container-Grammatik von einer spezifischen Smartphone-Marke erzeugt wurde. Dabei kennzeichnen sie jede Box mit ihrem 4-Zeichen-Code sowie einem Index, der die relative Position unter den Geschwisterboxen angibt, sodass für den Strukturbaum aus \cref{fig:tree_simpel} der vollständige Pfad zum Feldwert als \textbf{\(moov\text{-}3trak\text{-}1mdia\text{-}1duration{=}300\)} notiert würde, wobei sich der Index von \(moov\text{-}3\) aus dessen Position als drittes Kind der Wurzel und der Index von \(trak\text{-}1\) aus der Position der ersten der beiden \(trak\)-Boxen ergibt \cite[Kap. III]{iuliani_video_2019}. Dieser strukturbasierte Ansatz ermöglicht eine trennscharfe Zuordnung, da er die proprietären Designentscheidungen der Hersteller in ihrer syntaktischen Tiefe erfasst.
 
 Eine alternative Auswertung dieser topologischen Daten demonstrierten Ramos-López u.\,a. (2020) \cite{ramos_lopez_digital_2020}. Sie nutzen extrahierte Pfad- und Reihenfolge-Features der Boxen, um digitale Videos mittels unüberwachter Clustering-Algorithmen (wie dem hierarchischen Clustering) auch ohne vorheriges Training spezifischen Quellgeräten zuzuordnen. Anders als Iuliani u.\,a. definieren sie dafür vier parallele Merkmalsvarianten, sodass für dieselbe Information \(duration300\) aus \cref{fig:tree_simpel} sowohl eine reine Pfad-Feld-Variante \(moovtrakmdiaduration\) ohne Wert und ohne Reihenfolge als auch eine vollständige, geordnete Variante mit Reihenfolge und Wert gebildet wird \cite[Kap. III.A]{ramos_lopez_digital_2020}. Gerade bei der zweiten, leeren \(trak\)-Box aus \cref{fig:tree_simpel} zeigt sich der Unterschied dieser Varianten deutlich, da nur die reihenfolgeerhaltenden Merkmale zwischen den beiden Tracks unterscheiden können, während die ungeordneten Varianten beide Tracks auf denselben Pfad abbilden würden.
 
-Die Limitierung streng geordneter Strukturauswertungen (vergleichbar mit den Repräsentationen T1 und T2 nach der Taxonomie von Yang u.\,a. \cite{yang_comprehensive_2025}) liegt in ihrer Inflexibilität. Der strikte Abgleich sequenzieller Pfade kann in der Praxis daran scheitern, dass einfaches Verschieben durch Entfernen oder Einfügen von Boxen somit auch die Indizes verschieben. Dies verursacht eine starke Veränderung der abgebildeten Container-Reihenfolge und erschwert somit den Vergleich mit bekannten Strukturen.
+Die Limitierung streng geordneter Strukturauswertungen (vergleichbar mit den Repräsentationen T1 und T2 nach der Taxonomie von Yang u.\,a. \cite{yang_comprehensive_2025}) liegt in ihrer Inflexibilität. Der strikte Abgleich sequenzieller Pfade kann in der Praxis daran scheitern, dass ein einfaches Entfernen oder Einfügen von Boxen somit auch die zugehörigen Indizes verschiebt. Dies verursacht eine starke Veränderung der abgebildeten Container-Reihenfolge und erschwert somit den Vergleich mit bekannten Strukturen.
 
 % Verfahrenssteckbrief iuliani und ramos
 
