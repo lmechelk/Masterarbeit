@@ -8,6 +8,7 @@ Auf dieser Grundlage beschreibt Abschnitt \ref{sec:aehnlichkeitsberechnung} die 
 %%%
 
 \subsection{Similarity und Source Digest}
+\label{sec:sourcedigest}
 
 Der Similarity Digest repräsentiert die kompakte \(n\)-Gramm-Signatur einer einzelnen Datei. Der Source Digest aggregiert hingegen die Similarity Digests einer kleinen, repräsentativen Trainingsmenge und dient als Referenz für eine gesamte Quellklasse. Hierzu werden die Similarity Digests aller Trainingsdateien, die einer definierten Quellklasse angehören, über eine Mengenvereinigung zusammengeführt. Alle einzigartigen \(n\)-Gramme der gefilterten Trainingszeilen werden vereinigt, alphabetisch sortiert und als einzelner kompakter String gespeichert (siehe \cref{fig:digest-beispiel}).\\
 
@@ -70,8 +71,8 @@ tkhdtapt\;traktkhd\;trefmdia\;udta©mak\;udta©mod\;udta©swr\;vmhdhdlr\;
 wavefrma\;widemdat\;©day©mak\;©day©mod\;©day©xyz\;©makfree\;©mak©swr\;
 ©mod©mak\;©mod©swr\;©swr©day\;©xyz©mak\;©xyz©mod
 }}
-\caption{Source Digest Apple auf Herstellerebene ($n{=}2$, $|A|{=}68$ n-Gramme), 
-aggregiert aus allen Apple-Geräten der Trainingsmenge}
+\caption{Source Digest Apple auf Herstellerebene ($n{=}2$, $|A|{=}68$ \(n\)-Gramme) 
+aggregiert aus Apple-Geräten der Trainingsmenge (eigene Darstellung)}
 \label{fig:digest-apple}
 \end{figure}
 
@@ -88,8 +89,8 @@ stsdmp4a\;stsssdtp\;stszstco\;sttsstsc\;sttsstss\;taptedts\;tkhdedts\;
 tkhdtapt\;traktkhd\;udta©mod\;vmhdhdlr\;wavefrma\;widemdat\;©day©mak\;
 ©day©xyz\;©makfree\;©mod©swr\;©swr©day\;©xyz©mak
 }}
-\caption{Source Digest iPhone~4 auf Modellebene ($n{=}2$, $|B|{=}54$ n-Gramme), 
-aggregiert aus allen iPhone-4-Aufnahmen der Trainingsmenge}
+\caption{Source Digest iPhone~4 auf Modellebene ($n{=}2$, $|B|{=}54$ \(n\)-Gramme) 
+aggregiert aus allen iPhone-4-Aufnahmen der Trainingsmenge (eigene Darstellung)}
 \label{fig:digest-iphone4}
 \end{figure}
 
@@ -104,8 +105,7 @@ Im Ähnlichkeitsvergleich wird jede relevante Testdatei paarweise gegen einen ei
 
 Die forensische Intuition hinter dieser Asymmetrie ist, dass eine Testdatei dann einer Quellklasse zugeordnet wird, wenn sie deren charakteristische Strukturmerkmale enthält. Fehlende Boxen können durch Encoder-Varianz oder Re-Muxing entstehen und sollten die Zuordnung nicht verhindern, wohingegen strukturfremde Zusatzboxen ein klares Indiz gegen die Zugehörigkeit zur Quellklasse darstellen. Der resultierende Ähnlichkeitswert liegt im Intervall \([0, 1]\) und dient als Klassifikations-Score. Da kein fester Entscheidungsschwellenwert vorausgesetzt wird, wird die Klassifikationsleistung schwellenwertunabhängig über ROC-Kurve und AUC bewertet \cite{fawcett_introduction_2006}. Ein Source Digest repräsentiert dabei genau eine Quellklasse, für jede zu untersuchende Kategorie wird ein eigener Digest gebildet und separat ausgewertet.
 
-Die asymmetrische Konfiguration des Tversky-Index und die Vorteile gegenüber dem Jaccard-Index lässt sich anhand eines konkreten Beispiels (siehe zuvor vorgestellte Source Digests in \Cref{fig:digest-apple} und \ref{fig:digest-iphone4}) veranschaulichen. Ein Source Digest auf Markenebene (Apple, $|A| = 68$) enthält notwendigerweise mehr \(n\)-Gramme als ein modellspezifischer Digest (iPhone~4, $|B| = 54$), da er die Signaturen aller Apple-Geräte aggregiert. Für den Jaccard-Koeffizienten ergibt sich ein Ähnlichkeitswert von 0{,}794
-\label{eq:jaccard_apple}:
+Die asymmetrische Konfiguration des Tversky-Index und die Vorteile gegenüber dem Jaccard-Index lässt sich anhand eines konkreten Beispiels (siehe zuvor vorgestellte Source Digests in \Cref{fig:digest-apple} und \ref{fig:digest-iphone4}) veranschaulichen. Ein Source Digest auf Markenebene (Apple, $|A| = 68$) enthält notwendigerweise mehr \(n\)-Gramme als ein modellspezifischer Digest (iPhone~4, $|B| = 54$), da er die Signaturen aller Apple-Geräte aggregiert. Für den Jaccard-Koeffizienten ergibt sich ein Ähnlichkeitswert von 0{,}794:
 
 \begin{equation}
 J_{Apple, iPhone4} = \dfrac{|A \cap B|}{|A \cup B|} = \dfrac{54}{54 + 14 + 0} = 0{,}794
@@ -143,7 +143,7 @@ Source Digest AI01\_SYNTHETIC =\\[0.3em]
 \textcolor{green!50!black}{stscstsz}\;\textcolor{green!50!black}{stsdavc1}\;\textcolor{green!50!black}{stsdmp4a}\;\textcolor{blue!60!black}{stssctts}\;\textcolor{green!50!black}{stszstco}\;\textcolor{green!50!black}{sttsstsc}\;\textcolor{green!50!black}{sttsstss} \\
 \textcolor{green!50!black}{tkhdedts}\;\textcolor{green!50!black}{traktkhd}\;\textcolor{blue!60!black}{udtameta}\;\textcolor{blue!60!black}{uuidmoov}\;\textcolor{blue!60!black}{vmhddinf}
 }}
-\caption{Vergleich der Source Digests ($n{=}2$) von D09 (nativ, VISION) und AI01 (synthetisch, KI), 24 gemeinsame 2-Gramme (grün), 29 exklusive 2-Gramme in D09 (rot), 16 exklusive 2-Gramme in AI01 (blau) (Eigene Darstellung)}
+\caption{Vergleich der Source Digests ($n{=}2$) von D09 (nativ, VISION \cite{shullani_vision_2017}) und AI01 (synthetisch, KI), 24 gemeinsame 2-Gramme (grün), 29 exklusive 2-Gramme in D09 (rot), 16 exklusive 2-Gramme in AI01 (blau) (eigene Darstellung)}
 \label{fig:digestvergleich_d09ai01}
 \end{figure}
 

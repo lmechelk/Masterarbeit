@@ -46,7 +46,7 @@ Die etablierte Videoforensik stützt sich primär auf die Analyse des audiovisue
 
     \end{tikzpicture}%
     }
-    \caption{Forensische Aufgabenbereiche der Container-Analyse (Eigene Darstellung in Anlehnung an Yang u. a. (2025) \cite{yang_comprehensive_2025})}
+    \caption{Forensische Aufgabenbereiche der Container-Analyse (eigene Darstellung in Anlehnung an Yang u. a. (2025) \cite{yang_comprehensive_2025})}
     \label{fig:yang}
 \end{figure}
 
@@ -68,7 +68,7 @@ Die wissenschaftliche Fundierung dieser Methodik wurde maßgeblich durch die ric
          Nokia X3-00 & \(free, mdat\) (am Dateiende)\\\midrule
          Samsung SGH-D600& \(iods\)\\ \bottomrule
     \end{tabular}
-    \caption{Signifikante strukturelle Abweichungen in der Verwendung optionaler MP4-Atome bereits in 2014 (Eigene Darstellung nach Gloe u. a. \cite[Tab. 4]{gloe_forensic_2014})}
+    \caption{Dokumentierte signifikante Abweichungen in der Verwendung optionaler MP4-Boxen (eigene Darstellung nach Gloe u. a. (2014) \cite[Tab. 4]{gloe_forensic_2014})}
     \label{tab:gloe}
 \end{table}
 
@@ -91,7 +91,7 @@ Zur Strukturierung dieses Forschungsfeldes schlagen Yang u.\,a. (2025) eine Taxo
 - Anfällig bei identischen Boxen\\\midrule
          T5&  Ungeordnet&  Nur finales Feld sowie Wert und verwirft Struktur-Pfad komplett& - Vollständiger Verlust der Struktur-Infos\\ \bottomrule
     \end{tabular}
-    \caption{Repräsentationsmodelle für Video-Container (Eigene Darstellung nach Yang u.\,a. \cite[Tab. 2]{yang_comprehensive_2025}}
+    \caption{Repräsentationsmodelle für Video-Container (eigene Darstellung nach Yang u.\,a. \cite[Tab. 2]{yang_comprehensive_2025}}
     \label{tab:yang}
 \end{table}
 
@@ -142,7 +142,7 @@ Einen repräsentativen Ansatz für diese Methodik präsentierten Yang u.\,a. (20
         [udta]
     ]
     \end{forest}
-    \caption{Einfache Containerstruktur einer MP4-Datei mit einem Feld/Wert (Eigene Darstellung)}
+    \caption{Einfache Containerstruktur einer MP4-Datei mit einem Feld/Wert (eigene Darstellung)}
     \label{fig:tree_simpel}
 \end{figure}
 
@@ -166,7 +166,7 @@ Einen repräsentativen Ansatz für diese Methodik präsentierten Yang u.\,a. (20
     \(moovtrakmdiaduration300\) & 1 & entfällt \\
     \bottomrule
     \end{tabular}
-    \caption{Gegenüberstellung der Feature-Repräsentation nach Yang et al. \cite[Kap. 3]{yang_efficient_2020} und Xiang et al. \cite[Kap. 3.3]{xiang_forensic_2021} anhand des Strukturbaums aus Abb. \ref{fig:tree_simpel} (Eigene Darstellung)}
+    \caption{Gegenüberstellung der Feature-Repräsentation nach Yang et al. (2020) \cite[Kap. 3]{yang_efficient_2020} und Xiang et al. (2021) \cite[Kap. 3.3]{xiang_forensic_2021} (eigene Darstellung)}
     \label{tab:xiangyang}
 \end{table}
 
@@ -177,8 +177,8 @@ Die forensische Stärke von Bag-of-Words-Modellen und der generellen quantitativ
 \begin{table}[H]
     \centering
     \begin{tabular}{>{\raggedright\arraybackslash}p{0.15\linewidth}>{\raggedright\arraybackslash}p{0.4\linewidth}>{\raggedright\arraybackslash}p{0.4\linewidth}}\toprule
- \textbf{Studie}& Yang u. a. (2020)\cite{yang_efficient_2020}&	
-Xiang u. a. (2021)\cite{xiang_forensic_2021}\\\midrule
+ \textbf{Studie}& Yang u. a. (2020) \cite{yang_efficient_2020}&	
+Xiang u. a. (2021) \cite{xiang_forensic_2021}\\\midrule
          \textbf{Verfahren}&  Quantitative Integritätsprüfung und Software-Identifikation durch Container-Charakterisierung&Forensische Analyse von MP4-Metadaten durch vektorielle Repräsentation und Dimensionsreduktion\\\midrule
          \textbf{Unter-suchungs-ziele}&  MD (Manipulationserkennung), MTI (Software-Identifikation), SNA (Social-Media-Erkennung) und rudimentär SCI (Erkennung des Betriebssystems)&SCI (Brand Attribution), MTI (Software-Identifikation), SNA (Social-Media-Erkennung) und MD (Manipulationserkennung)\\\midrule
          \textbf{Feature}&  Field (Pfade) und Value (Pfade inklusive Werte) aus der Baumstruktur&Boxen sowie Felder, die als track-spezifische Features extrahiert werden\\\midrule
@@ -187,12 +187,12 @@ Xiang u. a. (2021)\cite{xiang_forensic_2021}\\\midrule
          \textbf{Feature-Selektion}&  	
 Likelihood-Ratio-Framework &Korrelationsmatrix und spektrales Clustering \\\midrule
          \textbf{Klassifikator}&  Entscheidungsbäume &Linear Discriminant Analysis (LDA) mit Nearest Neighbor Classifier (NNC) für Multi-Klassen; Entscheidungsbäume für binäre Klassen\\\midrule
-         \textbf{Datenbanken}&  VISION und EVA-7K&VISION und EVA-7K\\\midrule
+         \textbf{Datenbanken}&  VISIO, EVA-7K&VISION, EVA-7K\\\midrule
          \textbf{Test- und Trainingsdaten}&  Leave-one-device-out Kreuzvalidierung (34 Folds)&50/50 Split mit stratifiziertem Sampling sowie Leave-one-out Kreuzvalidierung für lokale Videos\\\midrule
          \textbf{Evaluation}& Unterscheidung von nativen und manipulierten Videos, 4 Social-Media-Plattformen&Brand Attribution, Software-Identifikation, 4 Social-Media-Plattformen und Integritätsprüfung\\\midrule
-         \textbf{Metriken}& \multicolumn{2}{c}{Balanced Accuracy, True Positive Rate (TPR), True Negative Rate (TNR)}\\ \bottomrule
+         \textbf{Metriken}& Balanced Accuracy, True Positive Rate (TPR), True Negative Rate (TNR)&TPR, TNR\\ \bottomrule
     \end{tabular}
-    \caption{Verfahrenssteckbriefe (Eigene Darstellung nach  Yang u. a. (2020)\cite{yang_efficient_2020} und Xiang u. a. 2021 \cite{xiang_forensic_2021})}
+    \caption{Verfahrenssteckbriefe der Studien von Yang u. a. (2020) \cite{yang_efficient_2020} und Xiang u. a. (2021) \cite{xiang_forensic_2021} (eigene Darstellung)}
     \label{tab:steckbrief-quan}
 \end{table}
 
@@ -213,8 +213,8 @@ Die Limitierung streng geordneter Strukturauswertungen (vergleichbar mit den Rep
 \begin{table}[H]
     \centering
     \begin{tabular}{>{\raggedright\arraybackslash}p{0.15\linewidth}>{\raggedright\arraybackslash}p{0.4\linewidth}>{\raggedright\arraybackslash}p{0.4\linewidth}}\toprule
- \textbf{Studie}& Iuliani u. a. (2019)\cite{iuliani_video_2019}&	
-Ramos López u. a. (2020)\cite{ramos_lopez_digital_2020}\\\midrule
+ \textbf{Studie}& Iuliani u. a. (2019) \cite{iuliani_video_2019}&	
+Ramos López u. a. (2020) \cite{ramos_lopez_digital_2020}\\\midrule
          \textbf{Verfahren}&  Unüberwachte Container-Analyse mittels Dissimilarity-Metrik und Likelihood-Ratios&Unüberwachte Videoquellen-Identifikation mittels hierarchischer und dichtebasierter Clustering-Algorithmen\\\midrule
          \textbf{Unter-suchungs-ziele}&  MD, SCI&SCI, SNA\\\midrule
          \textbf{Feature}&  Field und Values inklusive absoluter Pfade (z. B. moov-2/udta-2/count)&Field und Value der Boxen in vier Variationen (mit und ohne Pfad: PathField, PathFieldValue, PathOrderField, PathOrderFieldValue)\\\midrule
@@ -226,9 +226,9 @@ Manueller Ausschluss volatiler Metadaten&Manueller Ausschluss volatiler Metadate
          \textbf{Datenbanken}&  VISION&VISION, ACID\\\midrule
          \textbf{Test- und Trainingsdaten}&  Referenzvergleich (1-zu-1 für MD) und Likelihood-Berechnung mit klassenspezifischen Trainingsdaten (für SCI)&Unüberwachtes Clustering ohne vorheriges Training (Open-Set-Szenario)\\\midrule
          \textbf{Evaluation}& Unterscheidung nativer vs. bearbeiteter Videos sowie Brand Attribution&Clustering nach Marke, Modell, Gerät sowie Social Media \\\midrule
-         \textbf{Metriken}& AUC&Silhouette Coefficient, Homogeneity, Completeness, Rand Index (RI)\\ \bottomrule
+         \textbf{Metriken}& Area under the Curve (AUC)&Silhouette Coefficient, Homogeneity, Completeness, Rand Index (RI)\\ \bottomrule
     \end{tabular}
-    \caption{Verfahrenssteckbriefe (Eigene Darstellung nach Iuliani u. a. (2029)\cite{iuliani_video_2019} und Ramos López u. a. (2020)\cite{ramos_lopez_digital_2020} (Eigene Darstellung)}
+    \caption{Verfahrenssteckbriefe der Studien von Iuliani u. a. (2019) \cite{iuliani_video_2019} und Ramos López u. a. (2020) \cite{ramos_lopez_digital_2020} (eigene Darstellung)}
     \label{tab:steckbrief-qual}
 \end{table}
 
@@ -244,7 +244,7 @@ Dies steht im Spannungsfeld zu den Ergebnissen von Gloe u. a. (2014) und Yang u.
 
 Beide Aussagen stehen jedoch nicht im endgültigen Widerspruch zueinander, sondern beziehen sich auf unterschiedliche Phasen im Lebenszyklus einer Videodatei sowie auf verschiedene forensische Zielsetzungen. Während die strukturelle Volatilität beim Re-Muxing den ursprünglichen Fingerabdruck der Quellkamera vernichtet \cite[Kap. I]{li_learning_2024}\cite[Kap. III.A]{iuliani_video_2019}, generiert der deterministische Bearbeitungsprozess eine neue, stabile Containerstruktur, die als eigenständige Signatur fungiert \cite[S. S71--S72, S74]{gloe_forensic_2014}.
 
-Eine zweite Limitation ergibt sich jedoch aus der eingeschränkten Vergleichbarkeit bestehender Studien. Die untersuchten Arbeiten unterscheiden sich signifikant in Umfang und Herkunft ihrer Datensätze sowie den betrachteten Software-Systemen, was eine einheitliche methodische Evaluation erschwert \cite[Tab. 6]{yang_comprehensive_2025}. So fokussieren sich beispielsweise Datensätze wie VISION primär auf native Smartphone-Aufnahmen und Social-Media-Derivate \cite[Kap. 1]{shullani_vision_2017}, während Datensätze wie EVA-7K explizit für die Erkennung klassischer Manipulationssoftware konzipiert wurden \cite[Kap. 1]{yang_efficient_2020}.
+Eine zweite Limitation ergibt sich jedoch aus der eingeschränkten Vergleichbarkeit bestehender Studien. Die untersuchten Arbeiten unterscheiden sich signifikant in Umfang und Herkunft ihrer Datensätze sowie den betrachteten Software-Systemen, was eine einheitliche methodische Evaluation erschwert \cite[Tab. 6]{yang_comprehensive_2025}. So fokussieren sich beispielsweise Datensätze wie VISION primär auf native Smartphone-Aufnahmen und Social-Media-Derivate \cite[Kap. 1]{shullani_vision_2017}, während Datensätze wie EVA-7K für die Erkennung klassischer Manipulationssoftware konzipiert wurden \cite[Kap. 1]{yang_efficient_2020}.
 
 Drittens fokussieren sich die bisherigen Arbeiten nahezu ausschließlich auf native Kameraaufnahmen, Social-Media-Verarbeitungen oder klassische Manipulationswerkzeuge. Die rasant wachsende Klasse KI-generierter Videos, die zunehmend ebenfalls im MP4-Containerformat ausgegeben wird, bleibt in der bestehenden Literatur und den zugehörigen Datensätzen weitgehend unberücksichtigt \cite[Kap. 1]{shullani_vision_2017}, \cite[Kap. 1]{yang_efficient_2020}. Es ist daher offen, ob sich die etablierten Feature-Design-Ansätze auf diese neue Erzeugungsquelle übertragen lassen oder ob generative Modelle eine grundlegend abweichende syntaktische Signatur aufweisen, die eigene methodische Anpassungen erfordert.
 

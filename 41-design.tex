@@ -9,7 +9,7 @@
          \textbf{Verfahren}& Syntaktisches Similarity Hashing\\\midrule
          \textbf{Untersuchungsziele}& SCI, SNA, MTI, MD\\\midrule
          \textbf{Feature}& Extrahierte 4CC-Box-Informationen unter Ausschluss der Inhaltsdaten (\(mdat\)) und volatile Metadaten (z. B. Zeitstempel wie \(creationTime\))\\\midrule
-         \textbf{Symbolische Repräsentation} (T1 bis T5)& TODO: linearisiert die in JSON erfasste hierarchische Baumstruktur in eindimensionale Token-Sequenzen, ohne vertikale Pfade zu extrahieren\\\midrule
+         \textbf{Symbolische Repräsentation} (T1 bis T5)& Hybridform aus T1/T2 (lokale Ordnungserhaltung) und T5 (vollständiger Pfadverzicht)\\\midrule
          \textbf{Feature-Repräsentation}& \(n\)-Gramm-Sets (Similarity Digest)\\\midrule
          \textbf{Feature-Selektion}& Allowlisting relevanter Container-Boxen und Dubletteneliminierung\\\midrule
          \textbf{Klassifikator}& Approximate Matching (Ähnlichkeitsberechnung mittels Jaccard-Index oder asymmetrischem Tversky-Index)\\\midrule

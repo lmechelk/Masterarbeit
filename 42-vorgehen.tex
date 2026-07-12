@@ -30,7 +30,7 @@ Das Verfahren von der Umwandlung der Baumstruktur der Videodaten bis zum Similar
         \node[box] (input) {1. Eingabedatei (MP4, MOV)};
         \node[box, below=of input] (extract) {2. Box-Extraktion};
         \node[box, below=of extract] (json) {3. JSON-Speicherung};
-        \node[box, below=of json] (ngram) {4. n-Gramm-Tokenisierung (n=2)};
+        \node[box, below=of json] (ngram) {4. \(n\)-Gramm-Tokenisierung (\(n\)=2)};
         \node[box, below=of ngram] (digest) {5. Similarity Digest};
 
         \draw[arr] (input) -- (extract);
@@ -65,7 +65,7 @@ Das Verfahren von der Umwandlung der Baumstruktur der Videodaten bis zum Similar
         \draw[dashed, thick] (digestpart1.south) -- (window.north);
 
     \end{tikzpicture}
-    \caption{Ablauf der Merkmalsextraktion von der MP4-Datei bis zum Similarity Digest (Eigene Darstellung)}
+    \caption{Ablauf der Merkmalsextraktion von der Datei bis zum Similarity Digest (eigene Darstellung)}
     \label{fig:vorgehen}
 \end{figure}
 
@@ -76,14 +76,12 @@ Zunächst werden alle MP4-Dateien der drei Datenbankquellen über einen Parser e
 \subsection{Datenpipeline}
 \label{sec:pipeline}
 
-Die Implementierung des beschriebenen Vorgehens erfolgt in einer achtstufigen Pipeline, deren Quellcode\footfullcite{mechelk_github_2026} als auch die schrittweise Auswertung öffentlich verfügbar ist. Die \cref{fig:pipeline} gibt einen Überblick über den gesamten Datenfluss, \cref{tab:beispieldaten} TODO zeigt exemplarische Einträge des resultierenden Datensatzes. Nachfolgend wird jeder Schritt einzeln beschrieben und auf die Ausgaben, die in der Regel als CSV-Datei exportiert werden, eingegangen.\\
-
-TODO: Beispieldatensätze (Schritt 4, 6, 7) in den Anhang\\
+Die Implementierung des beschriebenen Vorgehens erfolgt in einer achtstufigen Pipeline, deren Quellcode\footfullcite{mechelk_github_2026} sowie die schrittweise Auswertung öffentlich verfügbar sind. Die \cref{fig:pipeline} gibt einen Überblick über den gesamten Datenfluss als Business Process Model and Notation (BPMN). Nachfolgend wird jeder Schritt einzeln beschrieben und auf die Ausgaben, die in der Regel als CSV-Datei exportiert werden, eingegangen. Repräsentative Ausschnitte der Ausgaben der Schritte befinden sich in Tabellenform im Anhang (siehe \cref{tab:train}, \ref{tab:sourcedigests_vision}, \ref{tab:sourcedigests_eva} und \ref{tab:sourcedigests_ki})\\
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=1\linewidth]{grafiken/pipeline.drawio.png}
-    \caption{Datenpipeline des MP4-Similarity-Hashing als BPMN (Eigene Darstellung)}
+    \caption{Datenpipeline des MP4-Similarity-Hashing als BPMN (eigene Darstellung)}
     \label{fig:pipeline}
 \end{figure}
 
@@ -102,5 +100,3 @@ Die Partitionierung in Trainings- und Testmengen erfolgt in \textbf{Schritt~5} d
 In \textbf{Schritt~7} wird jeder Referenz-Source-Digest, der für die jeweilige Evaluation relevant ist, gegen den ausgewählten Testdatensatz als 1-zu-n verglichen. Der \(SIMILARITY\)-Wert wird mittels asymmetrischem Tversky-Index berechnet. Boxen, die im Source Digest vorhanden, in der Testdatei jedoch nicht enthalten sind, fließen ohne Strafterm ein. Zusätzliche Boxen in der Testdatei gegenüber dem Referenz-Digest werden hingegen bestraft. \(GROUND\_TRUTH\_SOURCEDIGEST\) bezeichnet die korrekte Referenzklasse auf Digest-Ebene und \(GROUND\_TRUTH\_MP4\) die korrekte Klasse der einzelnen Test-MP4.\\
 
 Abschließend werden in \textbf{Schritt~8} die Similarity-Scores aller Testdateien je Kategorie ausgewertet. Für jeden Schwellenwert wird die zugehörige True-Positive-Rate sowie False-Positive-Rate berechnet und als ROC-Kurve visualisiert. Der AUC-Wert wird numerisch mittels der Trapezregel über die diskreten Stützpunkte der ROC-Kurve integriert \cite{sklearn_auc_2026}\cite{pedregosa_scikit-learn_2011}. Die Gesamtauswertung basiert auf den in Schritt~7 erzeugten Vergleichsergebnissen zwischen jedem Referenz-Source-Digest und jeder Testdatei. Dabei erfolgt die Berechnung von ROC-Kurve und AUC-Wert sowohl für einzelne Referenz-Source-Digests, etwa je Einzelgerät (z. B. \textit{D01}), als auch zusammengeführt über die gesamte Kategorie (z. B. \textit{Gerät}). Hierbei werden alle  Similarity-Werte zu jeder Referenz-Source-Digest mit jeder Testdatei zur Berechnung herangezogen.
-
-TODO: auf Anhang mit Tabellen verweisen

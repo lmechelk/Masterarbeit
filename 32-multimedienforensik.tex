@@ -51,7 +51,7 @@ Einen grundlegenden Beitrag in diesem Bereich lieferten Klier und Baier (2025) m
         \draw[dashedarr] (digest.east) -- (digestcode.west);
 
     \end{tikzpicture}
-    \caption{Ablauf der Merkmalsextraktion von der JPEG-Datei bis zum Similarity Digest (Eigene Darstellung nach Klier und Baier\cite[Kap. 3]{klier_media_2025})}
+    \caption{Ablauf der Merkmalsextraktion von der JPEG-Datei bis zum Similarity Digest (eigene Darstellung nach Klier und Baier (2025) \cite[Kap. 3]{klier_media_2025})}
     \label{fig:vorgeh-mssh}
 \end{figure}
 
@@ -74,7 +74,6 @@ Für das in dieser Arbeit zu entwickelnde Feature-Design (TF1) folgt daraus, das
          \textbf{Verfahren}& MSSH (Media Source Similarity Hashing)\\\midrule
          \textbf{Untersuchungsziele}& SCI (Source Camera Identification auf Geräte-, Modell- und Markenebene, z. B. zur Unterscheidung von Downloads und Eigenproduktionen in CSAM-Ermittlungen) und SNA (Erkennung der Verarbeitung durch 5 Social-Media-Plattformen)\\\midrule
          \textbf{Feature}& Strukturelle Marker und deren Reihenfolge (z. B. das 2-Gramm D8E1 aus den aneinandergereihten JPEG-Markern SOI und APP1)\\\midrule
-         \textbf{Symbolische Repräsentation} (T1 bis T5)& TODO\\\midrule
          \textbf{Feature-Repräsentation}& \(n\)-Gramm-Sets (Similarity Digest)\\\midrule
          \textbf{Feature-Selektion}& Dubletteneliminierung (reduziert die Sequenzen auf eine rein binäre Mengen-Repräsentation, Worthäufigkeiten werden ignoriert)\\\midrule
          \textbf{Klassifikator}& Approximate Matching (Ähnlichkeitsberechnung mittels Jaccard-Index oder asymmetrischem Tversky-Index)\\\midrule
@@ -83,6 +82,6 @@ Für das in dieser Arbeit zu entwickelnde Feature-Design (TF1) folgt daraus, das
          \textbf{Evaluation}&Klassifikation auf Geräte-, Modell- und Markenebene sowie Erkennung der Verarbeitung durch 5 Social-Media-Plattformen\\\midrule
          \textbf{Metriken}&Receiver Operating Characteristic (ROC) und Area Under Curve (AUC)\\ \bottomrule
     \end{tabular}
-    \caption{Verfahrenssteckbrief zum Media Source Similarity Hashing (Eigene Darstellung nach Klier und Baier\cite{klier_media_2025} }
+    \caption{Verfahrenssteckbrief zum MSSH von Klier und Baier (2025) \cite{klier_media_2025} (eigene Darstellung)}
     \label{tab:steckbrief-klier}
 \end{table}

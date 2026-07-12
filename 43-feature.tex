@@ -25,7 +25,7 @@ Da mehrere dieser Boxtypen von der reinen Container-Grammatik des ISOBMFF abweic
          avc1, hev1 & Visuelle Sample Entries und weisen direkt nach dem Header zwingend 78 Bytes an binären Bildparametern auf, bevor Unterboxen beginnen & Überspringen der binären Videodaten durch eine Offset-Verschiebung von +78 Bytes\\\midrule
          mp4a & Auditiver Sample Entry und weist nach dem Standard-Header zwingend 28 Bytes an binären Audioparametern auf & Überspringen der binären Audiodaten durch eine Offset-Verschiebung von +28 Bytes\\\bottomrule
     \end{tabular}
-\caption{Ausnahmeregelungen und Offset-Korrekturen beim Parsing (eigene Darstellung)}
+\caption{Eruierte Ausnahmeregelungen und Offset-Korrekturen zum Parsing von MP4-Dateien zu Extraktion der Box-Struktur (eigene Darstellung)}
 \label{tab:ausnahmeboxen}
 \end{table}
 
@@ -57,7 +57,7 @@ $\Rightarrow$
 \hspace{0.5cm}
 \texttt{[moov, mvhd, trak, tkhd, mdia]}
 \caption{Linearisierung der MP4-Baumstruktur mittels rekursiver Tiefensuche in 
-Hauptreihenfolge (eigene Darstellung)}
+Hauptreihenfolge als Token-Sequenz (eigene Darstellung)}
 \label{fig:linearisierung}
 \end{figure}
 

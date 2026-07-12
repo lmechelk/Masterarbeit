@@ -27,7 +27,7 @@ Die Identifikation von Ähnlichkeiten erfordert eine klare Definition der betrac
 
 Die Quellenerkennung mittels MP4-Container-Analyse operiert ausschließlich auf der syntaktischen Ebene. Sie ignoriert den visuellen Inhalt (Semantik) sowie den Payload der \textit{mdat}-Box (Byte-Ebene) und konzentriert sich auf strukturelle Merkmale wie die Anordnung oder das Vorhandensein der ISO-Boxen.
 
-Ein Feature entspricht dabei etwa dem Vorhandensein der Box \(udta\) an der Pfadposition \(moov/udta\) oder der unmittelbaren Nachbarschaft zweier Boxtypen wie \(mvhdtrak\). \cref{fig:feature-vergleich} veranschaulicht dies exemplarisch anhand des Vergleichs einer nativen Aufnahme mit einer Social-Media-Verarbeitung, bei der die herstellerspezifische \(udta\)-Box entfernt wurde.
+Die vereinfachte Darstellung zweier \(moov\)-Strukturen (siehe \cref{fig:feature-vergleich}) stellt exemplarisch die den Aufbau einer nativen Aufnahme mit einer Social-Media-Verarbeitung dar, bei der die herstellerspezifische \(udta\)-Box entfernt wurde. Ein Feature entspricht dabei etwa dem Vorhandensein der Box \(udta\) an der Pfadposition \(moov / udta\) oder der unmittelbaren Nachbarschaft zweier Boxtypen wie \(mvhd\) und \(trak\). 
 
 \begin{figure}[h]
     \centering
@@ -65,7 +65,7 @@ Ein Feature entspricht dabei etwa dem Vorhandensein der Box \(udta\) an der Pfad
         \end{forest}
         \caption*{(b) Social-Media-Verarbeitung}
     \end{minipage}
-    \caption{Vereinfachte Gegenüberstellung zweier \(moov\)-Substrukturen (Eigene Darstellung)}
+    \caption{Vereinfachte Gegenüberstellung zweier \(moov\)-Substrukturen (eigene Darstellung)}
     \label{fig:feature-vergleich}
 \end{figure}
 

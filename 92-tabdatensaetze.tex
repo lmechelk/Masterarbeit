@@ -1,3 +1,6 @@
+\chapter{Ergänzende Tabellen}
+\label{sec:ergaenztabellen}
+
 % Trainingsdaten
 
 \begin{sidewaystable}[!h]
@@ -20,12 +23,9 @@ type}& \textbf{processing} & \textbf{tampering} \\\hline
          AI & AI01 & GoogleFlow & OmniFlash & MIXED & DEEPFAKE & MP4 & ORIGINAL & NATIVE \\\hline
          AI & AI04 & Grok & Imagine1.5 & MIXED & DEEPFAKE & MP4 & ORIGINAL & NATIVE \\\hline
     \end{tabular}
-\caption{Auszug ausgewählter Metadatenspalten aus dem Trainingsdatensatz mit dem Vision-, EVA-7K- und KI-Datensatz (Eigene Darstellung basierend auf Daten von Shullani u. a.\cite{shullani_vision_2017} und Yang u. a.\cite{yang_efficient_2020})}
+\caption{Auszug ausgewählter Metadatenspalten aus dem Trainingsdatensatz mit dem Vision- \cite{shullani_vision_2017} , EVA-7K- \cite{yang_efficient_2020} und KI-Datensatz (eigene Darstellung)}
 \label{tab:train}
 \end{sidewaystable}
-
-
-
 
 
 % SD Vision
@@ -48,7 +48,7 @@ ORIGINAL& \{'brand': 'Xiaomi', 'processing': 'ORIGINAL'\}& 3& \seqsplit{avc1avcC
  RedmiNote3\_
 ORIGINAL& \{'model': 'RedmiNote3', 'processing': 'ORIGINAL'\}& 3&\seqsplit{avc1avcCavcCpaspdinfdrefdrefstblesdssttsfreemdatftypmoovhdlrkeyshdlrminfilsttrakkeysilstmdhdhdlrmdiamdhdmetahdlrminfsmhdminfvmhdmoovmvhdmp4aesdsmvhdmetamvhdudtapaspsttssmhddinfstblstsdstcofreestcotrakstscstcostsdavc1stsdmp4astssstszstszstscsttsstsssttsstsztkhdmdiatraktkhdudta\textcopyright{}xyzvmhddinf\textcopyright{}xyzmeta}\\ \hline
     \end{tabular}
-\caption{Auszug Source Digests für Geräte-, Modell- und Herstellererkennung mit dem VISION-Datensatz ((Eigene Darstellung basierend auf Daten von Shullani u. a.\cite{shullani_vision_2017})}
+\caption{Auszug der Source Digests für Geräte-, Modell- und Herstellererkennung mit dem VISION-Datensatz \cite{shullani_vision_2017} (eigene Darstellung)}
 \label{tab:sourcedigests_vision}
 \end{sidewaystable}
 
@@ -73,7 +73,7 @@ avidemux& \{'content\_source': 'DIGITAL\_CAMERA', 'tampering': 'avidemux'\}& 316
 CAMERA\_
 exiftool& \{'content\_source': 'DIGITAL\_CAMERA', 'tampering': 'exiftool'\}& 316&\seqsplit{avc1avcCavcCpaspavcCsttscttsstsccttsvmhddinfdrefdrefstbledtselstelstmdiaesdssttsfreemdatftypfreeftypmoovhdlrilsthdlrkeyshdlrminfilstfreeilstmdatkeysilstmdatmoovmdhdhdlrmdiamdhdmetahdlrminfdinfminfsmhdminfvmhdmoovmvhdmp4aesdsmvhdtrakpaspsttssbgpudtasgpdsbgpsmhddinfsmhdmdatsmhdudtastblstsdstcosgpdstcostszstcotrakstcoudtastscstcostscstszstsdavc1stsdmp4astsscttsstssstscstssvmhdstszsmhdstszstcostszstsssttsstscsttsstsstkhdedtstkhdmdiatraktkhdudtametavmhddinfvmhdtrak}\\\hline
     \end{tabular}
-\caption{Auszug Source Digests für Social-Media-Verarbeitung und Bearbeitungssoftware mit dem Vision- und EVA-7K-Datensatz (Eigene Darstellung basierend auf Daten von Shullani u. a.\cite{shullani_vision_2017} und Yang u. a.\cite{yang_efficient_2020})}
+\caption{Auszug der Source Digests für Social-Media-Verarbeitung und Bearbeitungssoftware mit dem Vision- \cite{shullani_vision_2017} und EVA-7K-Datensatz \cite{yang_efficient_2020} (eigene Darstellung)}
 \label{tab:sourcedigests_eva}
 \end{sidewaystable}
 
@@ -92,6 +92,6 @@ count}& \textbf{ngram\_2} \\\hline
  Pika2.5& \{'model': 'Pika2.5'\}& 6&\seqsplit{avc1avcCavcCbtrtbtrtsttscttsstscdinfdrefdrefstbledtselstelstmdiaesdsbtrtfreemdatftypmoovhdlrilsthdlrminfilstfreemdhdhdlrmdiamdhdmetahdlrminfsmhdminfvmhdmoovmvhdmp4aesdsmvhdtraksbgpudtasgpdsbgpsmhddinfstblstsdstcosgpdstcotrakstcoudtastscstszstsdavc1stsdmp4astsscttsstszstcosttsstscsttsstsstkhdedtstraktkhdudtametavmhddinf}\\\hline
  AI& \{'db\_name': 'AI'\}& 31& \seqsplit{avc1avcCavcCbtrtavcCcolravcCsttsbtrtsttscolrbtrtcttsstscdinfdrefdrefstbledtselstelstmdiaesdsbtrtfreemdatftypfreeftypmoovftypuuidhdlrilsthdlrkeyshdlrminfilstfreekeysilstmdatmoovmdhdhdlrmdiamdhdmetahdlrminfsmhdminfvmhdmoovmvhdmp4aesdsmvhdtraksbgptraksbgpudtasgpdsbgpsmhddinfstblstsdstcosgpdstcotrakstcoudtastscstszstsdavc1stsdmp4astsscttsstszstcosttsstscsttsstsstkhdedtstraktkhdudtametauuidmdatuuidmoovvmhddinf}\\ \hline
     \end{tabular}
-\caption{Auszug Source Digests für KI-generierte Inhalte (Eigene Darstellung)}
+\caption{Auszug Source Digests für KI-generierte Inhalte (eigene Darstellung)}
 \label{tab:sourcedigests_ki}
 \end{sidewaystable}
